@@ -1,0 +1,84 @@
+# legal-portal-frontend/.github/workflows/deploy-frontend.yml
+
+name: Legal Portal Frontend CI/CD (Next.js)
+
+on:
+  push:
+    branches:
+      - main # Этот workflow будет запускаться при каждом пуше в ветку 'main'
+  pull_request: # Также запускать при каждом Pull Request для проверки
+    branches:
+      - main
+
+jobs:
+  # ============================================
+  # CI (Continuous Integration) Stage
+  # ============================================
+  ci:
+    runs-on: ubuntu-latest # Виртуальная машина, на которой будут выполняться действия
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # Клонируем ваш репозиторий на виртуальную машину
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4 # Устанавливаем Node.js
+        with:
+          node-version: '20'       # Используйте LTS-версию Node.js 20. Убедитесь, что эта версия подходит для вашего Next.js.
+          cache: 'npm'             # Кэшируем зависимости npm для ускорения последующих запусков
+          cache-dependency-path: package-lock.json # Указываем файл для кэширования зависимостей
+
+      - name: Install dependencies
+        run: npm install           # Устанавливаем все зависимости проекта из package.json
+
+      - name: Run ESLint
+        # Next.js проекты, созданные с --eslint, имеют скрипт "lint"
+        run: npm run lint
+        # Если вы не хотите, чтобы линтинг останавливал деплой при ошибках, можете добавить:
+        # continue-on-error: true
+
+      - name: Run tests (if any)
+        # Next.js проекты не всегда имеют скрипт "test" по умолчанию.
+        # Если у вас есть тесты (например, с Jest), раскомментируйте эту строку:
+        # run: npm test
+        run: echo "No automated tests configured yet. Skipping test step." # Заглушка
+
+      - name: Build frontend project
+        run: npm run build         # Запускаем сборку Next.js проекта
+
+  # ============================================
+  # CD (Continuous Deployment) Stage
+  # ============================================
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ci] # Этот job запустится только после успешного завершения job 'ci'
+    # Развертывать только при пуше в main ветку, а не при Pull Request
+    if: github.ref == 'refs/heads/main' # Условие: только если пуш в ветку 'main'
+    environment: production # Опционально: можно использовать окружения GitHub для безопасности и настроек
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js for Deployment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Передаем Vercel токен из секретов GitHub
+          # Опционально: если вы используете Vercel с организацией или хотите явно указать проект
+          # vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          # vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod' # Развертывать в production-среду Vercel
+        env:
+          # Переменные окружения, которые нужны для сборки Next.js (например, URL вашего бэкенда)
+          # Важно: эти переменные должны быть префиксированы NEXT_PUBLIC_ если они нужны на клиенте
+          # или добавлены в .env.production файл на Vercel.
+          NEXT_PUBLIC_API_URL: https://api.yourdomain.com/api # ЗАМЕНИТЕ на реальный URL вашего будущего Nest.js API
+          # Если NEXT_PUBLIC_API_URL чувствителен, его тоже можно хранить в GitHub Secrets и передавать так:
+          # NEXT_PUBLIC_API_URL: ${{ secrets.FRONTEND_API_URL }}
