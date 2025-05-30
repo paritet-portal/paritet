@@ -1,11 +1,11 @@
 # legal-portal-frontend/.github/workflows/deploy-frontend.yml
 
-name: Legal Portal Frontend CI/CD (Next.js)
+name: Legal Portal Frontend CI/CD (Next.js to VPS)
 
 on:
   push:
     branches:
-      - main # Этот workflow будет запускаться при каждом пуше в ветку 'main'
+      - main # Запускать этот workflow при каждом пуше в ветку 'main'
   pull_request: # Также запускать при каждом Pull Request для проверки
     branches:
       - main
@@ -19,32 +19,41 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # Клонируем ваш репозиторий на виртуальную машину
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4 # Устанавливаем Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'       # Используйте LTS-версию Node.js 20. Убедитесь, что эта версия подходит для вашего Next.js.
-          cache: 'npm'             # Кэшируем зависимости npm для ускорения последующих запусков
-          cache-dependency-path: package-lock.json # Указываем файл для кэширования зависимостей
+          node-version: '20' # Используйте LTS-версию Node.js 20
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm install           # Устанавливаем все зависимости проекта из package.json
+        run: npm install
 
       - name: Run ESLint
-        # Next.js проекты, созданные с --eslint, имеют скрипт "lint"
         run: npm run lint
-        # Если вы не хотите, чтобы линтинг останавливал деплой при ошибках, можете добавить:
-        # continue-on-error: true
 
       - name: Run tests (if any)
-        # Next.js проекты не всегда имеют скрипт "test" по умолчанию.
-        # Если у вас есть тесты (например, с Jest), раскомментируйте эту строку:
-        # run: npm test
-        run: echo "No automated tests configured yet. Skipping test step." # Заглушка
+        run: echo "No automated tests configured yet. Skipping test step."
 
       - name: Build frontend project
-        run: npm run build         # Запускаем сборку Next.js проекта
+        run: npm run build # Эта команда собирает Next.js в папку .next/ и public/static/
+
+      - name: Archive production build
+        # Этот шаг архивирует только то, что нужно для деплоя
+        run: |
+          mkdir -p artifact-build
+          cp -r .next artifact-build/
+          cp -r public artifact-build/
+          cp package.json package-lock.json next.config.js .env.production artifact-build/ # Копируем нужные файлы
+
+      - name: Upload build artifact
+        # Сохраняем артефакт сборки, чтобы он был доступен для job 'deploy'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextjs-build
+          path: artifact-build/ # Путь к архиву, который мы только что создали
 
   # ============================================
   # CD (Continuous Deployment) Stage
@@ -52,33 +61,64 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: [ci] # Этот job запустится только после успешного завершения job 'ci'
-    # Развертывать только при пуше в main ветку, а не при Pull Request
-    if: github.ref == 'refs/heads/main' # Условие: только если пуш в ветку 'main'
-    environment: production # Опционально: можно использовать окружения GitHub для безопасности и настроек
+    if: github.ref == 'refs/heads/main' # Развертывать только при пуше в main ветку
+    environment: production # Опционально: можно использовать окружения GitHub для безопасности
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js for Deployment
-        uses: actions/setup-node@v4
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+          name: nextjs-build
+          path: ./ # Скачиваем артефакт в текущую директорию (в папку artifact-build/)
 
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Передаем Vercel токен из секретов GitHub
-          # Опционально: если вы используете Vercel с организацией или хотите явно указать проект
-          # vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          # vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod' # Развертывать в production-среду Vercel
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to VPS via SSH
+        run: |
+          # Директория на сервере, куда будет деплоиться ваш Next.js проект
+          # Измените на фактический путь на вашем VPS
+          DEPLOY_PATH="/var/www/legal-portal-frontend"
+          APP_PORT="3000" # Порт, на котором будет слушать Next.js
+
+          # Создаем директорию на сервере, если она не существует
+          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "mkdir -p $DEPLOY_PATH"
+
+          # Копируем файлы из артефакта на сервер
+          # rsync -avz --delete ./artifact-build/ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:$DEPLOY_PATH/
+          # Перейдем в папку с загруженным артефактом, чтобы rsync работал корректно
+          cd artifact-build/
+          rsync -avz --delete . ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:$DEPLOY_PATH/
+          cd .. # Вернуться обратно
+
+          # Выполняем команды на удаленном сервере
+          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
+            cd "$DEPLOY_PATH"
+
+            echo "Installing/Updating production dependencies (if needed)..."
+            if [ ! -d "node_modules" ] || [ "$(md5sum package.json | cut -d ' ' -f 1)" != "$(cat .package_json_md5 2>/dev/null)" ]; then
+              npm install --production # Установка только production-зависимостей
+              md5sum package.json | cut -d ' ' -f 1 > .package_json_md5
+            fi
+
+            echo "Restarting Next.js application via PM2..."
+            # Убедитесь, что PM2 установлен и настроен на вашем VPS.
+            # Замените 'legal-portal-frontend-app' на желаемое имя приложения в PM2.
+            # Если это первый запуск, то 'pm2 start', иначе 'pm2 restart'.
+            pm2 restart legal-portal-frontend-app || pm2 start npm --name legal-portal-frontend-app -- start
+
+            # Если вы используете Nginx, возможно, нужно его перезапустить,
+            # если вы обновляли его конфигурацию (например, новый домен)
+            # echo "Restarting Nginx..."
+            # sudo systemctl restart nginx
+
+            echo "Deployment to VPS successful!"
+          EOF
         env:
-          # Переменные окружения, которые нужны для сборки Next.js (например, URL вашего бэкенда)
-          # Важно: эти переменные должны быть префиксированы NEXT_PUBLIC_ если они нужны на клиенте
-          # или добавлены в .env.production файл на Vercel.
-          NEXT_PUBLIC_API_URL: https://api.yourdomain.com/api # ЗАМЕНИТЕ на реальный URL вашего будущего Nest.js API
-          # Если NEXT_PUBLIC_API_URL чувствителен, его тоже можно хранить в GitHub Secrets и передавать так:
-          # NEXT_PUBLIC_API_URL: ${{ secrets.FRONTEND_API_URL }}
+          # Переменные окружения, которые нужны для Next.js на сервере
+          # Например, для подключения к бэкенду. Добавьте их в GitHub Secrets, если чувствительны.
+          NODE_ENV: production
+          # Создайте этот секрет в GitHub, если ваш Next.js нуждается в URL бэкенда.
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
