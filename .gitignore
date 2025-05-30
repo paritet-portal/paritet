@@ -1,51 +1,25 @@
-# Загальні логи
-logs/
+# Build outputs
+.next/
+out/
+
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.local
+.env*.local
+
+# Editor/OS specific
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 .pnpm-debug.log*
 lerna-debug.log*
-
-# Залежності
-node_modules/
-
-# Файли блокування пакетів (якщо ви хочете їх відстежувати, закоментуйте або видаліть ці рядки)
-# package-lock.json
-# yarn.lock
-# pnpm-lock.yaml
-
-# Каталоги збірки та вихідні дані
-.next/
-dist/
-dist-ssr/
-out/ # Якщо ви використовуєте `next export` для статичної збірки
-
-# Змінні середовища
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env*.local
-
-# Конфігурації редакторів та системні файли
-.vscode/
-!.vscode/extensions.json # Залишити extensions.json
-.idea/
-.DS_Store
-Thumbs.db
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# Vite (якщо ви використовуєте Vite, що нетипово для Next.js)
-.vite/
-*.timestamp-*.mjs
-*.ts.timestamp-*
-
-# GitHub Actions workflow (якщо ви НЕ ВИКОРИСТОВУЄТЕ GitHub Actions для цього проекту.)
-# Якщо ви використовуєте GitHub Actions для будь-яких цілей, видаліть наступний рядок.
-# Якщо ви хочете ігнорувати лише конкретний файл workflow:
-# .github/workflows/deploy-frontend.yml
+logs/
