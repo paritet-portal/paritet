@@ -1,30 +1,79 @@
-# Logs
-logs
+# Загальні логи
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+.pnpm-debug.log*
 lerna-debug.log*
-package-lock.json
 
-node_modules
-dist
-dist-ssr
-*.local
+# Залежності
+node_modules/
 
-# Editor directories and files
+# Файли блокування пакетів
+# Якщо ви використовуєте npm >= 7, package-lock.json рекомендовано відстежувати.
+# Якщо ви використовуєте yarn, відстежуйте yarn.lock.
+# Якщо ви використовуєте pnpm, відстежуйте pnpm-lock.yaml.
+# package-lock.json # Закоментуйте, якщо ви хочете його відстежувати
+# yarn.lock # Закоментуйте, якщо ви хочете його відстежувати
+# pnpm-lock.yaml # Закоментуйте, якщо ви хочете його відстежувати
+
+# Каталоги збірки та вихідні дані
+.next/
+dist/
+dist-ssr/
+out/ # Якщо ви використовуєте `next export` для статичної збірки
+
+# Змінні середовища
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local # Захоплює всі *.local файли
+
+# Конфігурації редакторів та системні файли
+.vscode/ # Якщо ви не хочете ділитися налаштуваннями VS Code
 .vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
+!.vscode/extensions.json # Залишити extensions.json, якщо потрібно ділитися рекомендованими розширеннями
+.idea/
+.DS_Store # macOS
+Thumbs.db # Windows
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
-# Vite
+# Vite (якщо ви використовуєте Vite в проекті Next.js, що нетипово, але можливо)
 .vite/
 *.timestamp-*.mjs
 *.ts.timestamp-*
+
+# GitHub Actions workflow (ТІЛЬКИ якщо ви НЕ ВИКОРИСТОВУЄТЕ GitHub Actions для цього проекту.)
+# Якщо ви використовуєте GitHub Actions для будь-яких цілей, НЕ ІГНОРУЙТЕ .github/
+# .github/
+# Якщо ви хочете ігнорувати лише конкретний файл workflow:
+# .github/workflows/deploy-frontend.yml
+
+# Видалити .next/ з індексу Git
+git rm -r --cached .next/
+
+# Видалити node_modules/ з індексу Git (якщо є)
+git rm -r --cached node_modules/
+
+# Щодо .github/workflows/deploy-frontend.yml:
+# Якщо ви вирішили, що цей файл вам НЕ ПОТРІБЕН взагалі в репозиторії (тобто ви не використовуєте GitHub Actions для цього проекту),
+# то ВИДАЛІТЬ ЙОГО з репозиторію.
+git rm .github/workflows/deploy-frontend.yml
+
+# Якщо ви ПЛАНУЄТЕ використовувати .github/workflows/ для інших цілей, але саме цей файл не хочете відстежувати,
+# то замість видалення, додайте його конкретно до .gitignore
+# (але це нетипово для файлів workflow)
+# Знову ж таки, для файлів workflow краще або їх видаляти з Git, або дозволяти Git їх відстежувати.
+# Якщо ви впевнені, що він вам не потрібен, використовуйте git rm.
+
+# Тепер зафіксуйте зміни у .gitignore (якщо ви його змінювали)
+git add .gitignore
+
+# Перевірте статус ще раз, щоб переконатися, що тепер відображаються лише ті зміни, які ви дійсно хочете закомітити
+git status
