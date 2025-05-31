@@ -2,7 +2,7 @@
 const nextConfig = {
   output: 'standalone',
   basePath: '/portal', // ЦЕЙ РЯДОК МАЄ БУТИ ТУТ!
-  assetPrefix: '/portal/', // <<<<<<< ДОДАЙТЕ АБО ПЕРЕВІРТЕ ЦЕЙ РЯДОК!
+  assetPrefix: '/portal/.next/', // <<<<<<< ДОДАЙТЕ АБО ПЕРЕВІРТЕ ЦЕЙ РЯДОК!
   
   // Додайте або перевірте цей блок, якщо у вас є статичні зображення/файли в public/
   images: {
