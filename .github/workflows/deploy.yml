@@ -1,53 +1,66 @@
-name: Next.js CI/CD to cPanel (Manual SSH Steps)
+name: Next.js CI/CD to cPanel (Full Automation)
 
 on:
   push:
     branches:
-      - main # Або master
+      - main # Перевірте: main або master? Має бути main
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # Використовуємо віртуальну машину Linux для збірки
 
     steps:
-    - name: Checkout code
+    - name: Checkout code # 1. Клонуємо ваш репозиторій на віртуальну машину GitHub Actions
       uses: actions/checkout@v4
 
-    - name: Set up Node.js
+    - name: Set up Node.js # 2. Встановлюємо Node.js (ту ж версію, що і на cPanel)
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '20' # Переконайтеся, що це версія 20
 
-    - name: Install dependencies
+    - name: Install dependencies # 3. Встановлюємо залежності проекту
       run: npm install
 
-    - name: Build Next.js project
+    - name: Build Next.js project # 4. Виконуємо БІЛД Next.js (це працює на GitHub Actions!)
       run: npm run build
 
-    # Кроки для SSH видалено, тому що вони не працюють з вашим хостингом
+    - name: Clear remote deployment directory # 5. Очищаємо папку на cPanel перед завантаженням (використовуємо SSH з паролем)
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.FTP_HOST }} # Хост для SSH (може бути той самий, що і для FTP)
+        username: ${{ secrets.CPANEL_USERNAME }} # Ваш основний cPanel логін
+        password: ${{ secrets.CPANEL_PASSWORD }} # Пароль до вашого cPanel (не FTP-пароль!)
+        script: |
+          echo "Очищаємо /public_html/portal/.next..."
+          rm -rf /home/ohkebsmg/public_html/portal/.next || true
+          echo "Очищаємо /public_html/portal/public..."
+          rm -rf /home/ohkebsmg/public_html/portal/public || true
+          echo "Очищаємо /public_html/portal/node_modules..."
+          rm -rf /home/ohkebsmg/public_html/portal/node_modules || true # Додаємо очищення node_modules
+          echo "Віддалена директорія деплою очищена."
 
     # Завантажуємо папку .next/standalone
-    - name: Deploy .next/standalone via SFTP
+    - name: Deploy .next/standalone via SFTP # 6. Завантажуємо зібраний серверний білд
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
         server: ${{ secrets.FTP_HOST }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        server_directory: /home/ohkebsmg/public_html/portal/.next/
-        local_dir: ./.next/standalone/
+        server_directory: /home/ohkebsmg/public_html/portal/.next/ # Зверніть увагу на .next/ в кінці
+        local_dir: ./.next/standalone/ # Завантажуємо все з standalone
 
     # Завантажуємо папку public
-    - name: Deploy public/ via SFTP
+    - name: Deploy public/ via SFTP # 7. Завантажуємо статичні файли
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
         server: ${{ secrets.FTP_HOST }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        server_directory: /home/ohkebsmg/public_html/portal/
+        server_directory: /home/ohkebsmg/public_html/portal/ # Завантажуємо в корінь порталу
         local_dir: ./public/
 
     # Завантажуємо package.json
-    - name: Deploy package.json via SFTP
+    - name: Deploy package.json via SFTP # 8. Завантажуємо package.json (потрібен для npm install --production)
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
         server: ${{ secrets.FTP_HOST }}
@@ -56,18 +69,38 @@ jobs:
         server_directory: /home/ohkebsmg/public_html/portal/
         local_dir: ./package.json
 
-    # --- ЗАВЕРШЕННЯ АВТОМАТИЗАЦІЇ ---
-    - name: Deployment Instructions
-      run: |
-        echo "--------------------------------------------------------"
-        echo "AUTOMATIC DEPLOYMENT COMPLETED (SFTP files uploaded)."
-        echo "--------------------------------------------------------"
-        echo "НАСТУПНІ КРОКИ ПОВИННІ БУТИ ВИКОНАНІ ВРУЧНУ:"
-        echo "1. Підключіться до SSH на cPanel (логін: ${{ secrets.CPANEL_USERNAME }})."
-        echo "2. Перейдіть до директорії проекту: cd /home/ohkebsmg/public_html/portal"
-        echo "3. АКТИВУЙТЕ NODE.JS СЕРЕДОВИЩЕ: source /home/ohkebsmg/nodevenv/public_html/portal/20/bin/activate"
-        echo "4. ВИКОНАЙТЕ NPM INSTALL (якщо node_modules не було завантажено): npm install --production"
-        echo "5. ПЕРЕЗАПУСТІТЬ NODE.JS ДОДАТОК: /usr/local/bin/ea-nodejs restart-app --path /home/ohkebsmg/public_html/portal/"
-        echo "--------------------------------------------------------"
-        echo "Ваш сайт має бути оновлено за декілька хвилин після ручних кроків."
-        exit 0 # Позначаємо, що автоматична частина пройшла успішно
+    # НОВИЙ КРОК: Завантажуємо папку node_modules
+    - name: Deploy node_modules/ via SFTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      with:
+        server: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server_directory: /home/ohkebsmg/public_html/portal/
+        local_dir: ./node_modules/ # Завантажуємо папку node_modules
+
+    # --- Зберігаємо Install production dependencies на cPanel на всякий випадок, поки не переконаємось ---
+    - name: Install production dependencies on cPanel
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.CPANEL_USERNAME }}
+        password: ${{ secrets.CPANEL_PASSWORD }}
+        script: |
+          source /home/ohkebsmg/nodevenv/public_html/portal/20/bin/activate
+          cd /home/ohkebsmg/public_html/portal
+          echo "Встановлення production-залежностей на cPanel..."
+          # Використання 'npm ci' замість 'npm install --production' для CI-середовищ, якщо є package-lock.json
+          npm ci --production || { echo "ПОМИЛКА: npm ci --production завершився з помилкою на cPanel."; exit 1; }
+          echo "Production-залежності встановлені."
+
+    - name: Restart Node.js application on cPanel
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.CPANEL_USERNAME }}
+        password: ${{ secrets.CPANEL_PASSWORD }}
+        script: |
+          echo "Перезапуск Node.js додатка на cPanel..."
+          /usr/local/bin/ea-nodejs restart-app --path /home/ohkebsmg/public_html/portal/ || { echo "ПОМИЛКА: Не вдалося перезапустити Node.js додаток."; exit 1; }
+          echo "Node.js додаток перезапущено. Деплой завершено!"
