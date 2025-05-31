@@ -1,5 +1,5 @@
 import Image from "next/image";
-import '../fix-next-data-requests';
+import './fix-next-data-requests';
 
 export default function Home() {
   return (
