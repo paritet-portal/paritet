@@ -1,66 +1,51 @@
-name: Next.js CI/CD to cPanel (Full Automation)
+name: Next.js CI/CD to cPanel (Automated Build & SFTP Deploy, Manual Restart)
 
 on:
   push:
     branches:
-      - main # Перевірте: main або master? Має бути main
+      - main # Перевірте: main або master?
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest # Використовуємо віртуальну машину Linux для збірки
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code # 1. Клонуємо ваш репозиторій на віртуальну машину GitHub Actions
+    - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Node.js # 2. Встановлюємо Node.js (ту ж версію, що і на cPanel)
+    - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20' # Переконайтеся, що це версія 20
+        node-version: '20'
 
-    - name: Install dependencies # 3. Встановлюємо залежності проекту
+    - name: Install dependencies
       run: npm install
 
-    - name: Build Next.js project # 4. Виконуємо БІЛД Next.js (це працює на GitHub Actions!)
+    - name: Build Next.js project
       run: npm run build
 
-    - name: Clear remote deployment directory # 5. Очищаємо папку на cPanel перед завантаженням (використовуємо SSH з паролем)
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.FTP_HOST }} # Хост для SSH (може бути той самий, що і для FTP)
-        username: ${{ secrets.CPANEL_USERNAME }} # Ваш основний cPanel логін
-        password: ${{ secrets.CPANEL_PASSWORD }} # Пароль до вашого cPanel (не FTP-пароль!)
-        script: |
-          echo "Очищаємо /public_html/portal/.next..."
-          rm -rf /home/ohkebsmg/public_html/portal/.next || true
-          echo "Очищаємо /public_html/portal/public..."
-          rm -rf /home/ohkebsmg/public_html/portal/public || true
-          echo "Очищаємо /public_html/portal/node_modules..."
-          rm -rf /home/ohkebsmg/public_html/portal/node_modules || true # Додаємо очищення node_modules
-          echo "Віддалена директорія деплою очищена."
+    # SSH-кроки для очищення директорії ВИДАЛЕНО, оскільки вони не працюють з цим хостингом.
+    # Вам доведеться вручну видаляти старі файли або покладатися на перезапис SFTP.
 
-    # Завантажуємо папку .next/standalone
-    - name: Deploy .next/standalone via SFTP # 6. Завантажуємо зібраний серверний білд
+    - name: Deploy .next/standalone via SFTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
         server: ${{ secrets.FTP_HOST }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        server_directory: /home/ohkebsmg/public_html/portal/.next/ # Зверніть увагу на .next/ в кінці
-        local_dir: ./.next/standalone/ # Завантажуємо все з standalone
+        server_directory: /home/ohkebsmg/public_html/portal/.next/
+        local_dir: ./.next/standalone/
 
-    # Завантажуємо папку public
-    - name: Deploy public/ via SFTP # 7. Завантажуємо статичні файли
+    - name: Deploy public/ via SFTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
         server: ${{ secrets.FTP_HOST }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        server_directory: /home/ohkebsmg/public_html/portal/ # Завантажуємо в корінь порталу
+        server_directory: /home/ohkebsmg/public_html/portal/
         local_dir: ./public/
 
-    # Завантажуємо package.json
-    - name: Deploy package.json via SFTP # 8. Завантажуємо package.json (потрібен для npm install --production)
+    - name: Deploy package.json via SFTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
         server: ${{ secrets.FTP_HOST }}
@@ -69,7 +54,6 @@ jobs:
         server_directory: /home/ohkebsmg/public_html/portal/
         local_dir: ./package.json
 
-    # НОВИЙ КРОК: Завантажуємо папку node_modules
     - name: Deploy node_modules/ via SFTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
@@ -77,30 +61,28 @@ jobs:
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         server_directory: /home/ohkebsmg/public_html/portal/
-        local_dir: ./node_modules/ # Завантажуємо папку node_modules
+        local_dir: ./node_modules/
 
-    # --- Зберігаємо Install production dependencies на cPanel на всякий випадок, поки не переконаємось ---
-    - name: Install production dependencies on cPanel
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.FTP_HOST }}
-        username: ${{ secrets.CPANEL_USERNAME }}
-        password: ${{ secrets.CPANEL_PASSWORD }}
-        script: |
-          source /home/ohkebsmg/nodevenv/public_html/portal/20/bin/activate
-          cd /home/ohkebsmg/public_html/portal
-          echo "Встановлення production-залежностей на cPanel..."
-          # Використання 'npm ci' замість 'npm install --production' для CI-середовищ, якщо є package-lock.json
-          npm ci --production || { echo "ПОМИЛКА: npm ci --production завершився з помилкою на cPanel."; exit 1; }
-          echo "Production-залежності встановлені."
+    # SSH-кроки для npm install --production та перезапуску ВИДАЛЕНО, оскільки вони не працюють.
 
-    - name: Restart Node.js application on cPanel
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.FTP_HOST }}
-        username: ${{ secrets.CPANEL_USERNAME }}
-        password: ${{ secrets.CPANEL_PASSWORD }}
-        script: |
-          echo "Перезапуск Node.js додатка на cPanel..."
-          /usr/local/bin/ea-nodejs restart-app --path /home/ohkebsmg/public_html/portal/ || { echo "ПОМИЛКА: Не вдалося перезапустити Node.js додаток."; exit 1; }
-          echo "Node.js додаток перезапущено. Деплой завершено!"
+    - name: Manual Deployment Instructions
+      run: |
+        echo "----------------------------------------------------------------------"
+        echo "--- Next.js CI/CD: BUILD and SFTP DEPLOYMENT COMPLETED SUCCESSFULLY! ---"
+        echo "----------------------------------------------------------------------"
+        echo "ВАШІ ФАЙЛИ ЗАВАНТАЖЕНО НА СЕРВЕР. АЛЕ ДЛЯ ПОВНОГО ЗАПУСКУ ПОТРІБНІ РУЧНІ КРОКИ:"
+        echo ""
+        echo "1. ОЧИЩЕННЯ СТАРИХ ФАЙЛІВ (РЕКОМЕНДОВАНО):"
+        echo "   Зайдіть у cPanel -> 'Файловый менеджер' -> /home/ohkebsmg/public_html/portal/"
+        echo "   Видаліть папки '.next', 'public' та 'node_modules' (якщо вони були там раніше)."
+        echo "   (Якщо ви покладаєтесь на SFTP перезапис, цей крок не обов'язковий, але кращий для чистоти)."
+        echo ""
+        echo "2. ПЕРЕЗАПУСК NODE.JS ДОДАТКА:"
+        echo "   Зайдіть у cPanel -> 'Настройка Node.js приложений'."
+        echo "   Знайдіть додаток 'workts.com.ua/portal'."
+        echo "   Натисніть кнопку 'Перезапустить'."
+        echo ""
+        echo "--- СТАДІЯ: ОЧІКУВАННЯ НА РУЧНИЙ ПЕРЕЗАПУСК ---"
+        echo "Ваш сайт має бути оновлено за декілька хвилин після виконання ручних кроків."
+        echo "----------------------------------------------------------------------"
+        exit 0 # Позначаємо, що автоматична частина пройшла успішно
