@@ -28,7 +28,7 @@ if (typeof window !== 'undefined' && window.fetch) {
       }
     }
     
-    // Виконуємо оригінальний fetch з, можливо, зміненим URL
+    // Виконуємо оригінальний fetch з, можливо, зміненим 
     return originalFetch(input, init);
   };
 }
