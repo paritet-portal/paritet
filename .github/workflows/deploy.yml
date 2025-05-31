@@ -3,7 +3,7 @@ name: Next.js CI/CD to cPanel (Automated Build & SFTP Deploy, Manual Restart)
 on:
   push:
     branches:
-      - main # Перевірте: main або master?
+      - main
 
 jobs:
   deploy:
@@ -23,9 +23,6 @@ jobs:
 
     - name: Build Next.js project
       run: npm run build
-
-    # SSH-кроки для очищення директорії ВИДАЛЕНО, оскільки вони не працюють з цим хостингом.
-    # Вам доведеться вручну видаляти старі файли або покладатися на перезапис SFTP.
 
     - name: Deploy .next/standalone via SFTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
@@ -63,8 +60,6 @@ jobs:
         server_directory: /home/ohkebsmg/public_html/portal/
         local_dir: ./node_modules/
 
-    # SSH-кроки для npm install --production та перезапуску ВИДАЛЕНО, оскільки вони не працюють.
-
     - name: Manual Deployment Instructions
       run: |
         echo "----------------------------------------------------------------------"
@@ -85,4 +80,4 @@ jobs:
         echo "--- СТАДІЯ: ОЧІКУВАННЯ НА РУЧНИЙ ПЕРЕЗАПУСК ---"
         echo "Ваш сайт має бути оновлено за декілька хвилин після виконання ручних кроків."
         echo "----------------------------------------------------------------------"
-        exit 0 # Позначаємо, що автоматична частина пройшла успішно
+        exit 0
