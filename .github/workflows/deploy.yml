@@ -1,10 +1,68 @@
 name: Next.js CI/CD to cPanel
 
-on: # Ось ця секція. Переконайтеся, що вона так і починається.
+on:
   push:
     branches:
-      - main # Або 'master', якщо ваша гілка називається master
+      - main # або master
 
-jobs:
-  deploy:
-# ... весь інший код, який ми вже вставили
+jobs: # Цей рядок
+  deploy: # Цей рядок. Має бути з відступом 2 пробіли від jobs:
+    runs-on: ubuntu-latest # Цей рядок. Має бути з відступом 4 пробіли від jobs:
+
+    steps: # <--- ОСЬ ТУТ ПРОБЛЕМА! Цей рядок має бути з відступом 2 пробіли від 'deploy:', або 4 пробіли від 'jobs:'.
+           # Переконайтеся, що він є і під ним починаються кроки.
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Next.js project
+      run: npm run build
+
+    - name: Clear remote deployment directory
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          rm -rf /home/ohkebsmg/public_html/portal/.next || true
+          rm -rf /home/ohkebsmg/public_html/portal/public || true
+
+    - name: Deploy built files via SFTP
+      uses: cross-platform-actions/action-sftp@v0.5.0
+      with:
+        host: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        remote_path: /home/ohkebsmg/public_html/portal/
+        local_path: |
+          .next/standalone/
+          public/
+          package.json
+
+    - name: Install production dependencies on cPanel
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          source /home/ohkebsmg/nodevenv/public_html/portal/20/bin/activate
+          cd /home/ohkebsmg/public_html/portal
+          npm install --production
+
+    - name: Restart Node.js application on cPanel
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          /usr/local/bin/ea-nodejs restart-app --path /home/ohkebsmg/public_html/portal/
