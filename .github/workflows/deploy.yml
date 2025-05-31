@@ -1,9 +1,9 @@
-name: Next.js CI/CD to cPanel (Full Automation)
+name: Next.js CI/CD to cPanel (Manual SSH Steps)
 
 on:
   push:
     branches:
-      - main 
+      - main # Або master
 
 jobs:
   deploy:
@@ -24,17 +24,9 @@ jobs:
     - name: Build Next.js project
       run: npm run build
 
-    - name: Clear remote deployment directory
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.FTP_HOST }}
-        username: ${{ secrets.CPANEL_USERNAME }}
-        password: ${{ secrets.CPANEL_PASSWORD }}
-        script: |
-          rm -rf /home/ohkebsmg/public_html/portal/.next || true
-          rm -rf /home/ohkebsmg/public_html/portal/public || true
-          echo "Remote deployment directory cleared."
+    # Кроки для SSH видалено, тому що вони не працюють з вашим хостингом
 
+    # Завантажуємо папку .next/standalone
     - name: Deploy .next/standalone via SFTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
@@ -44,6 +36,7 @@ jobs:
         server_directory: /home/ohkebsmg/public_html/portal/.next/
         local_dir: ./.next/standalone/
 
+    # Завантажуємо папку public
     - name: Deploy public/ via SFTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
@@ -53,6 +46,7 @@ jobs:
         server_directory: /home/ohkebsmg/public_html/portal/
         local_dir: ./public/
 
+    # Завантажуємо package.json
     - name: Deploy package.json via SFTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
@@ -62,22 +56,18 @@ jobs:
         server_directory: /home/ohkebsmg/public_html/portal/
         local_dir: ./package.json
 
-    - name: Install production dependencies on cPanel
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.FTP_HOST }}
-        username: ${{ secrets.CPANEL_USERNAME }}
-        password: ${{ secrets.CPANEL_PASSWORD }}
-        script: |
-          source /home/ohkebsmg/nodevenv/public_html/portal/20/bin/activate
-          cd /home/ohkebsmg/public_html/portal
-          npm install --production || { echo "ERROR: npm install --production failed on cPanel."; exit 1; }
-
-    - name: Restart Node.js application on cPanel
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.FTP_HOST }}
-        username: ${{ secrets.CPANEL_USERNAME }}
-        password: ${{ secrets.CPANEL_PASSWORD }}
-        script: |
-          /usr/local/bin/ea-nodejs restart-app --path /home/ohkebsmg/public_html/portal/ || { echo "ERROR: Failed to restart Node.js application."; exit 1; }
+    # --- ЗАВЕРШЕННЯ АВТОМАТИЗАЦІЇ ---
+    - name: Deployment Instructions
+      run: |
+        echo "--------------------------------------------------------"
+        echo "AUTOMATIC DEPLOYMENT COMPLETED (SFTP files uploaded)."
+        echo "--------------------------------------------------------"
+        echo "НАСТУПНІ КРОКИ ПОВИННІ БУТИ ВИКОНАНІ ВРУЧНУ:"
+        echo "1. Підключіться до SSH на cPanel (логін: ${{ secrets.CPANEL_USERNAME }})."
+        echo "2. Перейдіть до директорії проекту: cd /home/ohkebsmg/public_html/portal"
+        echo "3. АКТИВУЙТЕ NODE.JS СЕРЕДОВИЩЕ: source /home/ohkebsmg/nodevenv/public_html/portal/20/bin/activate"
+        echo "4. ВИКОНАЙТЕ NPM INSTALL (якщо node_modules не було завантажено): npm install --production"
+        echo "5. ПЕРЕЗАПУСТІТЬ NODE.JS ДОДАТОК: /usr/local/bin/ea-nodejs restart-app --path /home/ohkebsmg/public_html/portal/"
+        echo "--------------------------------------------------------"
+        echo "Ваш сайт має бути оновлено за декілька хвилин після ручних кроків."
+        exit 0 # Позначаємо, що автоматична частина пройшла успішно
