@@ -5,17 +5,19 @@ if (typeof window !== 'undefined') { // Перевірка, що це брауз
   const { fetch: originalFetch } = window;
   const nextDataRequestRegex = /^\/_next\/data\/.*\.json/;
 
-  window.fetch = async (...args) => {
-    const [url] = args;
-    // Перевіряємо, чи це problematic `/_next/data/` запит
-    if (nextDataRequestRegex.test(url)) {
-      // Якщо це такий запит, ми відхиляємо його, щоб він не викликав 404
-      // Це може призвести до того, що деякі дані не завантажуватимуться,
-      // якщо вони потрібні для клієнтської навігації, але це обхідний шлях
-      console.warn(`Blocked potentially problematic _next/data/ request: ${url}`);
-      return Promise.reject(new Error(`Blocked _next/data/ request: ${url}`));
+  // Перевизначення window.fetch з коректними типами
+  // originalFetch може приймати (input: RequestInfo | URL, init?: RequestInit)
+  // Ми знаємо, що Next.js зазвичай передає string як перший аргумент для /_next/data/
+  // Тому можемо перевірити, чи перший аргумент є рядком перед тестуванням регулярного виразу
+  window.fetch = async (...args: Parameters<typeof originalFetch>) => { // Коректне типізування args
+    const [input] = args; // Змінено url на input
+    
+    // Перевіряємо, чи перший аргумент є рядком, і тільки тоді застосовуємо regex
+    if (typeof input === 'string' && nextDataRequestRegex.test(input)) {
+      console.warn(`Blocked potentially problematic _next/data/ request: ${input}`);
+      return Promise.reject(new Error(`Blocked _next/data/ request: ${input}`));
     }
-    // В іншому випадку, виконуємо оригінальний fetch
+    // В іншому випадку, виконуємо оригінальний fetch з усіма аргументами
     return originalFetch(...args);
   };
 }
