@@ -5,12 +5,11 @@ on:
     branches:
       - main # або master
 
-jobs: # Цей рядок
-  deploy: # Цей рядок. Має бути з відступом 2 пробіли від jobs:
-    runs-on: ubuntu-latest # Цей рядок. Має бути з відступом 4 пробіли від jobs:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
-    steps: # <--- ОСЬ ТУТ ПРОБЛЕМА! Цей рядок має бути з відступом 2 пробіли від 'deploy:', або 4 пробіли від 'jobs:'.
-           # Переконайтеся, що він є і під ним починаються кроки.
+    steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
@@ -32,20 +31,40 @@ jobs: # Цей рядок
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
+          # Очищаємо .next та public, щоб уникнути конфліктів
           rm -rf /home/ohkebsmg/public_html/portal/.next || true
           rm -rf /home/ohkebsmg/public_html/portal/public || true
+          echo "Remote deployment directory cleared."
 
-    - name: Deploy built files via SFTP
-      uses: cross-platform-actions/action-sftp@v0.5.0
+    # Завантажуємо папку .next/standalone
+    - name: Deploy .next/standalone via SFTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
-        host: ${{ secrets.FTP_HOST }}
+        server: ${{ secrets.FTP_HOST }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        remote_path: /home/ohkebsmg/public_html/portal/
-        local_path: |
-          .next/standalone/
-          public/
-          package.json
+        server_directory: /home/ohkebsmg/public_html/portal/.next/
+        local_dir: ./.next/standalone/ # Зверніть увагу на кінцевий слеш, це важливо
+
+    # Завантажуємо папку public
+    - name: Deploy public/ via SFTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      with:
+        server: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server_directory: /home/ohkebsmg/public_html/portal/
+        local_dir: ./public/
+
+    # Завантажуємо package.json
+    - name: Deploy package.json via SFTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      with:
+        server: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server_directory: /home/ohkebsmg/public_html/portal/
+        local_dir: ./package.json
 
     - name: Install production dependencies on cPanel
       uses: appleboy/ssh-action@v1.0.3
