@@ -1,4 +1,4 @@
-name: Next.js CI/CD to cPanel (CloudLinux Node_modules)
+name: Next.js CI/CD to cPanel (SFTP Only, No SSH)
 
 on:
   push:
@@ -16,63 +16,49 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '20' # Убедитесь, что это соответствует версии на сервере
 
-    - name: Install dependencies
-      run: npm install
+    - name: Install dependencies (including node_modules for upload)
+      run: npm install --legacy-peer-deps # --legacy-peer-deps может помочь с некоторыми ошибками совместимости пакетов
+                                         # node_modules будут созданы локально для загрузки
 
     - name: Build Next.js project
       run: npm run build
 
-    # ВИДАЛЯЄМО АБСОЛЮТНО ВСІ SSH-кроки (очищення, npm install, restart)
-    # ВИДАЛЯЄМО КРОК Deploy node_modules/ via SFTP
-
-    - name: Deploy .next/standalone via SFTP
+    # Загружаем ВСЮ корневую директорию проекта на сервер
+    # ЭТО ВКЛЮЧАЕТ node_modules/, .next/, public/, src/, package.json и т.д.
+    # FTP-Deploy-Action перезапишет существующие файлы, но НЕ удалит старые, отсутствующие локально.
+    - name: Deploy entire project via SFTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
         server: ${{ secrets.FTP_HOST }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        server_directory: /home/ohkebsmg/public_html/portal/.next/
-        local_dir: ./.next/standalone/
-
-    - name: Deploy public/ via SFTP
-      uses: SamKirkland/FTP-Deploy-Action@4.3.0
-      with:
-        server: ${{ secrets.FTP_HOST }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        server_directory: /home/ohkebsmg/public_html/portal/
-        local_dir: ./public/
-
-    - name: Deploy package.json via SFTP
-      uses: SamKirkland/FTP-Deploy-Action@4.3.0
-      with:
-        server: ${{ secrets.FTP_HOST }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        server_directory: /home/ohkebsmg/public_html/portal/
-        local_dir: ./package.json
+        server_directory: /home/ohkebsmg/public_html/portal/ # Корневой каталог вашего приложения на сервере
+        local_dir: . # Загружаем все содержимое корневой папки локального проекта
+        # exclude: # Можно добавить исключения, если какие-то файлы не нужны на сервере, например:
+        #   - .git/**
+        #   - node_modules/ # <-- НЕ ИСКЛЮЧАЙТЕ, если вы не запускаете npm install на сервере!
 
     - name: Final Manual Steps (Restart Node.js App)
       run: |
         echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
         echo "--- Next.js CI/CD: BUILD AND SFTP DEPLOYMENT COMPLETED SUCCESSFULLY! (FILES UPLOADED) ---"
         echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-        echo "ВАШІ ФАЙЛИ Next.js ЗАВАНТАЖЕНО НА СЕРВЕР. CLOUDLINUX NODE.JS SELECTOR ВИМАГАЄ СВОЄЇ ПАПКИ 'node_modules'."
-        echo "БУДЬ ЛАСКА, ПЕРЕКОНАЙТЕСЬ, ЩО У ВАШІЙ ПАПЦІ /home/ohkebsmg/public_html/portal/ НЕМАЄ ФІЗИЧНОЇ ПАПКИ 'node_modules'."
-        echo "Вона має бути символічним лінком, створеним CloudLinux."
+        echo "ВАШІ ФАЙЛИ Next.js ЗАВАНТАЖЕНО НА СЕРВЕР."
+        echo "ПОСКОЛЬКУ SSH НЕ ИСПОЛЬЗУЕТСЯ, ПОЛНАЯ ОЧИСТКА СЕРВЕРА НЕ БЫЛА ВЫПОЛНЕНА."
+        echo "СТАРЫЕ И НЕНУЖНЫЕ ФАЙЛЫ МОГУТ ОСТАТЬСЯ НА СЕРВЕРЕ. ЭТО МОЖЕТ ПРИВЕСТИ К ПРОБЛЕМАМ."
         echo ""
         echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-        echo "ОБОВ'ЯЗКОВИЙ РУЧНИЙ КРОК НА СЕРВЕРІ:"
+        echo "ОБЯЗАТЕЛЬНЫЙ РУЧНОЙ ШАГ НА СЕРВЕРЕ:"
         echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
         echo ""
-        echo "ПЕРЕЗАПУСТІТЬ NODE.JS ДОДАТОК ЧЕРЕЗ CPANEL ІНТЕРФЕЙС:"
-        echo "   Зайдіть у cPanel -> 'Настройка Node.js приложений'."
-        echo "   Знайдіть додаток 'workts.com.ua/portal'."
-        echo "   Натисніть кнопку 'Перезапустить'."
+        echo "ПЕРЕЗАПУСТИТЕ NODE.JS ПРИЛОЖЕНИЕ ЧЕРЕЗ CPANEL ИНТЕРФЕЙС:"
+        echo "   Зайдите в cPanel -> 'Настройка Node.js приложений'."
+        echo "   Найдите приложение, соответствующее 'workts.com.ua/portal'."
+        echo "   Нажмите кнопку 'Перезапустить'."
         echo ""
         echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-        echo "Ваш сайт має запрацювати за декілька хвилин після виконання цих ручних кроків."
+        echo "Ваш сайт должен запработать через несколько минут после выполнения этих ручных шагов."
         echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
         exit 0
