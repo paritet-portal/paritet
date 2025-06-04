@@ -1,64 +1,64 @@
-name: Next.js CI/CD to cPanel (Standalone Build - SFTP Only, No SSH)
+# name: Next.js CI/CD to cPanel (Standalone Build - SFTP Only, No SSH)
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v4
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+#     - name: Set up Node.js
+#       uses: actions/setup-node@v4
+#       with:
+#         node-version: '20'
 
-    - name: Install dependencies
-      run: npm install --legacy-peer-deps 
+#     - name: Install dependencies
+#       run: npm install --legacy-peer-deps 
 
-    - name: Build Next.js project
-      run: npm run build
+#     - name: Build Next.js project
+#       run: npm run build
 
-    - name: Copy static assets into standalone directory
-      run: |
-        mkdir -p ./.next/standalone/public/
-        cp -r public/* ./.next/standalone/public/ || true
+#     - name: Copy static assets into standalone directory
+#       run: |
+#         mkdir -p ./.next/standalone/public/
+#         cp -r public/* ./.next/standalone/public/ || true
 
-        mkdir -p ./.next/standalone/.next/static/
-        cp -r ./.next/static/* ./.next/standalone/.next/static/ || true
+#         mkdir -p ./.next/standalone/.next/static/
+#         cp -r ./.next/static/* ./.next/standalone/.next/static/ || true
 
-    - name: Deploy .next/standalone content via SFTP
-      uses: SamKirkland/FTP-Deploy-Action@4.3.0
-      with:
-        server: ${{ secrets.FTP_HOST }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        server_directory: /home/ohkebsmg/public_html/portal/ 
-        local_dir: ./.next/standalone/ 
+#     - name: Deploy .next/standalone content via SFTP
+#       uses: SamKirkland/FTP-Deploy-Action@4.3.0
+#       with:
+#         server: ${{ secrets.FTP_HOST }}
+#         username: ${{ secrets.FTP_USERNAME }}
+#         password: ${{ secrets.FTP_PASSWORD }}
+#         server_directory: /home/ohkebsmg/public_html/portal/ 
+#         local_dir: ./.next/standalone/ 
 
-    - name: Final Manual Steps (Restart Node.js App)
-      run: |
-        echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-        echo "--- Next.js CI/CD: BUILD AND SFTP DEPLOYMENT COMPLETED SUCCESSFULLY! (STANDALONE FILES UPLOADED) ---"
-        echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-        echo "ВАШИ ФАЙЛЫ Next.js ЗАВАНТАЖЕНО НА СЕРВЕР (Standalone билд)."
-        echo "Все необходимые статические активы теперь включены в билд."
-        echo ""
-        echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-        echo "ОБЯЗАТЕЛЬНЫЙ РУЧНОЙ ШАГ НА СЕРВЕРЕ:"
-        echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-        echo ""
-        echo "ПЕРЕЗАПУСТИТЕ NODE.JS ПРИЛОЖЕНИЕ ЧЕРЕЗ CPANEL ИНТЕРФЕЙС:"
-        echo "   Зайдите в cPanel -> 'Настройка Node.js приложений'."
-        echo "   Найдите приложение, соответствующее 'workts.com.ua/portal'."
-        echo "   Нажмите кнопку 'Перезапустить'."
-        echo ""
-        echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-        echo "Ваш сайт должен запработать через несколько минут после выполнения этих ручных шагов."
-        echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-        exit 0
+#     - name: Final Manual Steps (Restart Node.js App)
+#       run: |
+#         echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+#         echo "--- Next.js CI/CD: BUILD AND SFTP DEPLOYMENT COMPLETED SUCCESSFULLY! (STANDALONE FILES UPLOADED) ---"
+#         echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+#         echo "ВАШИ ФАЙЛЫ Next.js ЗАВАНТАЖЕНО НА СЕРВЕР (Standalone билд)."
+#         echo "Все необходимые статические активы теперь включены в билд."
+#         echo ""
+#         echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+#         echo "ОБЯЗАТЕЛЬНЫЙ РУЧНОЙ ШАГ НА СЕРВЕРЕ:"
+#         echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+#         echo ""
+#         echo "ПЕРЕЗАПУСТИТЕ NODE.JS ПРИЛОЖЕНИЕ ЧЕРЕЗ CPANEL ИНТЕРФЕЙС:"
+#         echo "   Зайдите в cPanel -> 'Настройка Node.js приложений'."
+#         echo "   Найдите приложение, соответствующее 'workts.com.ua/portal'."
+#         echo "   Нажмите кнопку 'Перезапустить'."
+#         echo ""
+#         echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+#         echo "Ваш сайт должен запработать через несколько минут после выполнения этих ручных шагов."
+#         echo "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+#         exit 0
