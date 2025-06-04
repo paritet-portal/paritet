@@ -1,0 +1,50 @@
+name: Build & Push Next.js Frontend Docker Image
+
+on:
+  push:
+    branches:
+      - main # Замени на 'master', если твоя основная ветка называется master
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }} # Имя образа будет user/repo-name
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest # Используем раннер на Linux (x86), который будет собирать образ для Arm64
+
+    permissions:
+      contents: read
+      packages: write # Необходимо для пуша в GitHub Container Registry
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        # Эта строка включает эмуляцию Arm64 на раннере x86, чтобы мы могли собирать образ для Arm64
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        # Настраивает Buildx для сборки мульти-архитектурных образов
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_PAT }}
+        # Авторизуется в GHCR, используя твой Personal Access Token
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest # Формат тега: ghcr.io/user/repo-name:latest
+          platforms: linux/amd64,linux/arm64 # Собирает образ сразу для двух архитектур
+          # Если ты абсолютно уверен, что тебе нужен только Arm64, то можешь оставить только 'linux/arm64'
+          # platforms: linux/arm64 
+          cache-from: type=gha,scope=${{ github.ref_name }}
+          cache-to: type=gha,mode=max,scope=${{ github.ref_name }}
