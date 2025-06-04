@@ -1,0 +1,50 @@
+
+
+services:
+  # Сервис Next.js Фронтенд
+  frontend:
+    build:
+      context: ./frontend # Указывает Docker на папку Next.js проекта для сборки
+      dockerfile: Dockerfile # Указывает, какой Dockerfile использовать
+    restart: always
+    ports:
+      - "3000:3000" # Порт для локальной разработки и прямого доступа (опционально, Nginx будет основным)
+    environment:
+      # Переменные окружения для Next.js, которые нужны во время выполнения
+      # Пример:
+      NEXT_PUBLIC_API_URL: http://backend:3500/api 
+      # Если у тебя есть другие NEXT_PUBLIC_ переменные, добавь их сюда
+    depends_on:
+      - backend # Зависит от бэкенда, чтобы бэкенд запустился первым
+
+  # Сервис Nest.js Бэкенд
+  backend:
+    build:
+      context: ./backend # Указывает Docker на папку Nest.js проекта для сборки
+      dockerfile: Dockerfile # Указывает, какой Dockerfile использовать
+    restart: always
+    environment:
+      # Переменные окружения для Nest.js
+      # <--- СЮДА ДОБАВЬ ВСЕ НЕОБХОДИМЫЕ ПЕРЕМЕННЫЕ ОКРУЖЕНИЯ ДЛЯ БЭКЕНДА
+      # Например:
+      PORT: 3500
+      # DATABASE_URL: postgresql://legal_portal_user:your_strong_db_password@db:5432/legal_portal_db # <-- Если бы была БД
+      # JWT_SECRET: your_jwt_secret_for_backend # <--- ОБЯЗАТЕЛЬНО ИЗМЕНИ ЭТО!
+      #
+      # Для локальной разработки можешь использовать тестовые/нечувствительные значения
+    ports:
+      - "3500:3500" # Открываем порт бэкенда на хост-машине (для прямого доступа, например, Postman)
+
+  # Сервис Nginx (Обратный прокси)
+  nginx:
+    image: public.ecr.aws/docker/library/nginx:alpine # Используем официальный образ Nginx (Arm64 совместимый)
+    restart: always
+    ports:
+      - "80:80"   # HTTP
+      - "443:443" # HTTPS (пока не настроен SSL, но порт уже открыт)
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro # Конфигурация Nginx
+      # - ./nginx/certs:/etc/nginx/certs:ro # Для SSL-сертификатов, пока не добавляем
+    depends_on:
+      - frontend
+      - backend
