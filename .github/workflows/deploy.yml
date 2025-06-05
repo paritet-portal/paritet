@@ -1,0 +1,59 @@
+name: Deploy to Hetzner VPS
+
+on:
+  push:
+    branches:
+      - main # Запускать этот workflow при пуше в ветку main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # Используем последний образ Ubuntu
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          platforms: linux/arm64 # Целевая платформа для Hetzner VPS (Arm64)
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/paritet-frontend:latest
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          platforms: linux/arm64 # Целевая платформа для Hetzner VPS (Arm64)
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/paritet-backend:latest
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }} # Здесь будет IP-адрес вашего VPS
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }} # Ваш приватный SSH-ключ из секретов GitHub
+          # ОЧЕНЬ ВАЖНО: Если у вас есть passphrase для ключа, добавьте:
+          # passphrase: ${{ secrets.SSH_PASSPHRASE }} # Добавьте этот секрет в GitHub, если ключ имеет парольную фразу
+          script: |
+            cd /root/paritet-monorepo # Путь, куда вы хотите задеплоить проект на VPS
+            git pull origin main # Обновить код на VPS
+            # Создаем или обновляем docker-compose.yml, Nginx и .env (если нужно)
+            # Это будет зависеть от нашей дальнейшей стратегии. Пока оставим это место пустым,
+            # но будем держать в уме, что нужно будет обеспечить наличие всех файлов
+            # (docker-compose.yml, nginx.conf) на VPS.
+            docker compose pull # Скачать свежие образы из GHCR
+            docker compose up -d --build # Запустить стек (возможно, --build не нужен, если образы только тянутся)
+            docker system prune -f # Очистка неиспользуемых Docker-ресурсов (опционально)
