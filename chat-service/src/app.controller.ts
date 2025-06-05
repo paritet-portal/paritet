@@ -1,11 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 
-@Controller('chat') // <-- ИЗМЕНИТЬ НА ЭТО!
+@Controller('chat') // <-- УБЕДИТЕСЬ, ЧТО ЭТА СТРОКА ИМЕННО ТАКАЯ
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get() // Это теперь будет обрабатывать /chat/
+  @Get()
   getHello(): string {
     return this.appService.getHello();
   }
