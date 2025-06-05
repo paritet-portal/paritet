@@ -24,6 +24,6 @@ ENV PORT=3333
 # ENV JWT_SECRET=your_jwt_secret_for_backend # <--- ОБЯЗАТЕЛЬНО ИЗМЕНИ ЭТО!
 # ... (остальные ENV переменные, если есть)
 
-EXPOSE 3333 
+EXPOSE 3333
 
 CMD ["node", "dist/main"]
