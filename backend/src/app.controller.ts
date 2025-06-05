@@ -1,5 +1,12 @@
-@Controller('api') // Должно быть так
+import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service';
+
+@Controller('api') // <-- ИЗМЕНИТЬ НА ЭТО!
 export class AppController {
-  @Get() // Должно быть так
-  getHello(): string { return 'Hello World!'; }
+  constructor(private readonly appService: AppService) {}
+
+  @Get() // Это теперь будет обрабатывать /chat/
+  getHello(): string {
+    return this.appService.getHello();
+  }
 }
