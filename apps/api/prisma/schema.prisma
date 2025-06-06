@@ -7,8 +7,56 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  CLIENT     
+  SPECIALIST 
+  ADMIN      
+}
+
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  // --- Основні поля ---
+  id            String    @id @default(uuid()) 
+  email         String    @unique 
+  password      String    
+
+  role          UserRole 
+  
+  phoneNumber   String?   
+  address       String?   
+  
+  isEmailVerified Boolean @default(false) 
+  isActive      Boolean   @default(true)  
+  
+
+  passwordResetToken String?   @unique 
+  lastLoginAt        DateTime? 
+  
+  createdAt     DateTime  @default(now()) 
+  updatedAt     DateTime  @updatedAt     
+
+
+  preferredNotificationChannels String[] 
+  portalRatingScore             Float?   
+
+
+  clientProfile     ClientProfile?
+  specialistProfile SpecialistProfile?
+
+  // Тут будуть інші відносини, коли ми додамо відповідні моделі
+  // наприклад, до нотифікацій, кейсів, документів і т.д.
+}
+
+
+model ClientProfile {
+  id     String @id @default(uuid())
+  userId String @unique 
+  user   User   @relation(fields: [userId], references: [id])
+  // ... інші поля профілю клієнта
+}
+
+model SpecialistProfile {
+  id     String @id @default(uuid())
+  userId String @unique 
+  user   User   @relation(fields: [userId], references: [id])
+  // ... інші поля профілю спеціаліста
 }
