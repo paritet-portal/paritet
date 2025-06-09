@@ -1,49 +1,70 @@
-FROM node:18-alpine AS base
+# ==============================================================================
+# Base image
+# ==============================================================================
+FROM node:20-alpine AS base
 WORKDIR /app
 
+# Declare build arguments
 ARG APP_NAME
+ARG APP_SCOPE
+ARG PRISMA_SCHEMA_PATH # Добавляем, даже если не используется, для единообразия
 
+# ==============================================================================
+# Turbo stage - Prune monorepo
+# ==============================================================================
 FROM base AS turbo
 RUN npm install -g turbo
 COPY . .
-RUN turbo prune --scope=@apps/${APP_NAME} --docker
+# --- ИЗМЕНЕНИЕ №1: Используем APP_SCOPE вместо @apps/APP_NAME ---
+RUN turbo prune --scope=${APP_SCOPE} --docker
 
-# Separate step to install dependencies, most of this will be cached if dependencies wont change
+# ==============================================================================
+# Builder stage - Install dependencies and build
+# ==============================================================================
 FROM base AS builder
-# Building Next requires building node-gyp modules. These require python to build which is not present in alpine.
-RUN apk add --no-cache python3 make g++ libc6-compat
-# First install the dependencies (as they change less often)
+
+# Install build tools for native modules
+RUN apk add --no-cache python3 make g++
+
+# Copy pruned manifests
 COPY --from=turbo /app/out/json/ .
 COPY --from=turbo /app/out/package-lock.json ./package-lock.json
-# Install all dependencies needed for the build
-RUN --mount=type=cache,target=/var/cache/npm npm install
 
-# Then copy over the application files (change often, no longer cached from this step on)
+# Install dependencies
+RUN --mount=type=cache,target=/var/cache/npm npm install --legacy-peer-deps
+
+# Copy pruned source code
 COPY --from=turbo /app/out/full/ .
-# These arguments enable remote cacheing inside docker build
-# And they need to be here because the token always changes which stops all further lines from being cached
+
+# Declare optional remote cache args
 ARG TURBO_TOKEN
 ARG TURBO_TEAMID
 ARG TURBO_API
+
+# --- ИЗМЕНЕНИЕ №2: Используем APP_SCOPE вместо @apps/APP_NAME ---
 # Build the project
-RUN npx turbo run build --filter=@apps/${APP_NAME}
+RUN npx turbo run build --filter=${APP_SCOPE}
+
 # Prune dev dependencies
 RUN npm prune --production
 
-
+# ==============================================================================
+# Runner stage - Final image
+# ==============================================================================
 FROM base AS runner
-# Don't run production as root
+
+# Create a non-root user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 USER nextjs
 
 # Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs app/apps/${APP_NAME}/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs app/apps/${APP_NAME}/.next/static ./apps/${APP_NAME}/.next/static
-# https://stackoverflow.com/questions/70096208/dockerfile-copy-folder-if-it-exists-conditional-copy
-COPY --from=builder --chown=nextjs:nodejs app/apps/${APP_NAME}/publi[c] ./apps/${APP_NAME}/public
+# --- ИЗМЕНЕНИЕ №3: Используем APP_SCOPE для правильных путей ---
+COPY --from=builder --chown=nextjs:nodejs app/apps/${APP_SCOPE}/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs app/apps/${APP_SCOPE}/.next/static ./apps/${APP_SCOPE}/.next/static
+COPY --from=builder --chown=nextjs:nodejs app/apps/${APP_SCOPE}/public ./apps/${APP_SCOPE}/public
 
-WORKDIR /app/apps/${APP_NAME}
+# --- ИЗМЕНЕНИЕ №4: Используем APP_SCOPE для рабочей директории ---
+WORKDIR /app/apps/${APP_SCOPE}
 
 CMD node server.js
