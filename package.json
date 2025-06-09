@@ -26,10 +26,10 @@
   },
   "packageManager": "npm@10.8.1",
   "overrides": {
-      "@nestjs/bull": "latest",
+    "@nestjs/bull": "latest",
     "@nestjs/common": "latest",
     "@nestjs/core": "latest",
-     "rxjs": "latest"
+    "rxjs": "latest"
   },
   "lint-staged": {
     "**/*": "turbo run precommit:format --"

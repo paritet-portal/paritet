@@ -15,8 +15,8 @@ FROM base AS builder
 # First install the dependencies (as they change less often)
 COPY --from=turbo /app/out/json/ .
 COPY --from=turbo /app/out/package-lock.json ./package-lock.json
-# First install only production deps and cache them, then install all deps
-RUN --mount=type=cache,target=/var/cache/npm npm install --omit=dev --ignore-scripts && cp -R node_modules node_modules_production && npm install
+# Install all dependencies needed for the build
+RUN --mount=type=cache,target=/var/cache/npm npm install
 
 # Then copy over the application files (change often, no longer cached from this step on)
 COPY --from=turbo /app/out/full/ .
@@ -27,8 +27,8 @@ ARG TURBO_TEAMID
 ARG TURBO_API
 # Build the project
 RUN npx turbo run build --filter=${APP_SCOPE}
-# Switch deps over to production only and prune out not needed files
-RUN rm -rf node_modules && mv node_modules_production node_modules && apk --no-cache add curl && curl -sf https://gobinaries.com/tj/node-prune | sh && node-prune
+# Prune dev dependencies
+RUN npm prune --production
 
 FROM base AS runner
 # Don't run production as root
