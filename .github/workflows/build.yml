@@ -21,35 +21,35 @@ jobs:
       matrix:
         # --- ТОЧНАЯ МАТРИЦА ДЛЯ ВАШИХ 6 СЕРВИСОВ ---
         include:
-          - service_name: admin
-            service_scope: admin
-            dockerfile_path: tooling/docker/next/Dockerfile
-            prisma_schema_path: ""
+          # - service_name: admin
+          #   service_scope: admin
+          #   dockerfile_path: tooling/docker/next/Dockerfile
+          #   prisma_schema_path: ""
 
-          - service_name: backend
-            service_scope: backend
-            dockerfile_path: tooling/docker/nest/Dockerfile
-            prisma_schema_path: ./apps/backend/prisma/schema.prisma
+          # - service_name: backend
+          #   service_scope: backend
+          #   dockerfile_path: tooling/docker/nest/Dockerfile
+          #   prisma_schema_path: ./apps/backend/prisma/schema.prisma
 
           - service_name: chat
             service_scope: chat
             dockerfile_path: tooling/docker/nest/Dockerfile
             prisma_schema_path: ""
 
-          - service_name: demo-worker
-            service_scope: demo-worker
-            dockerfile_path: tooling/docker/nest/Dockerfile
-            prisma_schema_path: ""
+          # - service_name: demo-worker
+          #   service_scope: demo-worker
+          #   dockerfile_path: tooling/docker/nest/Dockerfile
+          #   prisma_schema_path: ""
 
-          - service_name: service-gateway
-            service_scope: service-gateway
-            dockerfile_path: tooling/docker/nest/Dockerfile
-            prisma_schema_path: ""
+          # - service_name: service-gateway
+          #   service_scope: service-gateway
+          #   dockerfile_path: tooling/docker/nest/Dockerfile
+          #   prisma_schema_path: ""
 
-          - service_name: web
-            service_scope: web
-            dockerfile_path: tooling/docker/next/Dockerfile
-            prisma_schema_path: ""
+          # - service_name: web
+          #   service_scope: web
+          #   dockerfile_path: tooling/docker/next/Dockerfile
+          #   prisma_schema_path: ""
 
     steps:
       - name: Checkout repository
