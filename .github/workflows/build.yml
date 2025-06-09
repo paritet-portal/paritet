@@ -24,17 +24,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Добавляем QEMU для мульти-архитектурной сборки
+      # --- ДОБАВЬТЕ ЭТОТ ШАГ ДЛЯ КЭШИРОВАНИЯ ---
       - name: Restore Turborepo cache
         uses: actions/cache@v4
         with:
-          path: ${{ env.TURBO_CACHE_DIR }}
-          # Ключ кэша зависит от ОС и package-lock.json.
-          # Если lock-файл меняется, кэш сбрасывается.
+          # Указываем, ЧТО кэшировать
+          path: .turbo
+          # Ключ, по которому искать кэш
           key: ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}
+          # Запасной ключ, если точного совпадения нет
           restore-keys: |
             ${{ runner.os }}-turbo-
 
+      # Добавляем QEMU для мульти-архитектурной сборки
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -48,23 +50,26 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image for ${{ matrix.service_name }}
+      - name: Build and push Docker image
+        id: build-and-push
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
+          # Указываем, для каких платформ собирать образ
           platforms: linux/amd64,linux/arm64
-          file: ${{ matrix.dockerfile_path }}
-          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}:latest
+          file: ${{ env.DOCKERFILE_PATH }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.SERVICE_NAME }}:latest
           build-args: |
-            APP_NAME=${{ matrix.service_name }}
-            APP_SCOPE=${{ matrix.service_scope }}
-            PRISMA_SCHEMA_PATH=${{ matrix.prisma_schema_path }}
-            # Переменные TURBO_* больше не нужны
+            APP_NAME=${{ env.SERVICE_NAME }}
+            APP_SCOPE=${{ env.SERVICE_SCOPE }}
+            PRISMA_SCHEMA_PATH=${{ env.PRISMA_SCHEMA_PATH }}
+            TURBO_TOKEN=
+            TURBO_TEAMID=
+            TURBO_API=
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # Задача деплоя остается без изменений
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
