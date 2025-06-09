@@ -1,9 +1,9 @@
-name: "Build and Deploy Backend" # Я поменял имя, чтобы было понятнее
+name: "Build and Deploy Backend"
 
 on:
   push:
     branches:
-      - main # Запускается при пуше в main
+      - main
   workflow_dispatch:
 
 env:
@@ -11,7 +11,6 @@ env:
   SERVICE_NAME: backend
   SERVICE_SCOPE: backend
   DOCKERFILE_PATH: tooling/docker/nest/Dockerfile
-  # --- ДОБАВЬТЕ ЭТУ СТРОКУ, ОНА НУЖНА ДЛЯ DOCKERFILE ---
   PRISMA_SCHEMA_PATH: ./apps/backend/prisma/schema.prisma
 
 jobs:
@@ -25,7 +24,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # --- ИЗМЕНЕНИЕ №1: ДОБАВЛЯЕМ QEMU ---
+      # Добавляем QEMU для мульти-архитектурной сборки
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -33,7 +32,11 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to GitHub Container Registry
-        # ... (этот шаг без изменений) ...
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
         id: build-and-push
@@ -41,18 +44,21 @@ jobs:
         with:
           context: .
           push: true
-          # --- ИЗМЕНЕНИЕ №2: УКАЗЫВАЕМ ПЛАТФОРМЫ ---
+          # Указываем, для каких платформ собирать образ
           platforms: linux/amd64,linux/arm64
           file: ${{ env.DOCKERFILE_PATH }}
           tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.SERVICE_NAME }}:latest
           build-args: |
-            # ... (аргументы без изменений) ...
+            APP_NAME=${{ env.SERVICE_NAME }}
+            APP_SCOPE=${{ env.SERVICE_SCOPE }}
+            PRISMA_SCHEMA_PATH=${{ env.PRISMA_SCHEMA_PATH }}
+            TURBO_TOKEN=
+            TURBO_TEAMID=
+            TURBO_API=
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # --- ЗАДАЧА ДЕПЛОЯ ОСТАЕТСЯ БЕЗ ИЗМЕНЕНИЙ ---
   deploy:
-    # Запустится только после успешной сборки
     needs: build-and-push
     runs-on: ubuntu-latest
 
@@ -65,7 +71,9 @@ jobs:
           key: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}
           script: |
             cd ~/paritet
+            # Используем ваш секрет CR_PAT
             echo "${{ secrets.CR_PAT }}" | /usr/bin/docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-            docker compose pull
-            docker compose up -d
-            docker image prune -a -f
+            # Используем docker-compose с дефисом
+            /usr/bin/docker-compose pull
+            /usr/bin/docker-compose up -d
+            /usr/bin/docker-compose image prune -a -f
