@@ -18,7 +18,7 @@ RUN apk add --no-cache python3 make g++
 COPY --from=turbo /app/out/json/ .
 COPY --from=turbo /app/out/package-lock.json ./package-lock.json
 # Install all dependencies needed for the build
-RUN --mount=type=cache,target=/var/cache/npm npm install --legacy-peer-deps
+RUN --mount=type=cache,target=/var/cache/npm npm install --legacy-peer-deps --verbose
 
 # Then copy over the application files (change often, no longer cached from this step on)
 COPY --from=turbo /app/out/full/ .
