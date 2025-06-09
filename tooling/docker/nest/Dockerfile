@@ -27,8 +27,14 @@ COPY --from=turbo /app/out/full/ .
 ARG TURBO_TOKEN
 ARG TURBO_TEAMID
 ARG TURBO_API
+
+# --- ИЗМЕНЕНИЯ ЗДЕСЬ ---
+# Manually run prisma generate now that schema.prisma is available
+RUN npx prisma generate
+
 # Build the project
 RUN npx turbo run build --filter=${APP_SCOPE}
+# --- КОНЕЦ ИЗМЕНЕНИЙ ---
 # Prune dev dependencies
 RUN npm prune --production
 

@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "postinstall": "npm run generate",
+    "postinstall": "echo 'Skipping prisma generate during install'",
     "predev": "npm run db:migrate:dev",
     "build": "nest build",
     "dev": "nest start --watch",
