@@ -18,6 +18,7 @@ jobs:
 
     strategy:
       fail-fast: false
+      max-parallel: 6
       matrix:
         # --- ТОЧНАЯ МАТРИЦА ДЛЯ ВАШИХ 6 СЕРВИСОВ ---
         include:
