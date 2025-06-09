@@ -1,15 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
-// Загружаем переменные из корневого .env файла в самом начале
-import * as dotenv from 'dotenv';
-dotenv.config({ path: '../../.env' });
+if (process.env.NODE_ENV !== 'production') {
+  // Вызываем require и сразу метод config, результат никуда не присваиваем.
+  // Это самый "безопасный" для линтера способ.
+  require('dotenv').config({ path: '../../.env' });
+}
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Используем порт из .env, а если его нет, то 5001 по умолчанию
-  const port = process.env.API_PORT || 5003;
+  const port = process.env.PORT || 5003;
 
   await app.listen(port);
 
