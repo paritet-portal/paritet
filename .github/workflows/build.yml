@@ -19,15 +19,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          # Исправленная версия Node.js
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm install
+      # Шаги с 'setup-node' и 'npm install' здесь больше НЕ НУЖНЫ.
+      # Ваш Dockerfile сам справится с установкой зависимостей.
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -52,8 +45,7 @@ jobs:
             TURBO_TOKEN=
             TURBO_TEAMID=
             TURBO_API=
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.SERVICE_NAME }}:buildcache
-          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.SERVICE_NAME }}:buildcache,mode=max
-
-      - name: Image digest
-        run: echo ${{ steps.build-and-push.outputs.digest }}
+          # Эта строка включает кэширование для команды RUN --mount=type=cache
+          # в вашем Dockerfile. Это и есть решение проблемы.
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
