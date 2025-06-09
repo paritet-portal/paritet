@@ -53,7 +53,7 @@ RUN if [ -n "$PRISMA_SCHEMA_PATH" ]; then npx prisma generate --schema="$PRISMA_
 RUN npx turbo run build --filter=${APP_SCOPE}
 
 # Remove development dependencies to reduce the final image size
-RUN npm prune --production
+# RUN npm prune --production
 
 # ==============================================================================
 # Runner stage - The final, small, and secure image to run the application

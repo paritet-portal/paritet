@@ -21,10 +21,10 @@ jobs:
       matrix:
         # --- ТОЧНАЯ МАТРИЦА ДЛЯ ВАШИХ 6 СЕРВИСОВ ---
         include:
-          - service_name: admin
-            service_scope: admin
-            dockerfile_path: tooling/docker/next/Dockerfile
-            prisma_schema_path: ""
+         # - service_name: admin
+         #   service_scope: admin
+         #   dockerfile_path: tooling/docker/next/Dockerfile
+         #   prisma_schema_path: ""
 
          # - service_name: backend
          #   service_scope: backend
@@ -46,10 +46,10 @@ jobs:
        #     dockerfile_path: tooling/docker/nest/Dockerfile
        #     prisma_schema_path: ""
 
-          - service_name: web
-            service_scope: web
-            dockerfile_path: tooling/docker/next/Dockerfile
-            prisma_schema_path: ""
+       #   - service_name: web
+        #    service_scope: web
+       #     dockerfile_path: tooling/docker/next/Dockerfile
+       #     prisma_schema_path: ""
 
     steps:
       - name: Checkout repository
