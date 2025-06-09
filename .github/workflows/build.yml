@@ -1,4 +1,4 @@
-name: "Build and Deploy Backend"
+name: "Build and Deploy All Services"
 
 on:
   push:
@@ -8,10 +8,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  SERVICE_NAME: backend
-  SERVICE_SCOPE: backend
-  DOCKERFILE_PATH: tooling/docker/nest/Dockerfile
-  PRISMA_SCHEMA_PATH: ./apps/backend/prisma/schema.prisma
 
 jobs:
   build-and-push:
@@ -20,23 +16,53 @@ jobs:
       contents: read
       packages: write
 
+    strategy:
+      fail-fast: false
+      matrix:
+        # --- ТОЧНАЯ МАТРИЦА ДЛЯ ВАШИХ 6 СЕРВИСОВ ---
+        include:
+          - service_name: admin
+            service_scope: admin
+            dockerfile_path: tooling/docker/next/Dockerfile
+            prisma_schema_path: ""
+
+          - service_name: backend
+            service_scope: backend
+            dockerfile_path: tooling/docker/nest/Dockerfile
+            prisma_schema_path: ./apps/backend/prisma/schema.prisma
+
+          - service_name: chat
+            service_scope: chat
+            dockerfile_path: tooling/docker/nest/Dockerfile
+            prisma_schema_path: ./apps/chat/prisma/schema.prisma # <-- ПРОВЕРЬТЕ ПУТЬ
+
+          - service_name: demo-worker
+            service_scope: demo-worker
+            dockerfile_path: tooling/docker/nest/Dockerfile
+            prisma_schema_path: ""
+
+          - service_name: service-gateway
+            service_scope: service-gateway # Имя scope может отличаться, проверьте package.json
+            dockerfile_path: tooling/docker/nest/Dockerfile
+            prisma_schema_path: ""
+
+          - service_name: web
+            service_scope: web
+            dockerfile_path: tooling/docker/next/Dockerfile
+            prisma_schema_path: ""
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # --- ДОБАВЬТЕ ЭТОТ ШАГ ДЛЯ КЭШИРОВАНИЯ ---
       - name: Restore Turborepo cache
         uses: actions/cache@v4
         with:
-          # Указываем, ЧТО кэшировать
           path: .turbo
-          # Ключ, по которому искать кэш
           key: ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}
-          # Запасной ключ, если точного совпадения нет
           restore-keys: |
             ${{ runner.os }}-turbo-
 
-      # Добавляем QEMU для мульти-архитектурной сборки
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -50,23 +76,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
-        id: build-and-push
+      - name: Build and push Docker image for ${{ matrix.service_name }}
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          # Указываем, для каких платформ собирать образ
           platforms: linux/amd64,linux/arm64
-          file: ${{ env.DOCKERFILE_PATH }}
-          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.SERVICE_NAME }}:latest
+          file: ${{ matrix.dockerfile_path }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}:latest
           build-args: |
-            APP_NAME=${{ env.SERVICE_NAME }}
-            APP_SCOPE=${{ env.SERVICE_SCOPE }}
-            PRISMA_SCHEMA_PATH=${{ env.PRISMA_SCHEMA_PATH }}
-            TURBO_TOKEN=
-            TURBO_TEAMID=
-            TURBO_API=
+            APP_NAME=${{ matrix.service_name }}
+            APP_SCOPE=${{ matrix.service_scope }}
+            PRISMA_SCHEMA_PATH=${{ matrix.prisma_schema_path }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
