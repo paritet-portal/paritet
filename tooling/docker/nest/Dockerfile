@@ -26,7 +26,7 @@ ARG TURBO_TOKEN
 ARG TURBO_TEAMID
 ARG TURBO_API
 # Build the project
-RUN npx turbo run build --filter=@apps/${APP_SCOPE}
+RUN npx turbo run build --filter=${APP_SCOPE}
 # Switch deps over to production only and prune out not needed files
 RUN rm -rf node_modules && mv node_modules_production node_modules && apk --no-cache add curl && curl -sf https://gobinaries.com/tj/node-prune | sh && node-prune
 
