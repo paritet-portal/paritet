@@ -69,6 +69,7 @@ jobs:
           host: ${{ secrets.HETZNER_VPS_HOST }}
           username: ${{ secrets.HETZNER_VPS_USER }}
           key: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}
+          command_timeout: 15m
           script: |
             cd ~/paritet
             # Используем ваш секрет CR_PAT
