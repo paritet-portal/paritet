@@ -31,7 +31,11 @@ COPY --from=turbo /app/out/json/ .
 COPY --from=turbo /app/out/package-lock.json ./package-lock.json
 
 # Install dependencies
-RUN --mount=type=cache,target=/var/cache/npm npm install --legacy-peer-deps
+# RUN --mount=type=cache,target=/var/cache/npm npm install --legacy-peer-deps
+RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=cache,target=/var/cache/npm \
+    npm ci --legacy-peer-deps
+
 
 # Copy pruned source code
 COPY --from=turbo /app/out/full/ .
@@ -43,7 +47,10 @@ ARG TURBO_API
 
 # --- ИЗМЕНЕНИЕ №2: Используем APP_SCOPE вместо @apps/APP_NAME ---
 # Build the project
-RUN npx turbo run build --filter=${APP_SCOPE}
+RUN --mount=type=cache,target=.turbo \
+    --mount=type=cache,target=node_modules \
+    npx turbo run build --filter=${APP_SCOPE}
+
 
 # Prune dev dependencies
 RUN npm prune --production

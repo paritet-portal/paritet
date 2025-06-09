@@ -35,7 +35,11 @@ COPY --from=turbo /app/out/package-lock.json ./package-lock.json
 # Install all dependencies. We use --legacy-peer-deps to avoid strict peer
 # dependency errors common in complex monorepos. Prisma auto-generation
 # is disabled via a package.json override.
-RUN --mount=type=cache,target=/var/cache/npm npm install --legacy-peer-deps
+# RUN --mount=type=cache,target=/var/cache/npm npm install --legacy-peer-deps
+RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=cache,target=/var/cache/npm \
+    npm ci --legacy-peer-deps
+
 
 # Copy the full source code of the pruned application
 COPY --from=turbo /app/out/full/ .
@@ -50,7 +54,10 @@ ARG TURBO_API
 RUN if [ -n "$PRISMA_SCHEMA_PATH" ]; then npx prisma generate --schema="$PRISMA_SCHEMA_PATH"; fi
 
 # Build the application using Turborepo
-RUN npx turbo run build --filter=${APP_SCOPE}
+RUN --mount=type=cache,target=.turbo \
+    --mount=type=cache,target=node_modules \
+    npx turbo run build --filter=${APP_SCOPE}
+
 
 # Remove development dependencies to reduce the final image size
 RUN npm prune --production
