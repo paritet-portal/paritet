@@ -5,10 +5,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  # Имя папки сервиса
   SERVICE_NAME: service-gateway
-  # Полное имя пакета из его package.json
-  SERVICE_SCOPE: service-gateway # <--- ПРОВЕРЬТЕ ЭТО ИМЯ!
+  SERVICE_SCOPE: service-gateway
   DOCKERFILE_PATH: tooling/docker/nest/Dockerfile
 
 jobs:
@@ -39,11 +37,10 @@ jobs:
           context: .
           push: true
           file: ${{ env.DOCKERFILE_PATH }}
-          # Тег образа будет по имени папки, это удобно
           tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.SERVICE_NAME }}:latest
           build-args: |
             APP_NAME=${{ env.SERVICE_NAME }}
-            APP_SCOPE=${{ env.SERVICE_SCOPE }} # <--- Передаем новое значение
+            APP_SCOPE=${{ env.SERVICE_SCOPE }}
             TURBO_TOKEN=
             TURBO_TEAMID=
             TURBO_API=
