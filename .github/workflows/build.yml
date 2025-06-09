@@ -1,6 +1,9 @@
-name: "Build Docker Image"
+name: "Build and Deploy Backend" # Я поменял имя, чтобы было понятнее
 
 on:
+  push:
+    branches:
+      - main # Запускается при пуше в main
   workflow_dispatch:
 
 env:
@@ -8,8 +11,11 @@ env:
   SERVICE_NAME: backend
   SERVICE_SCOPE: backend
   DOCKERFILE_PATH: tooling/docker/nest/Dockerfile
+  # --- ДОБАВЬТЕ ЭТУ СТРОКУ, ОНА НУЖНА ДЛЯ DOCKERFILE ---
+  PRISMA_SCHEMA_PATH: ./apps/backend/prisma/schema.prisma
 
 jobs:
+  # --- ВАША ЗАДАЧА СБОРКИ ---
   build-and-push:
     runs-on: ubuntu-latest
     permissions:
@@ -41,8 +47,30 @@ jobs:
           build-args: |
             APP_NAME=${{ env.SERVICE_NAME }}
             APP_SCOPE=${{ env.SERVICE_SCOPE }}
+            # --- И ЭТУ СТРОКУ В BUILD-ARGS ---
+            PRISMA_SCHEMA_PATH=${{ env.PRISMA_SCHEMA_PATH }}
             TURBO_TOKEN=
             TURBO_TEAMID=
             TURBO_API=
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  # --- НОВАЯ ЗАДАЧА ДЛЯ ДЕПЛОЯ ---
+  deploy:
+    # Запустится только после успешной сборки
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HETZNER_VPS_HOST }}
+          username: ${{ secrets.HETZNER_VPS_USER }}
+          key: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/paritet
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+            docker compose pull
+            docker compose up -d
+            docker image prune -a -f
