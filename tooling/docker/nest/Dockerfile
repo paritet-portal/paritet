@@ -30,7 +30,7 @@ ARG TURBO_API
 
 # --- ИЗМЕНЕНИЯ ЗДЕСЬ ---
 # Manually run prisma generate now that schema.prisma is available
-RUN npx prisma generate
+RUN npx prisma generate --schema=./apps/backend/prisma/schema.prisma
 
 # Build the project
 RUN npx turbo run build --filter=${APP_SCOPE}
