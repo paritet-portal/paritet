@@ -12,11 +12,13 @@ RUN turbo prune --scope=${APP_SCOPE} --docker
 
 # Separate step to install dependencies, most of this will be cached if dependencies wont change
 FROM base AS builder
+
+RUN apk add --no-cache python3 make g++ libc-compat
 # First install the dependencies (as they change less often)
 COPY --from=turbo /app/out/json/ .
 COPY --from=turbo /app/out/package-lock.json ./package-lock.json
 # Install all dependencies needed for the build
-RUN --mount=type=cache,target=/var/cache/npm npm install
+RUN --mount=type=cache,target=/var/cache/npm npm install --legacy-peer-deps
 
 # Then copy over the application files (change often, no longer cached from this step on)
 COPY --from=turbo /app/out/full/ .
