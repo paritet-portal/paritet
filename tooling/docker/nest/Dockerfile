@@ -1,13 +1,14 @@
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 WORKDIR /app
 
 ARG APP_NAME
+ARG APP_SCOPE
 
 # Separate step to get a pruned version of the monorepository
 FROM base AS turbo
 RUN npm install -g turbo
 COPY . .
-RUN turbo prune --scope=@apps/${APP_NAME} --docker
+RUN turbo prune --scope=${APP_SCOPE} --docker
 
 # Separate step to install dependencies, most of this will be cached if dependencies wont change
 FROM base AS builder
