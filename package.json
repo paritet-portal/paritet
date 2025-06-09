@@ -8,28 +8,30 @@
   "scripts": {
     "prepare": "husky install",
     "build": "turbo run build",
-    "dev": "turbo run dev --filter=@apps/api",
+    "dev": "turbo run dev",
     "lint": "turbo run lint",
     "clean": "turbo run clean",
     "test": "turbo run test -- --forceExit --passWithNoTests",
     "format": "turbo run format"
   },
   "devDependencies": {
-    "husky": "^8.0.3",
-    "lint-staged": "^13.2.2",
-    "prisma": "^6.9.0",
-    "turbo": "^1.10.12",
-    "wait-on": "^7.0.1"
+    "husky": "latest",
+    "lint-staged": "latest",
+    "turbo": "latest",
+    "wait-on": "latest"
   },
   "engines": {
-    "npm": ">=8.0.0",
-    "node": ">=18.0.0"
+    "npm": ">=10.0.0",
+    "node": ">=20.0.0"
   },
-  "packageManager": "npm@1.22.22",
+  "packageManager": "npm@10.8.1",
+  "overrides": {
+      "@nestjs/bull": "latest",
+    "@nestjs/common": "latest",
+    "@nestjs/core": "latest",
+     "rxjs": "latest"
+  },
   "lint-staged": {
     "**/*": "turbo run precommit:format --"
-  },
-  "dependencies": {
-    "@prisma/client": "^6.9.0"
   }
 }

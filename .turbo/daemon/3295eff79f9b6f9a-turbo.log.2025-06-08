@@ -1,0 +1,46 @@
+2025-06-08T10:36:17.697195Z  WARN build:build_inner: turborepo_repository::package_graph::builder: Unable to calculate transitive closures: Missing version from non-workspace package: 'tooling/nestjs-webpack/node_modules/@swc/core-darwin-arm64'
+2025-06-08T10:36:17.715038Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\cookies"), AnchoredSystemPathBuf(".turbo\\cookies\\1.cookie"), AnchoredSystemPathBuf(".turbo"), AnchoredSystemPathBuf(".turbo\\cookies\\.turbo-cookie"), AnchoredSystemPathBuf(".turbo\\daemon")}
+2025-06-08T10:36:17.716079Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-06-08T10:36:17.799999Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T10:36:18.306044Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(".turbo\\daemon\\3295eff79f9b6f9a-turbo.log.2025-06-08")}
+2025-06-08T10:36:18.306086Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-06-08T10:37:41.712634Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("package.json")}
+2025-06-08T10:37:41.712661Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(All)
+2025-06-08T10:37:41.747565Z  WARN build:build_inner: turborepo_repository::package_graph::builder: Unable to calculate transitive closures: Missing version from non-workspace package: 'node_modules/@swc/core-darwin-arm64'
+2025-06-08T10:37:41.902183Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("turbo.json")}
+2025-06-08T10:37:41.902266Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(All)
+2025-06-08T10:37:41.927604Z  WARN build:build_inner: turborepo_repository::package_graph::builder: Unable to calculate transitive closures: Missing version from non-workspace package: 'node_modules/@swc/core-darwin-arm64'
+2025-06-08T10:37:50.200989Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("package.json")}
+2025-06-08T10:37:50.201006Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(All)
+2025-06-08T10:37:50.241756Z  WARN build:build_inner: turborepo_repository::package_graph::builder: Unable to calculate transitive closures: Missing version from non-workspace package: 'node_modules/@next/swc-darwin-arm64'
+2025-06-08T10:37:51.214675Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("package-lock.json")}
+2025-06-08T10:37:51.214703Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2025-06-08T10:45:40.126805Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T10:52:16.444072Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T11:15:29.838761Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T11:17:27.239811Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T11:18:43.172852Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T11:18:43.290686Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T12:19:01.779647Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T12:34:04.727385Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T12:34:04.847743Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T13:07:59.786368Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T13:07:59.951220Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T13:10:38.875902Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T13:10:39.005151Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T21:14:26.739502Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T21:14:26.882546Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T22:24:13.380158Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T22:31:09.848151Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T22:31:09.990240Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T22:38:33.815290Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T22:42:41.369091Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T22:48:29.440641Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T22:50:42.374549Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T22:54:57.805101Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T23:15:44.942181Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T23:18:44.999821Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T23:24:17.410708Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T23:28:00.082125Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T23:39:32.884142Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running
+2025-06-08T23:45:26.750420Z  WARN daemon_server: turborepo_lib::commands::daemon: daemon already running

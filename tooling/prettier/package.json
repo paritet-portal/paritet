@@ -7,7 +7,7 @@
     ".prettierrc.js"
   ],
   "dependencies": {
-    "prettier": "^2.8.1",
-    "prettier-plugin-tailwindcss": "^0.1.13"
+    "prettier": "latest",
+    "prettier-plugin-tailwindcss": "latest"
   }
 }

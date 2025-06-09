@@ -1,27 +1,73 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env"],
-  "pipeline": {
+  "globalDependencies": [
+    "**/.env"
+  ],
+  "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"],
+      "dependsOn": [
+        "^build",
+        "generate",
+        "codegen"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "public/dist/**"
+      ],
       "env": [
+        "VERCEL_URL",
+        "PORT",
         "NODE_ENV",
-        "DATABASE_URL"
+        "DATABASE_URL",
+        "CLERK_JWSK_URL",
+        "CLERK_ISSUER"
       ]
     },
-    "dev": {
-      "cache": false,
-      "persistent": true
+    "generate": {
+      "cache": false
+    },
+    "codegen": {
+      "cache": false
     },
     "lint": {
+      "dependsOn": [
+        "generate",
+        "codegen"
+      ],
       "outputs": []
     },
-    "test": {
+    "format": {
       "outputs": []
     },
     "clean": {
       "cache": false
+    },
+    "test": {
+      "outputs": []
+    },
+    "precommit:format": {
+      "cache": false
+    },
+    "health-check": {
+      "cache": false
+    },
+    "dev": {
+      "cache": false
+    },
+    "@apps/web#dev": {
+      "cache": false,
+      "dependsOn": [
+        "@apps/service-gateway#health-check"
+      ]
+    },
+    "@apps/service-gateway#dev": {
+      "cache": false,
+      "dependsOn": [
+        "@apps/chat#health-check",
+        "@apps/backend#health-check",
+        "@apps/admin#health-check"
+      ]
     }
   }
 }

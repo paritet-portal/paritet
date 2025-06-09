@@ -1,0 +1,35 @@
+{
+  "name": "@package/cli",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@commander-js/extra-typings": "latest",
+    "commander": "latest",
+    "envfile": "latest",
+    "prompts": "latest",
+    "shelljs": "latest",
+    "ts-node": "latest"
+  },
+  "scripts": {
+    "format": "npm run format:prettier && npm run format:es",
+    "format:prettier": "prettier --write .",
+    "format:es": "eslint . --fix",
+    "lint": "npm run lint:prettier && npm run lint:typescript && npm run lint:es",
+    "lint:typescript": "tsc --noEmit",
+    "lint:prettier": "prettier --check .",
+    "lint:es": "eslint .",
+    "precommit:format": "prettier --write --ignore-unknown"
+  },
+  "bin": {
+    "fvst": "./src/index.ts"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "devDependencies": {
+    "@tooling/eslint-config-custom": "*",
+    "@tooling/prettier": "*",
+    "@types/prompts": "latest",
+    "@types/shelljs": "latest"
+  }
+}
