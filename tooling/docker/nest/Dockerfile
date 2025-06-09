@@ -13,7 +13,7 @@ RUN turbo prune --scope=${APP_SCOPE} --docker
 # Separate step to install dependencies, most of this will be cached if dependencies wont change
 FROM base AS builder
 
-RUN apk add --no-cache python3 make g++ libc-compat
+RUN apk add --no-cache python3 make g++
 # First install the dependencies (as they change less often)
 COPY --from=turbo /app/out/json/ .
 COPY --from=turbo /app/out/package-lock.json ./package-lock.json
