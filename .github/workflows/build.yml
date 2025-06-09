@@ -77,4 +77,4 @@ jobs:
             # Используем docker-compose с дефисом
             /usr/bin/docker-compose pull
             /usr/bin/docker-compose up -d
-            /usr/bin/docker-compose image prune -a -f
+            /usr/bin/docker image prune -a -f
