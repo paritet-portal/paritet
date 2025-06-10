@@ -8,7 +8,7 @@ export class VideoProcessor {
 
   @Process('transcribe')
   handleTranscode(job: Job) {
-    this.logger.debug('Start video transcription...');
+    this.logger.debug('Start video  transcription...');
     this.logger.debug(job.data);
     this.logger.debug('Video transcription completed');
   }

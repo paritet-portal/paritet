@@ -7,7 +7,6 @@ async function bootstrap() {
     bodyParser: true,
   });
 
-  // Глобального пайпа здесь больше нет
 
   await app.listen(process.env.PORT ?? 5002);
 }
