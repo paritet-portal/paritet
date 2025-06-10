@@ -8,34 +8,49 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  # Определим здесь полные данные для каждого сервиса для удобства генерации матрицы
-  # Это можно было бы хранить в отдельном файле и читать, но для YAML так проще
-  # Обратите внимание на правильный синтаксис для многострочных YAML-строк, если решите форматировать иначе
   SERVICE_CONFIG_JSON: |-
     [
       {
-        "id": "admin", "service_name": "admin", "service_scope": "admin",
-        "dockerfile_path": "tooling/docker/next/Dockerfile", "prisma_schema_path": ""
+        "id": "admin",
+        "service_name": "admin",
+        "service_scope": "admin",
+        "dockerfile_path": "tooling/docker/next/Dockerfile",
+        "prisma_schema_path": ""
       },
       {
-        "id": "backend", "service_name": "backend", "service_scope": "backend",
-        "dockerfile_path": "tooling/docker/nest/Dockerfile", "prisma_schema_path": "./apps/backend/prisma/schema.prisma"
+        "id": "backend",
+        "service_name": "backend",
+        "service_scope": "backend",
+        "dockerfile_path": "tooling/docker/nest/Dockerfile",
+        "prisma_schema_path": "./apps/backend/prisma/schema.prisma"
       },
       {
-        "id": "chat", "service_name": "chat", "service_scope": "chat",
-        "dockerfile_path": "tooling/docker/nest/Dockerfile", "prisma_schema_path": ""
+        "id": "chat",
+        "service_name": "chat",
+        "service_scope": "chat",
+        "dockerfile_path": "tooling/docker/nest/Dockerfile",
+        "prisma_schema_path": ""
       },
       {
-        "id": "demo-worker", "service_name": "demo-worker", "service_scope": "demo-worker",
-        "dockerfile_path": "tooling/docker/nest/Dockerfile", "prisma_schema_path": ""
+        "id": "demo-worker",
+        "service_name": "demo-worker",
+        "service_scope": "demo-worker",
+        "dockerfile_path": "tooling/docker/nest/Dockerfile",
+        "prisma_schema_path": ""
       },
       {
-        "id": "service-gateway", "service_name": "service-gateway", "service_scope": "service-gateway",
-        "dockerfile_path": "tooling/docker/nest/Dockerfile", "prisma_schema_path": ""
+        "id": "service-gateway",
+        "service_name": "service-gateway",
+        "service_scope": "service-gateway",
+        "dockerfile_path": "tooling/docker/nest/Dockerfile",
+        "prisma_schema_path": ""
       },
       {
-        "id": "web", "service_name": "web", "service_scope": "web",
-        "dockerfile_path": "tooling/docker/next/Dockerfile", "prisma_schema_path": ""
+        "id": "web",
+        "service_name": "web",
+        "service_scope": "web",
+        "dockerfile_path": "tooling/docker/next/Dockerfile",
+        "prisma_schema_path": ""
       }
     ]
 
