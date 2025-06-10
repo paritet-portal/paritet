@@ -2,8 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 if (process.env.NODE_ENV !== 'production') {
-  // Вызываем require и сразу метод config, результат никуда не присваиваем.
-  // Это самый "безопасный" для линтера способ.
   require('dotenv').config({ path: '../../.env' });
 }
 

@@ -223,15 +223,15 @@ jobs:
         with:
           context: .
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/arm64
           file: ${{ matrix.dockerfile_path }}
           tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}:latest
           build-args: |
             APP_NAME=${{ matrix.service_name }}
             APP_SCOPE=${{ matrix.service_scope }}
             PRISMA_SCHEMA_PATH=${{ matrix.prisma_schema_path }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}:buildcache-arm64
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}:buildcache-arm64,mode=max,compression=zstd
 
   deploy:
     needs: [determine-changes, build-and-push]
