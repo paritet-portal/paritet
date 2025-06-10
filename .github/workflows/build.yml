@@ -1,4 +1,5 @@
-# Изменим имя для ясности
+# Имя файла: .github/workflows/deploy-changed.yml
+
 name: "Build and Deploy Changed Services"
 
 on:
@@ -11,9 +12,6 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  # --------------------------------------------------------------------
-  # 1. ДОБАВЛЯЕМ НОВЫЙ JOB ДЛЯ ОПРЕДЕЛЕНИЯ ИЗМЕНЕНИЙ
-  # --------------------------------------------------------------------
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
@@ -22,51 +20,42 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Нужно для сравнения с main
+          fetch-depth: 0
 
       - name: Get changed app directories
         id: changed-apps
         uses: tj-actions/changed-files@v44
         with:
           dir_names: "true"
-          files: apps/** # Смотрим на изменения только в папке apps
+          files: apps/**
 
       - name: Create build matrix
         id: set-matrix
         run: |
-          # Этот скрипт создает JSON-массив из измененных папок
-          # Например, если изменились apps/backend и apps/web, получится '["backend","web"]'
           json_array=$(echo "${{ steps.changed-apps.outputs.all_changed_files }}" | sed 's/apps\///g' | jq -R -s -c 'split(" ") | map(select(length > 0))')
           echo "matrix={\"service_name\":${json_array}}" >> $GITHUB_OUTPUT
           echo "Generated matrix for build: {\"service_name\":${json_array}}"
 
-  # --------------------------------------------------------------------
-  # 2. ИЗМЕНЯЕМ СУЩЕСТВУЮЩИЙ JOB `build-and-push`
-  # --------------------------------------------------------------------
   build-and-push:
-    # Добавляем зависимость и условие запуска
+    # ----------------------------------------------------
+    # ВОТ ЭТОТ IF УЖЕ ЕСТЬ И ОН ПРАВИЛЬНЫЙ
+    # ----------------------------------------------------
+    if: needs.detect-changes.outputs.matrix != '{"service_name":[]}'
     needs: detect-changes
-    if: needs.detect-changes.outputs.matrix != '{"service_name":[]}' # Не запускать, если нет изменений в /apps
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-
     strategy:
       fail-fast: false
-      # МАТРИЦА ТЕПЕРЬ ДИНАМИЧЕСКАЯ!
       matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Вся информация о сервисах для удобства хранится в одном месте
       - name: Define Service Properties
         id: service-props
         env:
-          # Храним всю нашу статическую матрицу как JSON-строку
           SERVICES_JSON: |
             [
               { "name": "admin",         "scope": "admin",         "dockerfile": "tooling/docker/next/Dockerfile", "prisma_schema": "" },
@@ -77,18 +66,18 @@ jobs:
               { "name": "web",           "scope": "web",           "dockerfile": "tooling/docker/next/Dockerfile", "prisma_schema": "" }
             ]
         run: |
-          # Этот скрипт находит нужный сервис в JSON и извлекает его свойства
           SERVICE_NAME="${{ matrix.service_name }}"
           SERVICE_INFO=$(echo "$SERVICES_JSON" | jq -c ".[] | select(.name == \"$SERVICE_NAME\")")
-
           echo "scope=$(echo $SERVICE_INFO | jq -r '.scope')" >> $GITHUB_OUTPUT
           echo "dockerfile_path=$(echo $SERVICE_INFO | jq -r '.dockerfile')" >> $GITHUB_OUTPUT
           echo "prisma_schema_path=$(echo $SERVICE_INFO | jq -r '.prisma_schema')" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -96,16 +85,26 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # --- ИСПРАВЛЕНИЕ ОШИБКИ С ТЕГАМИ ---
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}
+          tags: |
+            type=sha,prefix=,format=short
+            type=raw,value=latest,enable={{is_default_branch}}
+
       - name: Build and push Docker image for ${{ matrix.service_name }}
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           platforms: linux/amd64,linux/arm64
-          # Используем выходные данные из шага 'Define Service Properties'
           file: ${{ steps.service-props.outputs.dockerfile_path }}
-          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}:latest
-                ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}:${{ github.sha }}
+          # ИСПОЛЬЗУЕМ ПРАВИЛЬНЫЙ СПОСОБ ЗАДАНИЯ ТЕГОВ
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             APP_NAME=${{ matrix.service_name }}
             APP_SCOPE=${{ steps.service-props.outputs.scope }}
@@ -113,15 +112,13 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # --------------------------------------------------------------------
-  # 3. JOB `deploy` ОСТАЕТСЯ ПОЧТИ ТАКИМ ЖЕ
-  # --------------------------------------------------------------------
   deploy:
-    # Запускаем, если предыдущий job был успешным ИЛИ был пропущен
-    if: success() || needs.build-and-push.result == 'skipped'
-    needs: build-and-push
+    # ----------------------------------------------------
+    # ДОБАВЛЯЕМ IF СЮДА ДЛЯ БОЛЬШЕЙ НАДЕЖНОСТИ
+    # ----------------------------------------------------
+    if: always() && (needs.build-and-push.result == 'success' || needs.build-and-push.result == 'skipped')
+    needs: [detect-changes, build-and-push]
     runs-on: ubuntu-latest
-
     steps:
       - name: Deploy to VPS via SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -132,9 +129,7 @@ jobs:
           script: |
             cd ~/paritet
             echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-            # docker compose pull скачает только те образы, которые были обновлены в реестре
             docker compose pull
-            # docker compose up -d перезапустит только те сервисы, чьи образы обновились
             docker compose up -d --remove-orphans
             docker image prune -a -f
 
