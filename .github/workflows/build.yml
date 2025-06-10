@@ -121,64 +121,79 @@ jobs:
               - 'package.json'
               - 'pnpm-lock.yaml'
 
-      - name: Generate dynamic matrix
+            - name: Generate dynamic matrix
         id: generate_matrix
         run: |
           FULL_CONFIG_JSON='${{ env.SERVICE_CONFIG_JSON }}'
-          MATRIX_ARRAY="["
+          MATRIX_ARRAY_CONTENT="" # Будем собирать только содержимое массива
           ANY_CHANGED="false"
 
+          echo "--- Start: SERVICE_CONFIG_JSON ---"
+          echo "$FULL_CONFIG_JSON" | jq . # Выведем для проверки валидности и форматирования
+          echo "--- End: SERVICE_CONFIG_JSON ---"
+
+          add_to_matrix() {
+            local service_id=$1
+            # Используем jq -c для компактного однострочного вывода
+            SERVICE_JSON=$(echo "$FULL_CONFIG_JSON" | jq -c --arg id "$service_id" '.[] | select(.id == $id)')
+            echo "Attempting to add service: $service_id"
+            echo "Extracted JSON for $service_id: $SERVICE_JSON"
+
+            if [[ -n "$SERVICE_JSON" && "$SERVICE_JSON" != "null" ]]; then
+              if [[ -n "$MATRIX_ARRAY_CONTENT" ]]; then
+                MATRIX_ARRAY_CONTENT+="," # Добавляем запятую перед следующим элементом
+              fi
+              MATRIX_ARRAY_CONTENT+="$SERVICE_JSON"
+              ANY_CHANGED="true"
+              echo "Added $service_id to matrix content."
+            else
+              echo "Service $service_id not found in config or invalid JSON extracted."
+            fi
+          }
+
           if [[ "${{ steps.changed_files_detector.outputs.admin }}" == "true" ]]; then
-            SERVICE_JSON=$(echo "$FULL_CONFIG_JSON" | jq '.[] | select(.id == "admin")')
-            MATRIX_ARRAY+="${SERVICE_JSON},"
-            ANY_CHANGED="true"
+            add_to_matrix "admin"
           fi
           if [[ "${{ steps.changed_files_detector.outputs.backend }}" == "true" ]]; then
-            SERVICE_JSON=$(echo "$FULL_CONFIG_JSON" | jq '.[] | select(.id == "backend")')
-            MATRIX_ARRAY+="${SERVICE_JSON},"
-            ANY_CHANGED="true"
+            add_to_matrix "backend"
           fi
           if [[ "${{ steps.changed_files_detector.outputs.chat }}" == "true" ]]; then
-            SERVICE_JSON=$(echo "$FULL_CONFIG_JSON" | jq '.[] | select(.id == "chat")')
-            MATRIX_ARRAY+="${SERVICE_JSON},"
-            ANY_CHANGED="true"
+            add_to_matrix "chat"
           fi
-          # ВНИМАНИЕ: dorny/paths-filter использует ключи фильтров как есть.
-          # Если ключ в filters был 'demo_worker', то и output будет 'demo_worker'.
-          # Убедитесь, что id в SERVICE_CONFIG_JSON и ключи в filters совпадают.
-          # Либо используйте service_name для jq селектора, если id не совпадает с ключом фильтра.
-          if [[ "${{ steps.changed_files_detector.outputs.demo_worker }}" == "true" ]]; then # или demo-worker
-            SERVICE_JSON=$(echo "$FULL_CONFIG_JSON" | jq '.[] | select(.id == "demo-worker")') # или demo_worker
-            MATRIX_ARRAY+="${SERVICE_JSON},"
-            ANY_CHANGED="true"
+          # Убедитесь, что ключи в dorny/paths-filter и id в SERVICE_CONFIG_JSON совпадают для demo-worker и service-gateway
+          if [[ "${{ steps.changed_files_detector.outputs.demo_worker }}" == "true" ]]; then # Ключ из filters
+            add_to_matrix "demo-worker" # ID из SERVICE_CONFIG_JSON
           fi
-          if [[ "${{ steps.changed_files_detector.outputs.service_gateway }}" == "true" ]]; then # или service-gateway
-            SERVICE_JSON=$(echo "$FULL_CONFIG_JSON" | jq '.[] | select(.id == "service-gateway")') # или service_gateway
-            MATRIX_ARRAY+="${SERVICE_JSON},"
-            ANY_CHANGED="true"
+          if [[ "${{ steps.changed_files_detector.outputs.service_gateway }}" == "true" ]]; then # Ключ из filters
+            add_to_matrix "service-gateway" # ID из SERVICE_CONFIG_JSON
           fi
           if [[ "${{ steps.changed_files_detector.outputs.web }}" == "true" ]]; then
-            SERVICE_JSON=$(echo "$FULL_CONFIG_JSON" | jq '.[] | select(.id == "web")')
-            MATRIX_ARRAY+="${SERVICE_JSON},"
-            ANY_CHANGED="true"
+            add_to_matrix "web"
           fi
 
-          # Удалить последнюю запятую, если массив не пуст
-          if [[ "$ANY_CHANGED" == "true" ]]; then
-            MATRIX_ARRAY=$(echo "$MATRIX_ARRAY" | sed 's/,$//')
-          fi
-          MATRIX_ARRAY+="]"
+          FINAL_MATRIX_JSON="[${MATRIX_ARRAY_CONTENT}]"
 
-          echo "Generated matrix: $MATRIX_ARRAY"
-          echo "matrix=$MATRIX_ARRAY" >> $GITHUB_OUTPUT
+          echo "--- Final constructed matrix string before validation ---"
+          echo "$FINAL_MATRIX_JSON"
+
+          # Валидация и "очистка" финального JSON
+          # Если FINAL_MATRIX_JSON пустой "[]", то jq -c . его так и оставит.
+          # Если он содержит данные, он их очистит.
+          # Если он невалиден, jq здесь выдаст ошибку.
+          VALIDATED_MATRIX_JSON=$(echo "$FINAL_MATRIX_JSON" | jq -c .)
+
+          echo "--- Validated matrix JSON for GITHUB_OUTPUT ---"
+          echo "$VALIDATED_MATRIX_JSON"
+
+          echo "matrix=$VALIDATED_MATRIX_JSON" >> $GITHUB_OUTPUT
           echo "any_changed=$ANY_CHANGED" >> $GITHUB_OUTPUT
         env:
           # Передаем outputs из предыдущего шага в env для удобства в bash
           ADMIN_CHANGED: ${{ steps.changed_files_detector.outputs.admin }}
           BACKEND_CHANGED: ${{ steps.changed_files_detector.outputs.backend }}
           CHAT_CHANGED: ${{ steps.changed_files_detector.outputs.chat }}
-          DEMO_WORKER_CHANGED: ${{ steps.changed_files_detector.outputs.demo_worker }} # или demo-worker
-          SERVICE_GATEWAY_CHANGED: ${{ steps.changed_files_detector.outputs.service_gateway }} # или service-gateway
+          DEMO_WORKER_CHANGED: ${{ steps.changed_files_detector.outputs.demo_worker }}
+          SERVICE_GATEWAY_CHANGED: ${{ steps.changed_files_detector.outputs.service_gateway }}
           WEB_CHANGED: ${{ steps.changed_files_detector.outputs.web }}
 
   build-and-push:
