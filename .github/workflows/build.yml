@@ -230,8 +230,12 @@ jobs:
             APP_NAME=${{ matrix.service_name }}
             APP_SCOPE=${{ matrix.service_scope }}
             PRISMA_SCHEMA_PATH=${{ matrix.prisma_schema_path }}
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}:buildcache-arm64
-          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}:buildcache-arm64,mode=max,compression=zstd
+            # --- ДОБАВЛЕННЫЕ/ИЗМЕНЕННЫЕ СТРОКИ ---
+            TURBO_API=http://135.181.105.32:3000
+            TURBO_TOKEN=${{ secrets.YOUR_TURBO_REMOTE_CACHE_TOKEN }} # Используем созданный секрет
+            TURBO_TEAMID=paritet # Имя вашей команды/проекта для неймспейсинга кэша
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.service_name }}:buildcache-arm64 # Проверьте это именование
+          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.service_name }}:buildcache-arm64,mode=max,compression=zstd
 
   deploy:
     needs: [determine-changes, build-and-push]
