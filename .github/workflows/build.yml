@@ -63,65 +63,50 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        # Fetch all history for all tags and branches
-        # Это нужно для dorny/paths-filter, чтобы корректно сравнивать изменения с 'main'
-        # или другим базовым бранчем, особенно для PR. Для push на main это менее критично,
-        # но хорошая практика.
         with:
           fetch-depth: 0
 
       - name: Detect changed files
         id: changed_files_detector
-        uses: dorny/paths-filter@v3 # Используйте v3 или новее
+        uses: dorny/paths-filter@v3
         with:
-          # Токен нужен для доступа к API GitHub, чтобы получить измененные файлы для PRs.
-          # Для push событий он обычно не строго обязателен, если fetch-depth достаточно.
           token: ${{ secrets.GITHUB_TOKEN }}
           filters: |
-            # Общие файлы, изменение которых должно триггерить все сервисы,
-            # использующие соответствующие Dockerfile или зависящие от prisma глобально.
-            # Либо включите их в каждый сервис ниже.
-            # Проще всего включить общие файлы в каждый релевантный фильтр.
-
             admin: &admin_paths
               - 'apps/admin/**'
-              - 'tooling/docker/next/Dockerfile' # Dockerfile для Next.js (admin, web)
+              - 'tooling/docker/next/Dockerfile'
               - 'package.json'
-              - 'pnpm-lock.yaml' # или yarn.lock, package-lock.json
-              # - 'путь/к/общему/tsconfig.json' # если используется
-
+              - 'pnpm-lock.yaml'
             backend: &backend_paths
               - 'apps/backend/**'
-              - 'tooling/docker/nest/Dockerfile' # Dockerfile для NestJS
+              - 'tooling/docker/nest/Dockerfile'
               - 'apps/backend/prisma/schema.prisma'
               - 'package.json'
               - 'pnpm-lock.yaml'
-
             chat: &chat_paths
               - 'apps/chat/**'
               - 'tooling/docker/nest/Dockerfile'
               - 'package.json'
               - 'pnpm-lock.yaml'
-
-            demo_worker: &demo_worker_paths # Замените demo_worker на demo-worker если id должен совпадать с service_name
+            demo_worker: &demo_worker_paths
               - 'apps/demo-worker/**'
               - 'tooling/docker/nest/Dockerfile'
               - 'package.json'
               - 'pnpm-lock.yaml'
-
-            service_gateway: &service_gateway_paths # Аналогично, service_gateway vs service-gateway
+            service_gateway: &service_gateway_paths
               - 'apps/service-gateway/**'
               - 'tooling/docker/nest/Dockerfile'
               - 'package.json'
               - 'pnpm-lock.yaml'
-
             web: &web_paths
               - 'apps/web/**'
               - 'tooling/docker/next/Dockerfile'
               - 'package.json'
               - 'pnpm-lock.yaml'
+      # <<<--- КОНЕЦ ШАГА 'Detect changed files'
 
-            - name: Generate dynamic matrix
+      # НАЧАЛО НОВОГО ШАГА НА ПРАВИЛЬНОМ УРОВНЕ --->>>
+      - name: Generate dynamic matrix
         id: generate_matrix
         run: |
           FULL_CONFIG_JSON='${{ env.SERVICE_CONFIG_JSON }}'
@@ -160,12 +145,11 @@ jobs:
           if [[ "${{ steps.changed_files_detector.outputs.chat }}" == "true" ]]; then
             add_to_matrix "chat"
           fi
-          # Убедитесь, что ключи в dorny/paths-filter и id в SERVICE_CONFIG_JSON совпадают для demo-worker и service-gateway
-          if [[ "${{ steps.changed_files_detector.outputs.demo_worker }}" == "true" ]]; then # Ключ из filters
-            add_to_matrix "demo-worker" # ID из SERVICE_CONFIG_JSON
+          if [[ "${{ steps.changed_files_detector.outputs.demo_worker }}" == "true" ]]; then
+            add_to_matrix "demo-worker"
           fi
-          if [[ "${{ steps.changed_files_detector.outputs.service_gateway }}" == "true" ]]; then # Ключ из filters
-            add_to_matrix "service-gateway" # ID из SERVICE_CONFIG_JSON
+          if [[ "${{ steps.changed_files_detector.outputs.service_gateway }}" == "true" ]]; then
+            add_to_matrix "service-gateway"
           fi
           if [[ "${{ steps.changed_files_detector.outputs.web }}" == "true" ]]; then
             add_to_matrix "web"
@@ -176,10 +160,6 @@ jobs:
           echo "--- Final constructed matrix string before validation ---"
           echo "$FINAL_MATRIX_JSON"
 
-          # Валидация и "очистка" финального JSON
-          # Если FINAL_MATRIX_JSON пустой "[]", то jq -c . его так и оставит.
-          # Если он содержит данные, он их очистит.
-          # Если он невалиден, jq здесь выдаст ошибку.
           VALIDATED_MATRIX_JSON=$(echo "$FINAL_MATRIX_JSON" | jq -c .)
 
           echo "--- Validated matrix JSON for GITHUB_OUTPUT ---"
@@ -188,13 +168,14 @@ jobs:
           echo "matrix=$VALIDATED_MATRIX_JSON" >> $GITHUB_OUTPUT
           echo "any_changed=$ANY_CHANGED" >> $GITHUB_OUTPUT
         env:
-          # Передаем outputs из предыдущего шага в env для удобства в bash
           ADMIN_CHANGED: ${{ steps.changed_files_detector.outputs.admin }}
           BACKEND_CHANGED: ${{ steps.changed_files_detector.outputs.backend }}
           CHAT_CHANGED: ${{ steps.changed_files_detector.outputs.chat }}
           DEMO_WORKER_CHANGED: ${{ steps.changed_files_detector.outputs.demo_worker }}
           SERVICE_GATEWAY_CHANGED: ${{ steps.changed_files_detector.outputs.service_gateway }}
           WEB_CHANGED: ${{ steps.changed_files_detector.outputs.web }}
+
+  # ... остальная часть вашего workflow ...
 
   build-and-push:
     needs: determine-changes
