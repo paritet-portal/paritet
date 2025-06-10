@@ -1,4 +1,4 @@
-name: "Build and Deploy Changed Services"
+name: "Build and Deploy All Services"
 
 on:
   push:
@@ -10,80 +10,66 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  detect-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      # Мы будем выводить JSON-массив объектов, а не просто строк
-      matrix: ${{ steps.create-matrix.outputs.matrix }}
-      # Добавим флаг, чтобы было легче проверять, есть ли изменения
-      has_changes: ${{ steps.create-matrix.outputs.has_changes }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Get changed app directories
-        id: changed-apps
-        uses: tj-actions/changed-files@v44
-        with:
-          dir_names: "true"
-          files: apps/**
-
-      - name: Create full build matrix
-        id: create-matrix
-        env:
-          # Полная информация о всех сервисах
-          SERVICES_JSON: >
-            [
-              { "name": "admin", "scope": "admin", "dockerfile": "tooling/docker/next/Dockerfile", "prisma_schema": "" },
-              { "name": "backend", "scope": "backend", "dockerfile": "tooling/docker/nest/Dockerfile", "prisma_schema": "./apps/backend/prisma/schema.prisma" },
-              { "name": "chat", "scope": "chat", "dockerfile": "tooling/docker/nest/Dockerfile", "prisma_schema": "" },
-              { "name": "demo-worker", "scope": "demo-worker", "dockerfile": "tooling/docker/nest/Dockerfile", "prisma_schema": "" },
-              { "name": "service-gateway", "scope": "service-gateway", "dockerfile": "tooling/docker/nest/Dockerfile", "prisma_schema": "" },
-              { "name": "web", "scope": "web", "dockerfile": "tooling/docker/next/Dockerfile", "prisma_schema": "" }
-            ]
-        run: |
-          # Получаем список измененных папок
-          changed_list="${{ steps.changed-apps.outputs.all_changed_files }}"
-
-          # Если список пустой, создаем пустую матрицу и выходим
-          if [[ -z "$changed_list" ]]; then
-            echo "No changes in /apps detected."
-            echo "matrix={\"include\":[]}" >> $GITHUB_OUTPUT
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          # Если изменения есть, фильтруем полный список сервисов
-          # и создаем матрицу только из измененных
-          echo "Changes detected in: $changed_list"
-          matrix=$(echo "$SERVICES_JSON" | jq --arg list "$changed_list" '[.[] | select(.name as $name | $list | split(" ") | index($name))]')
-          echo "matrix={\"include\":$matrix}" >> $GITHUB_OUTPUT
-          echo "has_changes=true" >> $GITHUB_OUTPUT
-
   build-and-push:
-    # ----------------------------------------------------
-    # ЗАПУСКАЕМСЯ ТОЛЬКО ЕСЛИ ФЛАГ 'has_changes' РАВЕН 'true'
-    # ----------------------------------------------------
-    if: needs.detect-changes.outputs.has_changes == 'true'
-    needs: detect-changes
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+
     strategy:
       fail-fast: false
-      # Матрица теперь содержит полные объекты, а не только имена
-      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+      max-parallel: 6
+      matrix:
+        # --- ТОЧНАЯ МАТРИЦА ДЛЯ ВАШИХ 6 СЕРВИСОВ ---
+        include:
+          - service_name: admin
+            service_scope: admin
+            dockerfile_path: tooling/docker/next/Dockerfile
+            prisma_schema_path: ""
+
+          - service_name: backend
+            service_scope: backend
+            dockerfile_path: tooling/docker/nest/Dockerfile
+            prisma_schema_path: ./apps/backend/prisma/schema.prisma
+
+          - service_name: chat
+            service_scope: chat
+            dockerfile_path: tooling/docker/nest/Dockerfile
+            prisma_schema_path: ""
+
+          - service_name: demo-worker
+            service_scope: demo-worker
+            dockerfile_path: tooling/docker/nest/Dockerfile
+            prisma_schema_path: ""
+
+          - service_name: service-gateway
+            service_scope: service-gateway
+            dockerfile_path: tooling/docker/nest/Dockerfile
+            prisma_schema_path: ""
+
+          - service_name: web
+            service_scope: web
+            dockerfile_path: tooling/docker/next/Dockerfile
+            prisma_schema_path: ""
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Restore Turborepo cache
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -91,161 +77,38 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image for ${{ matrix.name }}
+      - name: Build and push Docker image for ${{ matrix.service_name }}
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           platforms: linux/amd64,linux/arm64
-          # Все данные берем напрямую из матрицы
-          file: ${{ matrix.dockerfile }}
-          tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.name }}:latest
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.name }}:${{ github.sha }}
+          file: ${{ matrix.dockerfile_path }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}:latest
           build-args: |
-            APP_NAME=${{ matrix.name }}
-            APP_SCOPE=${{ matrix.scope }}
-            PRISMA_SCHEMA_PATH=${{ matrix.prisma_schema }}
+            APP_NAME=${{ matrix.service_name }}
+            APP_SCOPE=${{ matrix.service_scope }}
+            PRISMA_SCHEMA_PATH=${{ matrix.prisma_schema_path }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   deploy:
-    # Запускаем всегда, после предыдущих шагов
-    if: always()
-    needs: [detect-changes, build-and-push]
+    needs: build-and-push
     runs-on: ubuntu-latest
+
     steps:
-      - name: Deploy to VPS
-        # Если изменений не было, deploy все равно выполнится,
-        # но docker compose pull ничего не скачает, что корректно.
-        if: needs.detect-changes.outputs.has_changes == 'true'
+      - name: Deploy to VPS via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HETZNER_VPS_HOST }}
           username: ${{ secrets.HETZNER_VPS_USER }}
           key: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}
+          command_timeout: 15m
           script: |
             cd ~/paritet
-            echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-            docker compose pull
-            docker compose up -d --remove-orphans
-            docker image prune -a -f
-      - name: No changes to deploy
-        if: needs.detect-changes.outputs.has_changes == 'false'
-        run: echo "No changes detected in services, skipping deployment."
-
-
-# name: "Build and Deploy All Services"
-
-# on:
-#   push:
-#     branches:
-#       - main
-#   workflow_dispatch:
-
-# env:
-#   REGISTRY: ghcr.io
-
-# jobs:
-#   build-and-push:
-#     runs-on: ubuntu-latest
-#     permissions:
-#       contents: read
-#       packages: write
-
-#     strategy:
-#       fail-fast: false
-#       max-parallel: 6
-#       matrix:
-#         # --- ТОЧНАЯ МАТРИЦА ДЛЯ ВАШИХ 6 СЕРВИСОВ ---
-#         include:
-#           - service_name: admin
-#             service_scope: admin
-#             dockerfile_path: tooling/docker/next/Dockerfile
-#             prisma_schema_path: ""
-
-#           - service_name: backend
-#             service_scope: backend
-#             dockerfile_path: tooling/docker/nest/Dockerfile
-#             prisma_schema_path: ./apps/backend/prisma/schema.prisma
-
-#           - service_name: chat
-#             service_scope: chat
-#             dockerfile_path: tooling/docker/nest/Dockerfile
-#             prisma_schema_path: ""
-
-#           - service_name: demo-worker
-#             service_scope: demo-worker
-#             dockerfile_path: tooling/docker/nest/Dockerfile
-#             prisma_schema_path: ""
-
-#           - service_name: service-gateway
-#             service_scope: service-gateway
-#             dockerfile_path: tooling/docker/nest/Dockerfile
-#             prisma_schema_path: ""
-
-#           - service_name: web
-#             service_scope: web
-#             dockerfile_path: tooling/docker/next/Dockerfile
-#             prisma_schema_path: ""
-
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v4
-
-#       - name: Restore Turborepo cache
-#         uses: actions/cache@v4
-#         with:
-#           path: .turbo
-#           key: ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}
-#           restore-keys: |
-#             ${{ runner.os }}-turbo-
-
-#       - name: Set up QEMU
-#         uses: docker/setup-qemu-action@v3
-
-#       - name: Set up Docker Buildx
-#         uses: docker/setup-buildx-action@v3
-
-#       - name: Log in to GitHub Container Registry
-#         uses: docker/login-action@v3
-#         with:
-#           registry: ${{ env.REGISTRY }}
-#           username: ${{ github.actor }}
-#           password: ${{ secrets.GITHUB_TOKEN }}
-
-#       - name: Build and push Docker image for ${{ matrix.service_name }}
-#         uses: docker/build-push-action@v5
-#         with:
-#           context: .
-#           push: true
-#           platforms: linux/amd64,linux/arm64
-#           file: ${{ matrix.dockerfile_path }}
-#           tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}:latest
-#           build-args: |
-#             APP_NAME=${{ matrix.service_name }}
-#             APP_SCOPE=${{ matrix.service_scope }}
-#             PRISMA_SCHEMA_PATH=${{ matrix.prisma_schema_path }}
-#           cache-from: type=gha
-#           cache-to: type=gha,mode=max
-
-#   deploy:
-#     needs: build-and-push
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Deploy to VPS via SSH
-#         uses: appleboy/ssh-action@v1.0.3
-#         with:
-#           host: ${{ secrets.HETZNER_VPS_HOST }}
-#           username: ${{ secrets.HETZNER_VPS_USER }}
-#           key: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}
-#           command_timeout: 15m
-#           script: |
-#             cd ~/paritet
-#             # Используем ваш секрет CR_PAT
-#             echo "${{ secrets.CR_PAT }}" | /usr/bin/docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-#             # Используем docker-compose с дефисом
-#             /usr/bin/docker-compose pull
-#             /usr/bin/docker-compose up -d
-#             /usr/bin/docker image prune -a -f
+            # Используем ваш секрет CR_PAT
+            echo "${{ secrets.CR_PAT }}" | /usr/bin/docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+            # Используем docker-compose с дефисом
+            /usr/bin/docker-compose pull
+            /usr/bin/docker-compose up -d
+            /usr/bin/docker image prune -a -f
