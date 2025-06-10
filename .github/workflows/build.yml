@@ -1,5 +1,3 @@
-# Имя файла: .github/workflows/deploy-changed.yml
-
 name: "Build and Deploy Changed Services"
 
 on:
@@ -15,7 +13,10 @@ jobs:
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      # Мы будем выводить JSON-массив объектов, а не просто строк
+      matrix: ${{ steps.create-matrix.outputs.matrix }}
+      # Добавим флаг, чтобы было легче проверять, есть ли изменения
+      has_changes: ${{ steps.create-matrix.outputs.has_changes }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,18 +30,43 @@ jobs:
           dir_names: "true"
           files: apps/**
 
-      - name: Create build matrix
-        id: set-matrix
+      - name: Create full build matrix
+        id: create-matrix
+        env:
+          # Полная информация о всех сервисах
+          SERVICES_JSON: >
+            [
+              { "name": "admin", "scope": "admin", "dockerfile": "tooling/docker/next/Dockerfile", "prisma_schema": "" },
+              { "name": "backend", "scope": "backend", "dockerfile": "tooling/docker/nest/Dockerfile", "prisma_schema": "./apps/backend/prisma/schema.prisma" },
+              { "name": "chat", "scope": "chat", "dockerfile": "tooling/docker/nest/Dockerfile", "prisma_schema": "" },
+              { "name": "demo-worker", "scope": "demo-worker", "dockerfile": "tooling/docker/nest/Dockerfile", "prisma_schema": "" },
+              { "name": "service-gateway", "scope": "service-gateway", "dockerfile": "tooling/docker/nest/Dockerfile", "prisma_schema": "" },
+              { "name": "web", "scope": "web", "dockerfile": "tooling/docker/next/Dockerfile", "prisma_schema": "" }
+            ]
         run: |
-          json_array=$(echo "${{ steps.changed-apps.outputs.all_changed_files }}" | sed 's/apps\///g' | jq -R -s -c 'split(" ") | map(select(length > 0))')
-          echo "matrix={\"service_name\":${json_array}}" >> $GITHUB_OUTPUT
-          echo "Generated matrix for build: {\"service_name\":${json_array}}"
+          # Получаем список измененных папок
+          changed_list="${{ steps.changed-apps.outputs.all_changed_files }}"
+
+          # Если список пустой, создаем пустую матрицу и выходим
+          if [[ -z "$changed_list" ]]; then
+            echo "No changes in /apps detected."
+            echo "matrix={\"include\":[]}" >> $GITHUB_OUTPUT
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Если изменения есть, фильтруем полный список сервисов
+          # и создаем матрицу только из измененных
+          echo "Changes detected in: $changed_list"
+          matrix=$(echo "$SERVICES_JSON" | jq --arg list "$changed_list" '[.[] | select(.name as $name | $list | split(" ") | index($name))]')
+          echo "matrix={\"include\":$matrix}" >> $GITHUB_OUTPUT
+          echo "has_changes=true" >> $GITHUB_OUTPUT
 
   build-and-push:
     # ----------------------------------------------------
-    # ВОТ ЭТОТ IF УЖЕ ЕСТЬ И ОН ПРАВИЛЬНЫЙ
+    # ЗАПУСКАЕМСЯ ТОЛЬКО ЕСЛИ ФЛАГ 'has_changes' РАВЕН 'true'
     # ----------------------------------------------------
-    if: needs.detect-changes.outputs.matrix != '{"service_name":[]}'
+    if: needs.detect-changes.outputs.has_changes == 'true'
     needs: detect-changes
     runs-on: ubuntu-latest
     permissions:
@@ -48,36 +74,16 @@ jobs:
       packages: write
     strategy:
       fail-fast: false
+      # Матрица теперь содержит полные объекты, а не только имена
       matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Define Service Properties
-        id: service-props
-        env:
-          SERVICES_JSON: |
-            [
-              { "name": "admin",         "scope": "admin",         "dockerfile": "tooling/docker/next/Dockerfile", "prisma_schema": "" },
-              { "name": "backend",       "scope": "backend",       "dockerfile": "tooling/docker/nest/Dockerfile", "prisma_schema": "./apps/backend/prisma/schema.prisma" },
-              { "name": "chat",          "scope": "chat",          "dockerfile": "tooling/docker/nest/Dockerfile", "prisma_schema": "" },
-              { "name": "demo-worker",   "scope": "demo-worker",   "dockerfile": "tooling/docker/nest/Dockerfile", "prisma_schema": "" },
-              { "name": "service-gateway", "scope": "service-gateway", "dockerfile": "tooling/docker/nest/Dockerfile", "prisma_schema": "" },
-              { "name": "web",           "scope": "web",           "dockerfile": "tooling/docker/next/Dockerfile", "prisma_schema": "" }
-            ]
-        run: |
-          SERVICE_NAME="${{ matrix.service_name }}"
-          SERVICE_INFO=$(echo "$SERVICES_JSON" | jq -c ".[] | select(.name == \"$SERVICE_NAME\")")
-          echo "scope=$(echo $SERVICE_INFO | jq -r '.scope')" >> $GITHUB_OUTPUT
-          echo "dockerfile_path=$(echo $SERVICE_INFO | jq -r '.dockerfile')" >> $GITHUB_OUTPUT
-          echo "prisma_schema_path=$(echo $SERVICE_INFO | jq -r '.prisma_schema')" >> $GITHUB_OUTPUT
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -85,42 +91,34 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # --- ИСПРАВЛЕНИЕ ОШИБКИ С ТЕГАМИ ---
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}
-          tags: |
-            type=sha,prefix=,format=short
-            type=raw,value=latest,enable={{is_default_branch}}
-
-      - name: Build and push Docker image for ${{ matrix.service_name }}
+      - name: Build and push Docker image for ${{ matrix.name }}
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           platforms: linux/amd64,linux/arm64
-          file: ${{ steps.service-props.outputs.dockerfile_path }}
-          # ИСПОЛЬЗУЕМ ПРАВИЛЬНЫЙ СПОСОБ ЗАДАНИЯ ТЕГОВ
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          # Все данные берем напрямую из матрицы
+          file: ${{ matrix.dockerfile }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.name }}:latest
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.name }}:${{ github.sha }}
           build-args: |
-            APP_NAME=${{ matrix.service_name }}
-            APP_SCOPE=${{ steps.service-props.outputs.scope }}
-            PRISMA_SCHEMA_PATH=${{ steps.service-props.outputs.prisma_schema_path }}
+            APP_NAME=${{ matrix.name }}
+            APP_SCOPE=${{ matrix.scope }}
+            PRISMA_SCHEMA_PATH=${{ matrix.prisma_schema }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   deploy:
-    # ----------------------------------------------------
-    # ДОБАВЛЯЕМ IF СЮДА ДЛЯ БОЛЬШЕЙ НАДЕЖНОСТИ
-    # ----------------------------------------------------
-    if: always() && (needs.build-and-push.result == 'success' || needs.build-and-push.result == 'skipped')
+    # Запускаем всегда, после предыдущих шагов
+    if: always()
     needs: [detect-changes, build-and-push]
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to VPS via SSH
+      - name: Deploy to VPS
+        # Если изменений не было, deploy все равно выполнится,
+        # но docker compose pull ничего не скачает, что корректно.
+        if: needs.detect-changes.outputs.has_changes == 'true'
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HETZNER_VPS_HOST }}
@@ -132,6 +130,9 @@ jobs:
             docker compose pull
             docker compose up -d --remove-orphans
             docker image prune -a -f
+      - name: No changes to deploy
+        if: needs.detect-changes.outputs.has_changes == 'false'
+        run: echo "No changes detected in services, skipping deployment."
 
 
 # name: "Build and Deploy All Services"
