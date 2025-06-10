@@ -105,6 +105,7 @@ jobs:
           # Используем выходные данные из шага 'Define Service Properties'
           file: ${{ steps.service-props.outputs.dockerfile_path }}
           tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}:latest
+                ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}:${{ github.sha }}
           build-args: |
             APP_NAME=${{ matrix.service_name }}
             APP_SCOPE=${{ steps.service-props.outputs.scope }}
