@@ -1,4 +1,4 @@
-name: "Build and Deploy All Services"
+name: "Build and Deploy Changed Services"
 
 on:
   push:
@@ -8,9 +8,168 @@ on:
 
 env:
   REGISTRY: ghcr.io
+  # Определим здесь полные данные для каждого сервиса для удобства генерации матрицы
+  # Это можно было бы хранить в отдельном файле и читать, но для YAML так проще
+  # Обратите внимание на правильный синтаксис для многострочных YAML-строк, если решите форматировать иначе
+  SERVICE_CONFIG_JSON: |-
+    [
+      {
+        "id": "admin", "service_name": "admin", "service_scope": "admin",
+        "dockerfile_path": "tooling/docker/next/Dockerfile", "prisma_schema_path": ""
+      },
+      {
+        "id": "backend", "service_name": "backend", "service_scope": "backend",
+        "dockerfile_path": "tooling/docker/nest/Dockerfile", "prisma_schema_path": "./apps/backend/prisma/schema.prisma"
+      },
+      {
+        "id": "chat", "service_name": "chat", "service_scope": "chat",
+        "dockerfile_path": "tooling/docker/nest/Dockerfile", "prisma_schema_path": ""
+      },
+      {
+        "id": "demo-worker", "service_name": "demo-worker", "service_scope": "demo-worker",
+        "dockerfile_path": "tooling/docker/nest/Dockerfile", "prisma_schema_path": ""
+      },
+      {
+        "id": "service-gateway", "service_name": "service-gateway", "service_scope": "service-gateway",
+        "dockerfile_path": "tooling/docker/nest/Dockerfile", "prisma_schema_path": ""
+      },
+      {
+        "id": "web", "service_name": "web", "service_scope": "web",
+        "dockerfile_path": "tooling/docker/next/Dockerfile", "prisma_schema_path": ""
+      }
+    ]
 
 jobs:
+  determine-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.generate_matrix.outputs.matrix }}
+      any_changed: ${{ steps.generate_matrix.outputs.any_changed }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        # Fetch all history for all tags and branches
+        # Это нужно для dorny/paths-filter, чтобы корректно сравнивать изменения с 'main'
+        # или другим базовым бранчем, особенно для PR. Для push на main это менее критично,
+        # но хорошая практика.
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed files
+        id: changed_files_detector
+        uses: dorny/paths-filter@v3 # Используйте v3 или новее
+        with:
+          # Токен нужен для доступа к API GitHub, чтобы получить измененные файлы для PRs.
+          # Для push событий он обычно не строго обязателен, если fetch-depth достаточно.
+          token: ${{ secrets.GITHUB_TOKEN }}
+          filters: |
+            # Общие файлы, изменение которых должно триггерить все сервисы,
+            # использующие соответствующие Dockerfile или зависящие от prisma глобально.
+            # Либо включите их в каждый сервис ниже.
+            # Проще всего включить общие файлы в каждый релевантный фильтр.
+
+            admin: &admin_paths
+              - 'apps/admin/**'
+              - 'tooling/docker/next/Dockerfile' # Dockerfile для Next.js (admin, web)
+              - 'package.json'
+              - 'pnpm-lock.yaml' # или yarn.lock, package-lock.json
+              # - 'путь/к/общему/tsconfig.json' # если используется
+
+            backend: &backend_paths
+              - 'apps/backend/**'
+              - 'tooling/docker/nest/Dockerfile' # Dockerfile для NestJS
+              - 'apps/backend/prisma/schema.prisma'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+
+            chat: &chat_paths
+              - 'apps/chat/**'
+              - 'tooling/docker/nest/Dockerfile'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+
+            demo_worker: &demo_worker_paths # Замените demo_worker на demo-worker если id должен совпадать с service_name
+              - 'apps/demo-worker/**'
+              - 'tooling/docker/nest/Dockerfile'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+
+            service_gateway: &service_gateway_paths # Аналогично, service_gateway vs service-gateway
+              - 'apps/service-gateway/**'
+              - 'tooling/docker/nest/Dockerfile'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+
+            web: &web_paths
+              - 'apps/web/**'
+              - 'tooling/docker/next/Dockerfile'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+
+      - name: Generate dynamic matrix
+        id: generate_matrix
+        run: |
+          FULL_CONFIG_JSON='${{ env.SERVICE_CONFIG_JSON }}'
+          MATRIX_ARRAY="["
+          ANY_CHANGED="false"
+
+          if [[ "${{ steps.changed_files_detector.outputs.admin }}" == "true" ]]; then
+            SERVICE_JSON=$(echo "$FULL_CONFIG_JSON" | jq '.[] | select(.id == "admin")')
+            MATRIX_ARRAY+="${SERVICE_JSON},"
+            ANY_CHANGED="true"
+          fi
+          if [[ "${{ steps.changed_files_detector.outputs.backend }}" == "true" ]]; then
+            SERVICE_JSON=$(echo "$FULL_CONFIG_JSON" | jq '.[] | select(.id == "backend")')
+            MATRIX_ARRAY+="${SERVICE_JSON},"
+            ANY_CHANGED="true"
+          fi
+          if [[ "${{ steps.changed_files_detector.outputs.chat }}" == "true" ]]; then
+            SERVICE_JSON=$(echo "$FULL_CONFIG_JSON" | jq '.[] | select(.id == "chat")')
+            MATRIX_ARRAY+="${SERVICE_JSON},"
+            ANY_CHANGED="true"
+          fi
+          # ВНИМАНИЕ: dorny/paths-filter использует ключи фильтров как есть.
+          # Если ключ в filters был 'demo_worker', то и output будет 'demo_worker'.
+          # Убедитесь, что id в SERVICE_CONFIG_JSON и ключи в filters совпадают.
+          # Либо используйте service_name для jq селектора, если id не совпадает с ключом фильтра.
+          if [[ "${{ steps.changed_files_detector.outputs.demo_worker }}" == "true" ]]; then # или demo-worker
+            SERVICE_JSON=$(echo "$FULL_CONFIG_JSON" | jq '.[] | select(.id == "demo-worker")') # или demo_worker
+            MATRIX_ARRAY+="${SERVICE_JSON},"
+            ANY_CHANGED="true"
+          fi
+          if [[ "${{ steps.changed_files_detector.outputs.service_gateway }}" == "true" ]]; then # или service-gateway
+            SERVICE_JSON=$(echo "$FULL_CONFIG_JSON" | jq '.[] | select(.id == "service-gateway")') # или service_gateway
+            MATRIX_ARRAY+="${SERVICE_JSON},"
+            ANY_CHANGED="true"
+          fi
+          if [[ "${{ steps.changed_files_detector.outputs.web }}" == "true" ]]; then
+            SERVICE_JSON=$(echo "$FULL_CONFIG_JSON" | jq '.[] | select(.id == "web")')
+            MATRIX_ARRAY+="${SERVICE_JSON},"
+            ANY_CHANGED="true"
+          fi
+
+          # Удалить последнюю запятую, если массив не пуст
+          if [[ "$ANY_CHANGED" == "true" ]]; then
+            MATRIX_ARRAY=$(echo "$MATRIX_ARRAY" | sed 's/,$//')
+          fi
+          MATRIX_ARRAY+="]"
+
+          echo "Generated matrix: $MATRIX_ARRAY"
+          echo "matrix=$MATRIX_ARRAY" >> $GITHUB_OUTPUT
+          echo "any_changed=$ANY_CHANGED" >> $GITHUB_OUTPUT
+        env:
+          # Передаем outputs из предыдущего шага в env для удобства в bash
+          ADMIN_CHANGED: ${{ steps.changed_files_detector.outputs.admin }}
+          BACKEND_CHANGED: ${{ steps.changed_files_detector.outputs.backend }}
+          CHAT_CHANGED: ${{ steps.changed_files_detector.outputs.chat }}
+          DEMO_WORKER_CHANGED: ${{ steps.changed_files_detector.outputs.demo_worker }} # или demo-worker
+          SERVICE_GATEWAY_CHANGED: ${{ steps.changed_files_detector.outputs.service_gateway }} # или service-gateway
+          WEB_CHANGED: ${{ steps.changed_files_detector.outputs.web }}
+
   build-and-push:
+    needs: determine-changes
+    # Запускаем только если есть изменения
+    if: needs.determine-changes.outputs.any_changed == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -18,39 +177,10 @@ jobs:
 
     strategy:
       fail-fast: false
-      max-parallel: 6
+      max-parallel: 6 # Можно оставить, т.к. матрица теперь будет меньше
       matrix:
-        # --- ТОЧНАЯ МАТРИЦА ДЛЯ ВАШИХ 6 СЕРВИСОВ ---
-        include:
-          - service_name: admin
-            service_scope: admin
-            dockerfile_path: tooling/docker/next/Dockerfile
-            prisma_schema_path: ""
-
-          - service_name: backend
-            service_scope: backend
-            dockerfile_path: tooling/docker/nest/Dockerfile
-            prisma_schema_path: ./apps/backend/prisma/schema.prisma
-
-          - service_name: chat
-            service_scope: chat
-            dockerfile_path: tooling/docker/nest/Dockerfile
-            prisma_schema_path: ""
-
-          - service_name: demo-worker
-            service_scope: demo-worker
-            dockerfile_path: tooling/docker/nest/Dockerfile
-            prisma_schema_path: ""
-
-          - service_name: service-gateway
-            service_scope: service-gateway
-            dockerfile_path: tooling/docker/nest/Dockerfile
-            prisma_schema_path: ""
-
-          - service_name: web
-            service_scope: web
-            dockerfile_path: tooling/docker/next/Dockerfile
-            prisma_schema_path: ""
+        # Динамически загружаем матрицу из предыдущего job
+        include: ${{ fromJson(needs.determine-changes.outputs.matrix) }}
 
     steps:
       - name: Checkout repository
@@ -60,7 +190,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .turbo
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-turbo-${{ hashFiles('**/pnpm-lock.yaml') }} # Используйте ваш lock-файл
           restore-keys: |
             ${{ runner.os }}-turbo-
 
@@ -93,7 +223,10 @@ jobs:
           cache-to: type=gha,mode=max
 
   deploy:
-    needs: build-and-push
+    needs: [determine-changes, build-and-push]
+    # Запускаем только если были изменения И сборка прошла успешно
+    # `success()` здесь неявно проверяет результат `build-and-push`
+    if: needs.determine-changes.outputs.any_changed == 'true' && success()
     runs-on: ubuntu-latest
 
     steps:
@@ -106,9 +239,125 @@ jobs:
           command_timeout: 15m
           script: |
             cd ~/paritet
-            # Используем ваш секрет CR_PAT
             echo "${{ secrets.CR_PAT }}" | /usr/bin/docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-            # Используем docker-compose с дефисом
+            # docker-compose pull скачает новые образы для всех сервисов,
+            # но docker-compose up -d пересоздаст только те контейнеры, чьи образы обновились.
             /usr/bin/docker-compose pull
-            /usr/bin/docker-compose up -d
+            /usr/bin/docker-compose up -d --remove-orphans # --remove-orphans полезно, если сервисы удаляются из compose файла
             /usr/bin/docker image prune -a -f
+
+
+# name: "Build and Deploy All Services"
+
+# on:
+#   push:
+#     branches:
+#       - main
+#   workflow_dispatch:
+
+# env:
+#   REGISTRY: ghcr.io
+
+# jobs:
+#   build-and-push:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: read
+#       packages: write
+
+#     strategy:
+#       fail-fast: false
+#       max-parallel: 6
+#       matrix:
+#         # --- ТОЧНАЯ МАТРИЦА ДЛЯ ВАШИХ 6 СЕРВИСОВ ---
+#         include:
+#           - service_name: admin
+#             service_scope: admin
+#             dockerfile_path: tooling/docker/next/Dockerfile
+#             prisma_schema_path: ""
+
+#           - service_name: backend
+#             service_scope: backend
+#             dockerfile_path: tooling/docker/nest/Dockerfile
+#             prisma_schema_path: ./apps/backend/prisma/schema.prisma
+
+#           - service_name: chat
+#             service_scope: chat
+#             dockerfile_path: tooling/docker/nest/Dockerfile
+#             prisma_schema_path: ""
+
+#           - service_name: demo-worker
+#             service_scope: demo-worker
+#             dockerfile_path: tooling/docker/nest/Dockerfile
+#             prisma_schema_path: ""
+
+#           - service_name: service-gateway
+#             service_scope: service-gateway
+#             dockerfile_path: tooling/docker/nest/Dockerfile
+#             prisma_schema_path: ""
+
+#           - service_name: web
+#             service_scope: web
+#             dockerfile_path: tooling/docker/next/Dockerfile
+#             prisma_schema_path: ""
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+
+#       - name: Restore Turborepo cache
+#         uses: actions/cache@v4
+#         with:
+#           path: .turbo
+#           key: ${{ runner.os }}-turbo-${{ hashFiles('**/package-lock.json') }}
+#           restore-keys: |
+#             ${{ runner.os }}-turbo-
+
+#       - name: Set up QEMU
+#         uses: docker/setup-qemu-action@v3
+
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v3
+
+#       - name: Log in to GitHub Container Registry
+#         uses: docker/login-action@v3
+#         with:
+#           registry: ${{ env.REGISTRY }}
+#           username: ${{ github.actor }}
+#           password: ${{ secrets.GITHUB_TOKEN }}
+
+#       - name: Build and push Docker image for ${{ matrix.service_name }}
+#         uses: docker/build-push-action@v5
+#         with:
+#           context: .
+#           push: true
+#           platforms: linux/amd64,linux/arm64
+#           file: ${{ matrix.dockerfile_path }}
+#           tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.service_name }}:latest
+#           build-args: |
+#             APP_NAME=${{ matrix.service_name }}
+#             APP_SCOPE=${{ matrix.service_scope }}
+#             PRISMA_SCHEMA_PATH=${{ matrix.prisma_schema_path }}
+#           cache-from: type=gha
+#           cache-to: type=gha,mode=max
+
+#   deploy:
+#     needs: build-and-push
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Deploy to VPS via SSH
+#         uses: appleboy/ssh-action@v1.0.3
+#         with:
+#           host: ${{ secrets.HETZNER_VPS_HOST }}
+#           username: ${{ secrets.HETZNER_VPS_USER }}
+#           key: ${{ secrets.HETZNER_SSH_PRIVATE_KEY }}
+#           command_timeout: 15m
+#           script: |
+#             cd ~/paritet
+#             # Используем ваш секрет CR_PAT
+#             echo "${{ secrets.CR_PAT }}" | /usr/bin/docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+#             # Используем docker-compose с дефисом
+#             /usr/bin/docker-compose pull
+#             /usr/bin/docker-compose up -d
+#             /usr/bin/docker image prune -a -f
