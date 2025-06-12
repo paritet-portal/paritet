@@ -255,11 +255,11 @@ jobs:
           script: |
             cd ~/paritet
             echo "${{ secrets.CR_PAT }}" | /usr/bin/docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-            # docker-compose pull скачает новые образы для всех сервисов,
-            # но docker-compose up -d пересоздаст только те контейнеры, чьи образы обновились.
-            /usr/bin/docker-compose pull
-            /usr/bin/docker-compose up -d --remove-orphans # --remove-orphans полезно, если сервисы удаляются из compose файла
-            /usr/bin/docker image prune -a -f
+            echo "Using Docker Compose V2"
+            docker compose version
+            docker compose pull
+            docker compose up -d --remove-orphans
+            docker image prune -a -f
 
 
 # name: "Build and Deploy All Services"
