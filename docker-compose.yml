@@ -1,178 +1,118 @@
-# version: '3.8'
-
-# services:
-#   # ----------------------------------
-#   #       ПРИЛОЖЕНИЯ (локальная сборка)
-#   # ----------------------------------
-#   admin:
-#     # Указываем Docker'у собрать образ локально
-#     build:
-#       context: . # Собирать из текущей директории (корень проекта)
-#       dockerfile: tooling/docker/next/Dockerfile # Путь к Dockerfile
-#       args: # Аргументы для сборки
-#         APP_NAME: admin
-#         APP_SCOPE: admin
-#     image: paritet/admin:local # Даем образу локальное имя
-#     restart: always
-#     ports:
-#       - "3001:3001"
-#     environment:
-#       - NODE_ENV=production
-#     networks:
-#       - paritet_network
-
-#   chat:
-#     build:
-#       context: .
-#       dockerfile: tooling/docker/nest/Dockerfile
-#       args:
-#         APP_NAME: chat
-#         APP_SCOPE: chat
-#     image: paritet/chat:local
-#     restart: always
-#     ports:
-#       - "5004:5004"
-#     environment:
-#       - NODE_ENV=production
-#       - MONGO_URI=mongodb://root:example@mongo:27017/chat?authSource=admin
-#       - PORT=5004
-#       - CLERK_JWKS_URL=
-#       - CLERK_ISSUER=
-#       - CLERK_BACK_URL=
-#     networks:
-#       - paritet_network
-
-#   demo-worker:
-#     build:
-#       context: .
-#       dockerfile: tooling/docker/nest/Dockerfile
-#       args:
-#         APP_NAME: demo-worker
-#         APP_SCOPE: demo-worker
-#     image: paritet/demo-worker:local
-#     restart: always
-#     environment:
-#       - NODE_ENV=production
-#     networks:
-#       - paritet_network
-
-#   service-gateway:
-#     build:
-#       context: .
-#       dockerfile: tooling/docker/nest/Dockerfile
-#       args:
-#         APP_NAME: service-gateway
-#         APP_SCOPE: service-gateway
-#     image: paritet/service-gateway:local
-#     restart: always
-#     ports:
-#       - "4500:4500"
-#     environment:
-#       - NODE_ENV=production
-#     networks:
-#       - paritet_network
-
-#   web:
-#     build:
-#       context: .
-#       dockerfile: tooling/docker/next/Dockerfile
-#       args:
-#         APP_NAME: web
-#         APP_SCOPE: web
-#     image: paritet/web:local
-#     restart: always
-#     ports:
-#       - "3200:3200"
-#     environment:
-#       - NODE_ENV=production
-#     networks:
-#       - paritet_network
-
-#   backend:
-#     build:
-#       context: .
-#       dockerfile: tooling/docker/nest/Dockerfile
-#       args:
-#         APP_NAME: backend
-#         APP_SCOPE: backend
-#     image: paritet/backend:local
-#     restart: always
-#     ports:
-#       - "5003:5003"
-#     environment:
-#       - NODE_ENV=production
-#       - DATABASE_URL=postgresql://fvst:fvst@postgres:5432/fvst?schema=user
-#       - PORT=5003
-#       - CLERK_ISSUER=
-#       - CLERK_JWKS_URL=
-#       - REDIS_HOST=redis
-#       - REDIS_PORT=6379
-#     networks:
-#       - paritet_network
-
-#   # ----------------------------------
-#   #       БАЗЫ ДАННЫХ (остаются без изменений)
-#   # ----------------------------------
-#   postgres:
-#     image: postgres:17.5
-#     restart: always
-#     environment:
-#       POSTGRES_USER: fvst
-#       POSTGRES_PASSWORD: fvst
-#       POSTGRES_DB: fvst
-#     volumes:
-#       - postgres_data:/var/lib/postgresql/data
-#     ports:
-#       - "5432:5432"
-#     networks:
-#       - paritet_network
-
-#   redis:
-#     image: redis:7.4.1-alpine
-#     restart: always
-#     ports:
-#       - "6379:6379"
-#     command: redis-server --save 20 1 --loglevel warning
-#     volumes:
-#       - redis_data:/data
-#     networks:
-#       - paritet_network
-
-#   mongo:
-#     image: mongo:8.0
-#     restart: always
-#     environment:
-#       MONGO_INITDB_ROOT_USERNAME: root
-#       MONGO_INITDB_ROOT_PASSWORD: example
-#     ports:
-#       - "27017:27017"
-#     volumes:
-#       - mongo_data:/data/db
-#     networks:
-#       - paritet_network
-
-# # ----------------------------------
-# #       ТОМА И СЕТИ
-# # ----------------------------------
-# volumes:
-#   postgres_data:
-#   redis_data:
-#   mongo_data:
-
-# networks:
-#   paritet_network:
-#     driver: bridge
-
-
-
-
-
-
-
-
-
 
 services:
+  # ----------------------------------
+  #       ПРИЛОЖЕНИЯ (локальная сборка)
+  # ----------------------------------
+  admin:
+    # Указываем Docker'у собрать образ локально
+    build:
+      context: . # Собирать из текущей директории (корень проекта)
+      dockerfile: tooling/docker/next/Dockerfile # Путь к Dockerfile
+      args: # Аргументы для сборки
+        APP_NAME: admin
+        APP_SCOPE: admin
+    image: paritet/admin:local # Даем образу локальное имя
+    restart: always
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - paritet_network
+
+  chat:
+    build:
+      context: .
+      dockerfile: tooling/docker/nest/Dockerfile
+      args:
+        APP_NAME: chat
+        APP_SCOPE: chat
+    image: paritet/chat:local
+    restart: always
+    ports:
+      - "5004:5002"
+    environment:
+      - NODE_ENV=production
+      - MONGO_URI=mongodb://root:example@mongo:27017/chat?authSource=admin
+      - CHAT_MONGODB_URI=mongodb://mychatuser:mychatpassword@mongo:27017/chat_db_from_seed?authSource=chat_db_from_seed
+      - PORT=5002
+      - CLERK_JWKS_URL=
+      - CLERK_ISSUER=
+      - CLERK_BACK_URL=
+    networks:
+      - paritet_network
+
+  demo-worker:
+    build:
+      context: .
+      dockerfile: tooling/docker/nest/Dockerfile
+      args:
+        APP_NAME: demo-worker
+        APP_SCOPE: demo-worker
+    image: paritet/demo-worker:local
+    restart: always
+    environment:
+      - NODE_ENV=production
+    networks:
+      - paritet_network
+
+  service-gateway:
+    build:
+      context: .
+      dockerfile: tooling/docker/nest/Dockerfile
+      args:
+        APP_NAME: service-gateway
+        APP_SCOPE: service-gateway
+    image: paritet/service-gateway:local
+    restart: always
+    ports:
+      - "4500:4500"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - paritet_network
+
+  web:
+    build:
+      context: .
+      dockerfile: tooling/docker/next/Dockerfile
+      args:
+        APP_NAME: web
+        APP_SCOPE: web
+    image: paritet/web:local
+    restart: always
+    ports:
+      - "3200:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - paritet_network
+
+  backend:
+    build:
+      context: .
+      dockerfile: tooling/docker/nest/Dockerfile
+      args:
+        APP_NAME: backend
+        APP_SCOPE: backend
+    image: paritet/backend:local
+    restart: always
+    ports:
+      - "5003:5003"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://fvst:fvst@postgres:5432/fvst?schema=user
+      - PORT=5003
+      - CLERK_ISSUER=
+      - CLERK_JWKS_URL=
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    networks:
+      - paritet_network
+
+  # ----------------------------------
+  #       БАЗЫ ДАННЫХ (остаются без изменений)
+  # ----------------------------------
   postgres:
     image: postgres:17.5
     restart: always
@@ -181,9 +121,11 @@ services:
       POSTGRES_PASSWORD: fvst
       POSTGRES_DB: fvst
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - paritet_network
 
   redis:
     image: redis:7.4.1-alpine
@@ -192,7 +134,9 @@ services:
       - "6379:6379"
     command: redis-server --save 20 1 --loglevel warning
     volumes:
-      - redis:/data
+      - redis_data:/data
+    networks:
+      - paritet_network
 
   mongo:
     image: mongo:8.0
@@ -204,8 +148,64 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - paritet_network
 
+# ----------------------------------
+#       ТОМА И СЕТИ
+# ----------------------------------
 volumes:
-  postgres:
-  redis:
+  postgres_data:
+  redis_data:
   mongo_data:
+
+networks:
+  paritet_network:
+    driver: bridge
+
+
+
+
+
+
+
+
+
+
+# services:
+#   postgres:
+#     image: postgres:17.5
+#     restart: always
+#     environment:
+#       POSTGRES_USER: fvst
+#       POSTGRES_PASSWORD: fvst
+#       POSTGRES_DB: fvst
+#     volumes:
+#       - postgres:/var/lib/postgresql/data
+#     ports:
+#       - "5432:5432"
+
+#   redis:
+#     image: redis:7.4.1-alpine
+#     restart: always
+#     ports:
+#       - "6379:6379"
+#     command: redis-server --save 20 1 --loglevel warning
+#     volumes:
+#       - redis:/data
+
+#   mongo:
+#     image: mongo:8.0
+#     restart: always
+#     environment:
+#       MONGO_INITDB_ROOT_USERNAME: root
+#       MONGO_INITDB_ROOT_PASSWORD: example
+#     ports:
+#       - "27017:27017"
+#     volumes:
+#       - mongo_data:/data/db
+
+# volumes:
+#   postgres:
+#   redis:
+#   mongo_data:

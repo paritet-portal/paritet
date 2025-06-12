@@ -6,7 +6,15 @@
     "dev": "next dev -p 3200",
     "build": "npx next build && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/",
     "start": "node .next/standalone/apps/admin/server.js",
-    "lint": "next lint"
+    "test": "jest",
+    "format": "npm run format:prettier && npm run format:es",
+    "format:prettier": "prettier --write .",
+    "format:es": "eslint . --fix",
+    "lint": "npm run lint:prettier && npm run lint:typescript && npm run lint:es",
+    "lint:typescript": "tsc --noEmit",
+    "lint:prettier": "prettier --check .",
+    "lint:es": "eslint .",
+    "precommit:format": "prettier --write --ignore-unknown"
   },
   "dependencies": {
     "react": "^19.0.0",
@@ -25,7 +33,7 @@
     "@tailwindcss/postcss": "^4",
     "autoprefixer": "^10.4.14",
     "tailwindcss": "^4",
-    "eslint": "^9",
+    "eslint": "^9.28.0",
     "eslint-config-next": "15.3.3",
     "@eslint/eslintrc": "^3"
   },

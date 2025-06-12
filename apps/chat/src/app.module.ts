@@ -1,22 +1,35 @@
-// apps/chat/src/app.module.ts
-
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AppService } from './app.service'; // AppService оставляем
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { Message, MessageSchema } from './message.schema'; // <--- ДОБАВИТЬ ЭТОТ ИМПОРТ
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGO_URI'),
+        uri: configService.get<string>('CHAT_MONGODB_URI'),
+        connectionFactory: (connection) => {
+          if (connection.readyState === 1) {
+            console.log('✅ MongoDB connected successfully for App!');
+          }
+          connection.on('connected', () => console.log('MongoDB App event: connected'));
+          connection.on('disconnected', () => console.log('MongoDB App event: disconnected'));
+          connection.on('error', (error: any) => console.log('MongoDB App event: error', error));
+          return connection;
+        }
       }),
       inject: [ConfigService],
     }),
+    MongooseModule.forFeature([{ name: Message.name, schema: MessageSchema }]), // <--- ДОБАВИТЬ ЭТУ СТРОКУ
   ],
-  controllers: [], // Массив контроллеров теперь пустой
-  providers: [AppService], // Оставляем только AppService
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

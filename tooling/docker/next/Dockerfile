@@ -44,6 +44,12 @@ ARG TURBO_API
 
 # --- ИЗМЕНЕНИЕ №2: Используем APP_SCOPE вместо @apps/APP_NAME ---
 # Build the project
+
+ENV TURBO_TOKEN=${TURBO_TOKEN}
+ENV TURBO_TEAMID=${TURBO_TEAMID}
+ENV TURBO_API=${TURBO_API}
+
+
 RUN npx turbo run build --filter=${APP_SCOPE}
 
 # Prune dev dependencies

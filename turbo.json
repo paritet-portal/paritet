@@ -24,6 +24,9 @@
         "CLERK_ISSUER"
       ]
     },
+    "deploy:build": {
+      "outputs": ["dist/**", ".next/**"]
+    },
     "generate": {
       "cache": false
     },
@@ -54,20 +57,6 @@
     },
     "dev": {
       "cache": false
-    },
-    "@apps/web#dev": {
-      "cache": false,
-      "dependsOn": [
-        "@apps/service-gateway#health-check"
-      ]
-    },
-    "@apps/service-gateway#dev": {
-      "cache": false,
-      "dependsOn": [
-        "@apps/chat#health-check",
-        "@apps/backend#health-check",
-        "@apps/admin#health-check"
-      ]
     }
   }
 }

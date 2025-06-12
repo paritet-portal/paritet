@@ -12,12 +12,27 @@
     "lint": "turbo run lint",
     "clean": "turbo run clean",
     "test": "turbo run test -- --forceExit --passWithNoTests",
-    "format": "turbo run format"
+    "format": "turbo run format",
+    "list-scopes": "turbo run list-workspaces"
+  },
+  "dependencies": {
+    "@nestjs/common": "latest",
+    "@nestjs/core": "latest",
+    "@nestjs/platform-express": "latest",
+    "reflect-metadata": "^0.2.0",
+    "@nestjs/bull": "latest",
+    "bull": "latest",
+    "rxjs": "latest"
   },
   "devDependencies": {
+    "@nestjs/cli": "^11.0.0",
+    "eslint": "^9.28.0",
     "husky": "latest",
+    "jest": "^30.0.0",
     "lint-staged": "latest",
+    "prisma": "^6.9.0",
     "turbo": "latest",
+    "typescript": "^5.7.3",
     "wait-on": "latest"
   },
   "engines": {
@@ -29,7 +44,10 @@
     "@nestjs/bull": "latest",
     "@nestjs/common": "latest",
     "@nestjs/core": "latest",
-    "rxjs": "latest"
+    "rxjs": "latest",
+    "rimraf": "^4.0.0",
+    "glob": "^9.3.0",
+    "inflight": "^1.0.7"
   },
   "lint-staged": {
     "**/*": "turbo run precommit:format --"
