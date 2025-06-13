@@ -103,6 +103,8 @@ services:
     restart: always
     ports:
       - "5003:5003"
+    depends_on:
+      - postgres
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://fvst:fvst@postgres:5432/fvst?schema=user
