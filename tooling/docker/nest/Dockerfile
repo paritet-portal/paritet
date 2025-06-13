@@ -72,6 +72,7 @@ FROM base AS runner
 ARG APP_SCOPE
 
 WORKDIR /app
+RUN apk add --no-cache bash netcat-openbsd
 
 RUN addgroup --system --gid 1001 appuser && \
     adduser --system --uid 1001 appuser
@@ -83,8 +84,10 @@ COPY --from=builder --chown=appuser:appuser /app/apps/${APP_SCOPE}/package.json 
 
 # COPY --from=builder --chown=appuser:appuser /app/apps/${APP_SCOPE}/entrypoint.sh ./apps/${APP_SCOPE}/entrypoint.sh
 COPY --chown=appuser:appuser apps/${APP_SCOPE}/entrypoint.sh ./apps/${APP_SCOPE}/entrypoint.sh
+COPY --chown=appuser:appuser apps/${APP_SCOPE}/wait-for-it.sh ./apps/${APP_SCOPE}/wait-for-it.sh
 
-RUN chmod +x ./apps/${APP_SCOPE}/entrypoint.sh
+RUN chmod +x ./apps/${APP_SCOPE}/entrypoint.sh && \
+    chmod +x ./apps/${APP_SCOPE}/wait-for-it.sh
 
 USER appuser
 
