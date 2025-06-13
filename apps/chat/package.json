@@ -28,6 +28,10 @@
     "deploy:build": "npm install --no-save @nestjs/cli && npm install --no-save typescript && node ../../node_modules/@nestjs/cli/bin/nest.js build && npm run build:seed",
     "build:seed": "node ../../node_modules/typescript/bin/tsc ./src/mongo-seed.ts --outDir ./dist --module commonjs --target es2020 --esModuleInterop true --skipLibCheck true --resolveJsonModule true"
   },
+   "files": [
+    "dist",
+    "entrypoint.sh"
+  ],
   "dependencies": {
     "@nestjs/common": "^11.1.3",
     "@nestjs/config": "^4.0.2",

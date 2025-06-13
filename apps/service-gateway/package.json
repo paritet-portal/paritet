@@ -26,6 +26,10 @@
     "db:migrate": "echo no-op",
     "start:app": "node dist/main.js"
   },
+   "files": [
+    "dist",
+    "entrypoint.sh"
+  ],
   "dependencies": {
     "@nestjs/common": "latest",
     "@nestjs/core": "latest",

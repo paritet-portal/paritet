@@ -28,6 +28,10 @@
     "db:migrate": "echo no-op",
     "start:app": "node dist/main.js"
   },
+   "files": [
+    "dist",
+    "entrypoint.sh"
+  ],
   "dependencies": {
     "bull": "^4.16.5",
     "@nestjs/bull": "^11.0.2",

@@ -81,7 +81,8 @@ COPY --from=builder --chown=appuser:appuser /app/apps/${APP_SCOPE}/dist ./apps/$
 
 COPY --from=builder --chown=appuser:appuser /app/apps/${APP_SCOPE}/package.json ./apps/${APP_SCOPE}/package.json
 
-COPY --from=builder --chown=appuser:appuser /app/apps/${APP_SCOPE}/entrypoint.sh ./apps/${APP_SCOPE}/entrypoint.sh
+# COPY --from=builder --chown=appuser:appuser /app/apps/${APP_SCOPE}/entrypoint.sh ./apps/${APP_SCOPE}/entrypoint.sh
+COPY --chown=appuser:appuser apps/${APP_SCOPE}/entrypoint.sh ./apps/${APP_SCOPE}/entrypoint.sh
 
 RUN chmod +x ./apps/${APP_SCOPE}/entrypoint.sh
 
