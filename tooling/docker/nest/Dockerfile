@@ -86,6 +86,15 @@ COPY --from=builder --chown=appuser:appuser /app/apps/${APP_SCOPE}/package.json 
 COPY --chown=appuser:appuser apps/${APP_SCOPE}/entrypoint.sh ./apps/${APP_SCOPE}/entrypoint.sh
 COPY --chown=appuser:appuser apps/${APP_SCOPE}/wait-for-it.sh ./apps/${APP_SCOPE}/wait-for-it.sh
 
+# RUN chmod +x ./apps/${APP_SCOPE}/entrypoint.sh && \
+#     chmod +x ./apps/${APP_SCOPE}/wait-for-it.sh
+
+
+RUN apk add --no-cache dos2unix && \
+    dos2unix ./apps/${APP_SCOPE}/entrypoint.sh && \
+    dos2unix ./apps/${APP_SCOPE}/wait-for-it.sh && \
+    apk del dos2unix # Опционально удалить dos2unix для чистоты
+
 RUN chmod +x ./apps/${APP_SCOPE}/entrypoint.sh && \
     chmod +x ./apps/${APP_SCOPE}/wait-for-it.sh
 

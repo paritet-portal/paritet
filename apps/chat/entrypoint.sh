@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Используем /bin/sh. Если wait-for-it.sh строго требует bash,
 # то первая строка должна быть #!/bin/bash и bash должен быть установлен в Dockerfile.
 set -e
