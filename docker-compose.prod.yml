@@ -11,12 +11,14 @@ services:
       args: # Аргументы для сборки
         APP_NAME: admin
         APP_SCOPE: admin
-    image: paritet/admin:local # Даем образу локальное имя
+    image: paritet/admin:local
     restart: always
     ports:
       - "3001:3000"
     environment:
       - NODE_ENV=production
+    env_file:
+      - ./apps/admin/.env
     networks:
       - paritet_network
 
@@ -33,16 +35,10 @@ services:
       - "5004:5002"
     depends_on:
       - mongo # Гарантирует, что mongo запустится перед chat
+    environment:
+      - NODE_ENV=production
     env_file:
       - ./apps/chat/.env
-    # environment:
-    #   - NODE_ENV=production
-    #   - MONGO_URI=mongodb://root:example@mongo:27017/chat?authSource=admin
-    #   - CHAT_MONGODB_URI=mongodb://mychatuser:mychatpassword@mongo:27017/chat_db_from_seed?authSource=chat_db_from_seed
-    #   - PORT=5002
-    #   - CLERK_JWKS_URL=
-    #   - CLERK_ISSUER=
-    #   - CLERK_BACK_URL=
     networks:
       - paritet_network
 
@@ -57,6 +53,8 @@ services:
     restart: always
     environment:
       - NODE_ENV=production
+    env_file:
+      - ./apps/demo-worker/.env
     depends_on:
       - redis
     networks:
@@ -73,6 +71,8 @@ services:
     restart: always
     ports:
       - "4500:4500"
+    env_file:
+      - ./apps/service-gateway/.env
     environment:
       - NODE_ENV=production
     depends_on:
@@ -93,6 +93,8 @@ services:
       - "3200:3000"
     environment:
       - NODE_ENV=production
+    env_file:
+      - ./apps/web/.env
     networks:
       - paritet_network
 
@@ -111,12 +113,8 @@ services:
       - postgres
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://fvst:fvst@postgres:5432/fvst?schema=user
-      - PORT=5003
-      - CLERK_ISSUER=
-      - CLERK_JWKS_URL=
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+    env_file:
+      - ./apps/backend/.env
     networks:
       - paritet_network
 
@@ -174,48 +172,3 @@ networks:
     driver: bridge
 
 
-
-
-
-
-
-
-
-
-# services:
-#   postgres:
-#     image: postgres:17.5
-#     restart: always
-#     environment:
-#       POSTGRES_USER: fvst
-#       POSTGRES_PASSWORD: fvst
-#       POSTGRES_DB: fvst
-#     volumes:
-#       - postgres:/var/lib/postgresql/data
-#     ports:
-#       - "5432:5432"
-
-#   redis:
-#     image: redis:7.4.1-alpine
-#     restart: always
-#     ports:
-#       - "6379:6379"
-#     command: redis-server --save 20 1 --loglevel warning
-#     volumes:
-#       - redis:/data
-
-#   mongo:
-#     image: mongo:8.0
-#     restart: always
-#     environment:
-#       MONGO_INITDB_ROOT_USERNAME: root
-#       MONGO_INITDB_ROOT_PASSWORD: example
-#     ports:
-#       - "27017:27017"
-#     volumes:
-#       - mongo_data:/data/db
-
-# volumes:
-#   postgres:
-#   redis:
-#   mongo_data:
