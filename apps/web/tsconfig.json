@@ -1,20 +1,26 @@
+/** @type {import('next').NextConfig['typescript']} */
 {
   "extends": "@tooling/typescript/nextjs.json",
-
-  // ДОБАВЬТЕ ЭТУ СЕКЦИЮ
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@messages/*": ["./messages/*"] 
     },
-    // Также обязательно добавьте эту опцию для Next.js 14+
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "allowJs": true
   },
-
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

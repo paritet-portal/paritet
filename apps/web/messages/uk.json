@@ -1,0 +1,29 @@
+{
+    "WorksPage": {
+        "title": "Мої Роботи"
+    },
+    "Header": {
+        "navHome": "Головна",
+        "navServices": "Послуги",
+        "navResume": "Резюме",
+        "navWorks": "Роботи",
+        "navContact": "Контакти"
+    },
+    "HomePage": {
+        "title": "ласкаво просимо на сайт",
+        "welcomeMessage": "це головна сторінка"
+    },
+    "Metadata": {
+    "siteTitle": "Моє Портфоліо - Богдан",
+    "siteDescription": "Перегляньте мої проекти та навички у веб-розробці."
+    },
+    "Common": { 
+    "hireMeButton": "Найми Мене!"
+    },
+    "Resume": {
+        "Resume": "Резюме",
+        "ExpTitle": "Досвід",
+        "EduTitle": "Освіта",
+        "SkillsTitle": "Навички"
+    }
+}

@@ -28,11 +28,12 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "generate": "prisma generate",
+    "with-env": "dotenv -e .env.local",
     "db:migrate:deploy": "prisma migrate deploy",
-    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:dev": "dotenv -e .env.local -- prisma migrate dev",
     "health-check": "wait-on http://localhost:5003/health && echo Up",
-    "prisma:seed": "ts-node prisma/seed.ts",
-    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:seed": "dotenv -e .env.local -- ts-node prisma/seed.ts",
+    "prisma:migrate": "dotenv -e .env.local -- npx prisma migrate dev",
     "clean:dist": "rm -rf dist",
     "deploy:build": "npm run clean:dist && npx prisma generate --schema=./prisma/schema.prisma && npx nest build && cp -R ./prisma ./dist/",
     "db:migrate": "npx prisma migrate deploy --schema=./dist/prisma/schema.prisma",
@@ -40,15 +41,17 @@
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@prisma/client": "^6.9.0",
     "bcrypt": "^6.0.0",
-    "reflect-metadata": "^0.2.2",
+    "dotenv-flow": "^4.1.0",
     "prisma": "^6.9.0",
+    "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
-   "files": [
+  "files": [
     "dist",
     "prisma",
     "entrypoint.sh"
@@ -66,6 +69,7 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.7",
     "@types/supertest": "^6.0.2",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",

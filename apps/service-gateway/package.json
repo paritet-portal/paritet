@@ -5,6 +5,7 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+
   "scripts": {
     "build": "nest build",
     "dev": "nest start --watch",

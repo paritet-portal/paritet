@@ -9,7 +9,7 @@ import { Message, MessageSchema } from './message.schema'; // <--- ДОБАВИ�
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: ['.env.local', '.env'],
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],

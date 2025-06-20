@@ -5,6 +5,7 @@
     "tooling/*",
     "packages/*"
   ],
+  "type": "module" ,
   "scripts": {
     "prepare": "husky install",
     "build": "turbo run build",
@@ -16,12 +17,12 @@
     "list-scopes": "turbo run list-workspaces"
   },
   "dependencies": {
+    "@nestjs/bull": "latest",
     "@nestjs/common": "latest",
     "@nestjs/core": "latest",
     "@nestjs/platform-express": "latest",
-    "reflect-metadata": "^0.2.0",
-    "@nestjs/bull": "latest",
     "bull": "latest",
+    "reflect-metadata": "^0.2.0",
     "rxjs": "latest"
   },
   "devDependencies": {
@@ -33,7 +34,8 @@
     "prisma": "^6.9.0",
     "turbo": "latest",
     "typescript": "^5.7.3",
-    "wait-on": "latest"
+    "wait-on": "latest",
+    "next-intl": "^4.1.0"
   },
   "engines": {
     "npm": ">=10.0.0",
