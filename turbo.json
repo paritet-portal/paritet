@@ -16,12 +16,9 @@
         "public/dist/**"
       ],
       "env": [
-        "VERCEL_URL",
         "PORT",
         "NODE_ENV",
-        "DATABASE_URL",
-        "CLERK_JWSK_URL",
-        "CLERK_ISSUER"
+        "DATABASE_URL"
       ]
     },
     "deploy:build": {

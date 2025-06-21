@@ -37,6 +37,7 @@ services:
       - mongo # Гарантирует, что mongo запустится перед chat
     environment:
       - NODE_ENV=production
+      - CHAT_MONGODB_URI=mongodb://root:example@mongo:27017/chat_db_from_seed?authSource=admin
     env_file:
       - ./apps/chat/.env
     networks:
@@ -113,6 +114,7 @@ services:
       - postgres
     environment:
       - NODE_ENV=production
+      - DATABASE_URL=postgresql://fvst:fvst@postgres:5432/fvst?schema=user
     env_file:
       - ./apps/backend/.env
     networks:

@@ -6,7 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky",
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
@@ -25,6 +25,9 @@
     "rxjs": "latest"
   },
   "devDependencies": {
+    "eslint-config-prettier": "^10.0.1",
+    "@eslint/js": "^9.18.0",
+    "@eslint/eslintrc": "^3",
     "@nestjs/cli": "^11.0.0",
     "eslint": "^9.28.0",
     "husky": "latest",
@@ -33,7 +36,13 @@
     "prisma": "^6.9.0",
     "turbo": "latest",
     "typescript": "^5.7.3",
-    "wait-on": "latest"
+    "wait-on": "latest",
+    "eslint-plugin-prettier": "^5.2.2",
+    "prettier": "^3.4.2",
+    "ts-jest": "^29.2.5",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.10.7",
+    "typescript-eslint": "^8.20.0"
   },
   "engines": {
     "npm": ">=10.0.0",
