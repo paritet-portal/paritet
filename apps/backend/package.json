@@ -39,13 +39,15 @@
     "start:app": "node dist/main.js"
   },
   "dependencies": {
-    "@nestjs/common": "^11.0.1",
+   "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@prisma/client": "^6.9.0",
     "bcrypt": "^6.0.0",
-    "reflect-metadata": "^0.2.2",
+    "dotenv-flow": "^4.1.0",
     "prisma": "^6.9.0",
+    "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
    "files": [
@@ -66,6 +68,7 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.7",
     "@types/supertest": "^6.0.2",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",

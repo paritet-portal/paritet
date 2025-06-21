@@ -3,6 +3,7 @@
 
   // ДОБАВЬТЕ ЭТУ СЕКЦИЮ
   "compilerOptions": {
+    "moduleResolution": "bundler",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]

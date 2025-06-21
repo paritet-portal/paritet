@@ -6,13 +6,13 @@ export type MessageDocument = Message & Document;
 @Schema({ timestamps: true })
 export class Message {
   @Prop({ required: true })
-  text: string;
+  text!: string;
 
   @Prop({ required: true, index: true }) // Добавляем index для sender
-  sender: string;
+  sender!: string;
 
   @Prop({ index: true }) // Добавляем index для roomId
-  roomId: string;
+  roomId!: string;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(Message);

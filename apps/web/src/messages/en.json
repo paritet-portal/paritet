@@ -1,0 +1,29 @@
+{
+    "WorksPage": {
+        "title": "My Works"
+    },
+    "Header": {
+        "navHome": "Home",
+        "navServices": "Services",
+        "navResume": "Resume",
+        "navWorks": "Works",
+        "navContact": "Contact"
+    },
+    "HomePage": {
+        "title": "Welcome to our Website!",
+        "welcomeMessage": "This is the main page."
+    },
+    "Metadata": {
+        "siteTitle": "My Portfolio - Bohdan",
+        "siteDescription": "Explore my projects and skills in web development."
+    },
+    "Common": {
+        "hireMeButton": "Hire Me!"
+    },
+    "Resume": {
+        "Resume": "Resume",
+        "ExpTitle": "Experiences",
+        "EduTitle": "Educations",
+        "SkillsTitle": "Skills"
+    }
+}

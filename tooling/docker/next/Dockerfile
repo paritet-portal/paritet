@@ -70,6 +70,7 @@ USER nextjs
 COPY --from=builder --chown=nextjs:nodejs app/apps/${APP_SCOPE}/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs app/apps/${APP_SCOPE}/.next/static ./apps/${APP_SCOPE}/.next/static
 COPY --from=builder --chown=nextjs:nodejs app/apps/${APP_SCOPE}/public ./apps/${APP_SCOPE}/public
+# COPY --from=builder --chown=nextjs:nodejs app/apps/${APP_SCOPE}/messages ./apps/${APP_SCOPE}/messages
 
 # --- ИЗМЕНЕНИЕ №4: Используем APP_SCOPE для рабочей директории ---
 WORKDIR /app/apps/${APP_SCOPE}
