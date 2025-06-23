@@ -1,0 +1,73 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/demo-worker-e2e"
+    },
+    {
+      "path": "./apps/demo-worker"
+    },
+    {
+      "path": "./apps/chat-e2e"
+    },
+    {
+      "path": "./apps/chat"
+    },
+    {
+      "path": "./apps/backend-e2e"
+    },
+    {
+      "path": "./apps/backend"
+    },
+    {
+      "path": "./apps/admin-e2e"
+    },
+    {
+      "path": "./apps/admin"
+    },
+    {
+      "path": "./apps/web-e2e"
+    },
+    {
+      "path": "./apps/web"
+    },
+    {
+      "path": "./apps/service-gateway-e2e"
+    },
+    {
+      "path": "./apps/service-gateway"
+    },
+    {
+      "path": "./apps/api-gateway-e2e"
+    },
+    {
+      "path": "./apps/api-gateway"
+    },
+    {
+      "path": "./apps/auth-service-e2e"
+    },
+    {
+      "path": "./apps/auth-service"
+    },
+    {
+      "path": "./apps/frontend-service-e2e"
+    },
+    {
+      "path": "./apps/frontend-service"
+    },
+    {
+      "path": "./apps/specialist-frontend-service-e2e"
+    },
+    {
+      "path": "./apps/specialist-frontend-service"
+    },
+    {
+      "path": "./apps/client-frontend-service-e2e"
+    },
+    {
+      "path": "./apps/client-frontend-service"
+    }
+  ]
+}

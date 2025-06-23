@@ -3,122 +3,121 @@ services:
   # ----------------------------------
   #       ПРИЛОЖЕНИЯ (локальная сборка)
   # ----------------------------------
-  admin:
-    # Указываем Docker'у собрать образ локально
-    build:
-      context: . # Собирать из текущей директории (корень проекта)
-      dockerfile: tooling/docker/next/Dockerfile # Путь к Dockerfile
-      args: # Аргументы для сборки
-        APP_NAME: admin
-        APP_SCOPE: admin
-    image: paritet/admin:local
-    restart: always
-    ports:
-      - "3001:3000"
-    environment:
-      - NODE_ENV=production
-    env_file:
-      - ./apps/admin/.env
-    networks:
-      - paritet_network
+  # admin:
+   
+  #   build:
+  #     context: . 
+  #     dockerfile: tooling/docker/next/Dockerfile 
+  #     args: 
+  #       APP_NAME: admin
+  #   image: paritet/admin:local
+  #   restart: always
+  #   ports:
+  #     - "3001:3050"
+  #   environment:
+  #     - NODE_ENV=production
+  #   env_file:
+  #     - ./apps/admin/.env
+  #   networks:
+  #     - paritet_network
 
-  chat:
-    build:
-      context: .
-      dockerfile: tooling/docker/nest/Dockerfile
-      args:
-        APP_NAME: chat
-        APP_SCOPE: chat
-    image: paritet/chat:local
-    restart: always
-    ports:
-      - "5004:5002"
-    depends_on:
-      - mongo # Гарантирует, что mongo запустится перед chat
-    environment:
-      - NODE_ENV=production
-      - CHAT_MONGODB_URI=mongodb://root:example@mongo:27017/chat_db_from_seed?authSource=admin
-    env_file:
-      - ./apps/chat/.env
-    networks:
-      - paritet_network
-
-  demo-worker:
-    build:
-      context: .
-      dockerfile: tooling/docker/nest/Dockerfile
-      args:
-        APP_NAME: demo-worker
-        APP_SCOPE: demo-worker
-    image: paritet/demo-worker:local
-    restart: always
-    environment:
-      - NODE_ENV=production
-    env_file:
-      - ./apps/demo-worker/.env
-    depends_on:
-      - redis
-    networks:
-      - paritet_network
-
-  service-gateway:
-    build:
-      context: .
-      dockerfile: tooling/docker/nest/Dockerfile
-      args:
-        APP_NAME: service-gateway
-        APP_SCOPE: service-gateway
-    image: paritet/service-gateway:local
-    restart: always
-    ports:
-      - "4500:4500"
-    env_file:
-      - ./apps/service-gateway/.env
-    environment:
-      - NODE_ENV=production
-    depends_on:
-      - postgres
-    networks:
-      - paritet_network
-
-  web:
+  frontend-service:
     build:
       context: .
       dockerfile: tooling/docker/next/Dockerfile
       args:
-        APP_NAME: web
-        APP_SCOPE: web
-    image: paritet/web:local
+        APP_NAME: frontend-service
+    image: paritet/frontend-service:local
     restart: always
     ports:
-      - "3200:3000"
+      - "3002:3200"
     environment:
       - NODE_ENV=production
     env_file:
-      - ./apps/web/.env
+      - ./apps/frontend-service/.env
     networks:
       - paritet_network
 
-  backend:
-    build:
-      context: .
-      dockerfile: tooling/docker/nest/Dockerfile
-      args:
-        APP_NAME: backend
-        APP_SCOPE: backend
-    image: paritet/backend:local
-    restart: always
-    ports:
-      - "5003:5003"
-    depends_on:
-      - postgres
-    environment:
-      - NODE_ENV=production
-      - DATABASE_URL=postgresql://fvst:fvst@postgres:5432/fvst?schema=user
-    env_file:
-      - ./apps/backend/.env
-    networks:
-      - paritet_network
+  # chat:
+  #   build:
+  #     context: .
+  #     dockerfile: tooling/docker/nest/Dockerfile
+  #     args:
+  #       APP_NAME: chat
+  #       APP_SCOPE: chat
+  #   image: paritet/chat:local
+  #   restart: always
+  #   ports:
+  #     - "5004:5002"
+  #   depends_on:
+  #     - mongo # Гарантирует, что mongo запустится перед chat
+  #   environment:
+  #     - NODE_ENV=production
+  #     - CHAT_MONGODB_URI=mongodb://root:example@mongo:27017/chat_db_from_seed?authSource=admin
+  #   env_file:
+  #     - ./apps/chat/.env
+  #   networks:
+  #     - paritet_network
+
+  # demo-worker:
+  #   build:
+  #     context: .
+  #     dockerfile: tooling/docker/nest/Dockerfile
+  #     args:
+  #       APP_NAME: demo-worker
+  #       APP_SCOPE: demo-worker
+  #   image: paritet/demo-worker:local
+  #   restart: always
+  #   environment:
+  #     - NODE_ENV=production
+  #   env_file:
+  #     - ./apps/demo-worker/.env
+  #   depends_on:
+  #     - redis
+  #   networks:
+  #     - paritet_network
+
+  # service-gateway:
+  #   build:
+  #     context: .
+  #     dockerfile: tooling/docker/nest/Dockerfile
+  #     args:
+  #       APP_NAME: service-gateway
+  #       APP_SCOPE: service-gateway
+  #   image: paritet/service-gateway:local
+  #   restart: always
+  #   ports:
+  #     - "4500:4500"
+  #   env_file:
+  #     - ./apps/service-gateway/.env
+  #   environment:
+  #     - NODE_ENV=production
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - paritet_network
+
+
+  # backend:
+  #   build:
+  #     context: .
+  #     dockerfile: tooling/docker/nest/Dockerfile
+  #     args:
+  #       APP_NAME: backend
+  #       APP_SCOPE: backend
+  #   image: paritet/backend:local
+  #   restart: always
+  #   ports:
+  #     - "5003:5003"
+  #   depends_on:
+  #     - postgres
+  #   environment:
+  #     - NODE_ENV=production
+  #     - DATABASE_URL=postgresql://fvst:fvst@postgres:5432/fvst?schema=user
+  #   env_file:
+  #     - ./apps/backend/.env
+  #   networks:
+  #     - paritet_network
 
   # ----------------------------------
   #       БАЗЫ ДАННЫХ (остаются без изменений)
