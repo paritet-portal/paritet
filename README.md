@@ -88,3 +88,30 @@ And join the Nx community:
 - [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
 - [Our Youtube channel](https://www.youtube.com/@nxdevtools)
 - [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+
+
+
+nx g @nx/workspace:remove @paritet/service-gateway-e2e
+
+npx nx show projects
+
+npx nx dev @paritet/web
+
+npx nx show project api-gateway --target=build
+
+
+
+docker-compose pull
+docker-compose up
+docker-compose build --no-cache
+docker-compose up --build -d 
+
+
+npm i
+docker-compose pull
+docker-compose build --no-cache
+docker-compose up -d
+docker compose -f docker-compose.prod.yml pull
+docker compose -f docker-compose.prod.yml build --no-cache
+docker compose -f docker-compose.prod.yml up -d
+docker builder prune
