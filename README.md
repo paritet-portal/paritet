@@ -115,3 +115,25 @@ docker compose -f docker-compose.prod.yml pull
 docker compose -f docker-compose.prod.yml build --no-cache
 docker compose -f docker-compose.prod.yml up -d
 docker builder prune
+
+
+
+  Статический сайт ---------------------------- (frontend-service)
+  Портал специалиста -------------------------- (specialist-frontend-service)
+  Клиентский портал --------------------------- (client-frontend-service)
+  Шлюз API ------------------------------------ (api-gateway)
+  Сервис Аутентификации и Авторизации --------- (auth-service)
+
+
+  Административная панель --------------------- (admin-panel-frontend)
+  Брокер сообщений ---------------------------- (Message Broker)
+  Сервис Профилей Специалистов ---------------- (Specialist Profile Service)
+  Сервис Кейсов ------------------------------- (Case Service)
+  Сервис Платежей и Биллинга ------------------ (Payment Service)
+  Сервис Уведомлений -------------------------- (Notification Service)
+  Сервис Документов --------------------------- (Document Service)
+  Конструктор Документов ---------------------- (Document Constructor Service)
+  Гео-сервис "Радар" -------------------------- (Geo Service)
+  Сервис Отзывов и Рейтингов ------------------ (Review & Rating Service)
+  Сервис Чатов и Сообщений -------------------- (Messaging Service)
+  Сервис Администрирования -------------------- (Admin Service)
