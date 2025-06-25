@@ -1,0 +1,37 @@
+{
+    "name": "@paritet/prisma-auth",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "prisma-auth/src",
+    "projectType": "library",
+    "targets": {
+        "prisma-generate": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "prisma generate",
+                "cwd": "prisma-auth"
+            }
+        },
+        "prisma-migrate-dev": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "prisma migrate dev",
+                "cwd": "prisma-auth"
+            }
+        },
+        "prisma-migrate-reset": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "prisma migrate reset",
+                "cwd": "prisma-auth"
+            }
+        },
+        "prisma-studio": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "prisma studio",
+                "cwd": "prisma-auth"
+            }
+        }
+    },
+    "tags": []
+}

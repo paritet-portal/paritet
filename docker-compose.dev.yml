@@ -1,47 +1,128 @@
 services:
-  postgres:
-    image: postgres:17.5
+  auth-db:
+    image: postgres:15-alpine
+    container_name: paritet-auth-db
     restart: always
+    ports:
+      - "5433:5432"
+    env_file:
+      - ./apps/auth-service/.env
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${AUTH_DB_USER:-user} -d ${AUTH_DB_NAME:-auth_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
     environment:
-      POSTGRES_USER: fvst
-      POSTGRES_PASSWORD: fvst
-      POSTGRES_DB: fvst
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+      ALLOW_ANONYMOUS_LOGIN: "yes"
     networks:
-      - paritet_network
+      - paritet-network
 
-  redis:
-    image: redis:7.4.1-alpine
-    restart: always
+  kafka: 
+    image: wurstmeister/kafka
+    container_name: paritet-kafka-1 
     ports:
-      - "6379:6379"
-    command: redis-server --save 20 1 --loglevel warning
-    volumes:
-      - redis_data:/data
-    networks:
-      - paritet_network
-
-  mongo:
-    image: mongo:8.0
-    restart: always
+      - "9092:9092"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
+        KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+        KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+    depends_on:
+      - zookeeper
     networks:
-      - paritet_network
-
-volumes:
-  postgres_data:
-  redis_data:
-  mongo_data:
+      - paritet-network
 
 networks:
-  paritet_network:
+  paritet-network:
     driver: bridge
+
+volumes:
+  auth-db-data:
+  kafka-data:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# services:
+#   postgres:
+#     image: postgres:17.5
+#     restart: always
+#     environment:
+#       POSTGRES_USER: fvst
+#       POSTGRES_PASSWORD: fvst
+#       POSTGRES_DB: fvst
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     ports:
+#       - "5432:5432"
+#     networks:
+#       - paritet_network
+
+#   redis:
+#     image: redis:7.4.1-alpine
+#     restart: always
+#     ports:
+#       - "6379:6379"
+#     command: redis-server --save 20 1 --loglevel warning
+#     volumes:
+#       - redis_data:/data
+#     networks:
+#       - paritet_network
+
+#   mongo:
+#     image: mongo:8.0
+#     restart: always
+#     environment:
+#       MONGO_INITDB_ROOT_USERNAME: root
+#       MONGO_INITDB_ROOT_PASSWORD: example
+#     ports:
+#       - "27017:27017"
+#     volumes:
+#       - mongo_data:/data/db
+#     networks:
+#       - paritet_network
+
+# volumes:
+#   postgres_data:
+#   redis_data:
+#   mongo_data:
+
+# networks:
+#   paritet_network:
+#     driver: bridge

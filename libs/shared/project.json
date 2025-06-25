@@ -1,0 +1,21 @@
+{
+    "name": "shared-i18n",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/shared/i18n/src",
+    "root": "libs/shared/i18n",
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "options": {
+                "outputPath": "dist/libs/shared/i18n",
+                "main": "libs/shared/i18n/src/index.ts",
+                "tsConfig": "libs/shared/i18n/tsconfig.lib.json"
+            }
+        }
+    },
+    "tags": [
+        "type:lib",
+        "scope:shared"
+    ]
+}

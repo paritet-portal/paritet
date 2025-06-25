@@ -16,6 +16,11 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "customConditions": ["development"]
+    "customConditions": ["development"],
+    "baseUrl": ".",
+    "paths": {
+      "@paritet/prisma-auth": ["libs/prisma-auth/src/index.ts"],
+      "@paritet/shared/i18n": ["libs/shared/i18n/src/index.ts"]
+    }
   }
 }
