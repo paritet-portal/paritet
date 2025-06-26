@@ -1,34 +1,48 @@
-# === Етап 1: Встановлення залежностей (Installer) ===
-FROM node:20-slim AS installer
+
+FROM node:20-alpine AS installer
 WORKDIR /app
 RUN corepack enable
-COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev
 
-# === Етап 2: Збірка проєкту (Builder) ===
-FROM node:20-slim AS builder
-WORKDIR /app
-RUN corepack enable
 COPY package.json package-lock.json* ./
-RUN npm ci
-COPY . .
 
-# Збірка проєкту (через переданий APP_NAME)
+RUN npm install --omit=dev
+
+
+
+
+
+FROM node:20-alpine AS builder
 ARG APP_NAME
-RUN npx nx build apps/${APP_NAME} --skip-nx-cache
-
-# === Етап 3: Фінальний образ (Runner) ===
-FROM node:20-slim AS runner
 WORKDIR /app
-RUN groupadd -r nodejs && useradd -r -g nodejs nestjs
+# ENV APP_NAME=${APP_NAME}
+RUN corepack enable
 
-# Копіюємо залежності тільки runtime
+COPY package.json package-lock.json* ./
+RUN npm install
+
+COPY . .
+RUN npx nx sync --force
+RUN npx nx build ${APP_NAME} --skip-nx-cache
+
+
+
+
+
+
+FROM node:20-alpine AS runner
+ARG APP_NAME 
+WORKDIR /app
+
+# ENV APP_NAME=${APP_NAME}
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
 COPY --from=installer /app/node_modules ./node_modules
 COPY --from=installer /app/package.json ./package.json
 
-# Копіюємо білд проєкту
-ARG APP_NAME
 COPY --from=builder /app/apps/${APP_NAME}/dist ./dist
 
-USER nestjs
+
+USER nextjs
+
 CMD ["node", "dist/main.js"]
