@@ -1,4 +1,5 @@
 services:
+
   auth-db:
     image: postgres:15-alpine
     container_name: paritet-auth-db
@@ -37,6 +38,28 @@ services:
       - zookeeper
     networks:
       - paritet-network
+
+
+  nginx:
+    image: nginx:latest # Используем готовый образ, не пересобираем каждый раз
+    container_name: paritet-nginx-dev
+    ports:
+      - "80:80"
+    volumes:
+    # Монтируем ваш dev конфиг Nginx из вашей локальной системы в контейнер Nginx
+    # Убедитесь, что путь './tooling/configs/nginx/dev.conf' верен.
+    # Он должен быть смонтирован в /etc/nginx/conf.d/ (это стандартное место для конфигов)
+    - ./tooling/configs/nginx/conf.d/:/etc/nginx/conf.d/:ro # Один главный файл для dev
+      # Если нужно монтировать отдельные файлы, то так:
+      # - ./tooling/configs/nginx/dev/frontend.conf:/etc/nginx/conf.d/frontend.conf:ro
+      # - ./tooling/configs/nginx/dev/specialist.conf:/etc/nginx/conf.d/specialist.conf:ro
+      # ... и так для всех сервисов.
+    build:
+      context: . # Корневая папка проекта
+      dockerfile: tooling/docker/nginx/Dockerfile.dev 
+    networks:
+      - paritet-network
+    
 
 networks:
   paritet-network:
