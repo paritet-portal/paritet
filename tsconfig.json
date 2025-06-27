@@ -35,6 +35,18 @@
     },
     {
       "path": "./apps/specialist-frontend-service"
+    },
+    {
+      "path": "./apps/translation-service-e2e"
+    },
+    {
+      "path": "./apps/translation-service"
+    },
+    {
+      "path": "./libs/prisma-translation"
+    },
+    {
+      "path": "./libs/prisma-auth"
     }
   ]
 }

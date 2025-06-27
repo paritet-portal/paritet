@@ -30,7 +30,11 @@
           "watchDepsName": "watch-deps"
         }
       },
-      "exclude": ["libs/shared/i18n/*"]
+      "exclude": [
+        "libs/shared/i18n/*",
+        "libs/prisma-translation/*",
+        "libs/prisma-auth/*"
+      ]
     },
     {
       "plugin": "@nx/next/plugin",
@@ -60,11 +64,19 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/api-gateway-e2e/**/*", "apps/auth-service-e2e/**/*"]
+      "exclude": [
+        "apps/api-gateway-e2e/**/*",
+        "apps/auth-service-e2e/**/*",
+        "apps/translation-service-e2e/**/*"
+      ]
     },
     {
       "plugin": "@nx/js/typescript",
-      "include": ["libs/shared/i18n/*"],
+      "include": [
+        "libs/shared/i18n/*",
+        "libs/prisma-translation/*",
+        "libs/prisma-auth/*"
+      ],
       "options": {
         "typecheck": {
           "targetName": "typecheck"

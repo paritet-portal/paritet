@@ -1,67 +1,86 @@
 services:
-
   auth-db:
     image: postgres:15-alpine
     container_name: paritet-auth-db
     restart: always
     ports:
-      - "5433:5432"
+      - '5433:5432'
     env_file:
       - ./apps/auth-service/.env
     volumes:
       - auth-db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${AUTH_DB_USER:-user} -d ${AUTH_DB_NAME:-auth_db}"]
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -U ${AUTH_DB_USER:-user} -d ${AUTH_DB_NAME:-auth_db}',
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  zookeeper:
-    image: wurstmeister/zookeeper
+  translation-db:
+    image: postgres:15-alpine
+    container_name: paritet-translation-db
+    restart: always
     ports:
-      - "2181:2181"
-    environment:
-      ALLOW_ANONYMOUS_LOGIN: "yes"
+      - '5434:5432'
+    env_file:
+      - ./apps/translation-service/.env
+    volumes:
+      - prod-translation-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - paritet-network
 
-  kafka: 
-    image: wurstmeister/kafka
-    container_name: paritet-kafka-1 
+  zookeeper:
+    image: wurstmeister/zookeeper
     ports:
-      - "9092:9092"
+      - '2181:2181'
     environment:
-        KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-        KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      ALLOW_ANONYMOUS_LOGIN: 'yes'
+    networks:
+      - paritet-network
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: paritet-kafka-1
+    ports:
+      - '9092:9092'
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
     depends_on:
       - zookeeper
     networks:
       - paritet-network
 
-
   nginx:
     image: nginx:latest # Используем готовый образ, не пересобираем каждый раз
     container_name: paritet-nginx-dev
     ports:
-      - "80:80"
+      - '80:80'
     volumes:
-    # Монтируем ваш dev конфиг Nginx из вашей локальной системы в контейнер Nginx
-    # Убедитесь, что путь './tooling/configs/nginx/dev.conf' верен.
-    # Он должен быть смонтирован в /etc/nginx/conf.d/ (это стандартное место для конфигов)
-    # - ./tooling/configs/nginx/dev.d/dev.conf:/etc/nginx/conf.d/dev.conf:ro # Один главный файл для dev
-    - ./tooling/configs/nginx/dev.d/dev.conf:/etc/nginx/conf.d/default.conf:ro
+      # Монтируем ваш dev конфиг Nginx из вашей локальной системы в контейнер Nginx
+      # Убедитесь, что путь './tooling/configs/nginx/dev.conf' верен.
+      # Он должен быть смонтирован в /etc/nginx/conf.d/ (это стандартное место для конфигов)
+      # - ./tooling/configs/nginx/dev.d/dev.conf:/etc/nginx/conf.d/dev.conf:ro # Один главный файл для dev
+      - ./tooling/configs/nginx/dev.d/dev.conf:/etc/nginx/conf.d/default.conf:ro
     # - ./tooling/configs/nginx/dev.d/dev.conf:/etc/nginx/conf.d/dev.conf:ro
-      # Если нужно монтировать отдельные файлы, то так:
-      # - ./tooling/configs/nginx/dev/frontend.conf:/etc/nginx/conf.d/frontend.conf:ro
-      # - ./tooling/configs/nginx/dev/specialist.conf:/etc/nginx/conf.d/specialist.conf:ro
-      # ... и так для всех сервисов.
+    # Если нужно монтировать отдельные файлы, то так:
+    # - ./tooling/configs/nginx/dev/frontend.conf:/etc/nginx/conf.d/frontend.conf:ro
+    # - ./tooling/configs/nginx/dev/specialist.conf:/etc/nginx/conf.d/specialist.conf:ro
+    # ... и так для всех сервисов.
     # build:
     #   context: . # Корневая папка проекта
-    #   dockerfile: tooling/docker/nginx/Dockerfile.dev 
+    #   dockerfile: tooling/docker/nginx/Dockerfile.dev
     networks:
       - paritet-network
-    
 
 networks:
   paritet-network:
@@ -69,41 +88,8 @@ networks:
 
 volumes:
   auth-db-data:
+  prod-translation-db-data:
   kafka-data:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # services:
 #   postgres:
 #     image: postgres:17.5

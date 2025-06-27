@@ -78,6 +78,26 @@ services:
     networks:
       - paritet-network
 
+  translation-service:
+    container_name: paritet-translation-service
+    build:
+      context: .
+      dockerfile: tooling/docker/nest/Dockerfile
+      args:
+        APP_NAME: translation-service
+    ports:
+      - "3335:3333"  
+    env_file:
+      - ./apps/translation-service/.env
+    environment:
+      - NODE_ENV=production
+      - PORT=3333
+    depends_on:
+      translation-db:
+        condition: service_healthy
+    networks:
+      - paritet-network
+
   api-gateway:
     container_name: paritet-api-gateway
     build:
@@ -97,6 +117,8 @@ services:
     depends_on:
       - auth-service # Зависит от сервиса аутентификации
       - auth-db    # Зависит от базы данных аутентификации
+      - translation-service
+      - translation-db
       # Добавьте зависимости от Kafka, если api-gateway его использует
     networks:
       - paritet-network
@@ -118,6 +140,25 @@ services:
       retries: 5
     networks:
       - paritet-network
+
+  translation-db:
+    image: postgres:15-alpine
+    container_name: paritet-translation-db
+    restart: always
+    ports:
+      - "5434:5432"
+    env_file:
+      - ./apps/translation-service/.env
+    volumes:
+      - prod-translation-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - paritet-network
+
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -169,6 +210,7 @@ services:
 
 volumes:
   prod-auth-db-data:
+  prod-translation-db-data:
   prod-kafka-data:
 
 networks:

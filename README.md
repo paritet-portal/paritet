@@ -167,3 +167,43 @@ tree /F /A > project-description.txt
 у меня виндовс 
 я фронтенд розработчик
 работаю на Vscode
+
+
+
+Алгоритм запиту до translation-service:
+
+🌐 1.Користувач відкриває: https://paritet.com/ua/translate?text=Hello
+Або фронтенд виконує запит:
+GET /ua/api/translation?text=Hello
+
+📥 2. NGINX приймає запит:
+location ~ ^/(ua|en)/api/ {
+    rewrite ^/(ua|en)/(api/.*)$ /$2 break;
+    proxy_pass http://host.docker.internal:3333;  # ← Порт API Gateway
+}
+
+https://paritet.com/ua/api/translation?text=Hello
+Перетворюється у:
+http://host.docker.internal:3333/api/translation?text=Hello
+
+🛂3. API Gateway (NestJS) приймає /api/translation
+
+🔄 4. API Gateway проксірує запит на: http://translation-service:3006/translate?text=Hello
+
+🧠 5. translation-service (NestJS) обробляє запит:
+
+📤 6. Відповідь повертається через API Gateway → NGINX → браузер:
+
+📦 Що треба мати:
+У NGINX — переписування /ua/api/... на /api/...
+
+У API Gateway — проксі логіку на translation-service
+
+У translation-service — ендпоінт /translate
+
+
+✅ Бонус: Можеш навіть у api-gateway використовувати Nest microservices (наприклад, @nestjs/microservices з TCP, Redis або NATS) — тоді проксі буде ще потужніший. Але для початку достатньо HttpService.
+
+бази даних
+npx nx run prisma-translation:prisma-generate   Коли запускати 🔁 Завжди після зміни schema.prisma (локально чи перед білдом сервісу)
+npx nx run prisma-translation:prisma-migrate-dev --name init  Коли запускати  🛠️ Один раз при створенні нової схеми — перед деплоєм або в dev-контейнері вручну
