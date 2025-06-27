@@ -1,0 +1,40 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/frontend-service-e2e"
+    },
+    {
+      "path": "./apps/frontend-service"
+    },
+    {
+      "path": "./libs/shared/i18n"
+    },
+    {
+      "path": "./apps/api-gateway-e2e"
+    },
+    {
+      "path": "./apps/api-gateway"
+    },
+    {
+      "path": "./apps/auth-service-e2e"
+    },
+    {
+      "path": "./apps/auth-service"
+    },
+    {
+      "path": "./apps/client-frontend-service-e2e"
+    },
+    {
+      "path": "./apps/client-frontend-service"
+    },
+    {
+      "path": "./apps/specialist-frontend-service-e2e"
+    },
+    {
+      "path": "./apps/specialist-frontend-service"
+    }
+  ]
+}
