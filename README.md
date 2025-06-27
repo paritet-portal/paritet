@@ -120,7 +120,10 @@ nx add @nx/next
 nx g @nx/next:app apps/frontend-service
 
 nx add @nx/nest
- nx g @nx/nest:app apps/api-gateway
+nx g @nx/nest:app apps/api-gateway
+
+npx nx sync
+nx reset
 
 
 tree /F /A > project-description.txt
