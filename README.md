@@ -111,6 +111,10 @@ docker compose -f docker-compose.prod.yml build --no-cache
 docker compose -f docker-compose.prod.yml up -d
 docker builder prune
 
+docker compose -f docker-compose.dev.yml logs nginx
+docker compose -f docker-compose.dev.yml build --no-cache
+docker builder prune
+
 
 npx create-nx-workspace@latest paritet
 
@@ -126,7 +130,7 @@ npx nx sync
 nx reset
 
 nx serve api-gateway
-nx dev client-frontend-service
+npx nx dev @paritet/frontend-service
 
 
 tree /F /A > project-description.txt
