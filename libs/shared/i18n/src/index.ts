@@ -1,58 +1,51 @@
-// export * from './lib/i18n.js';
 // libs/shared/i18n/src/index.ts
 
-// Импортируем JSON файлы с переводами
+// Импорты ваших JSON файлов с локализациями
 import enLocales from './locales/en.json';
 import ruLocales from './locales/ru.json';
 
-// Определяем поддерживаемые локали (можно расширить)
+// Определение типа для ваших языков. Убедитесь, что это совпадает с ключами объекта locales.
 type Locale = 'en' | 'ru';
 
-// Храним все локали в одном объекте
+// Определение объекта, который хранит все ваши локализованные строки
+// Record<Locale, Record<string, string>> означает:
+// - Это объект (Record)
+// - Ключи этого объекта - это типы Locale ('en' или 'ru')
+// - Значениями являются другие объекты (Record)
+//   - Ключи этих вложенных объектов - строки (ключи переводов)
+//   - Значениями являются строки (сам перевод)
 const locales: Record<Locale, Record<string, string>> = {
   en: enLocales,
   ru: ruLocales,
 };
 
-// Переменная для хранения текущей выбранной локали
-let currentLocale: Locale = 'en'; // По умолчанию английский
+// Функция для получения перевода, которая также обрабатывает подстановку значений
+export const t = (
+  locale: Locale,
+  key: string,
+  values?: Record<string, any> // Необязательные значения для подстановки в строку перевода
+): string => {
+  // Пытаемся получить перевод для указанной локали и ключа
+  let translation = locales[locale]?.[key];
 
-// Функция для установки текущей локали
-export const setLocale = (locale: Locale) => {
-  if (locales[locale]) {
-    currentLocale = locale;
-    // В реальном приложении здесь может быть обновление состояния
-    // или сохранение в localStorage/sessionStorage
-  } else {
-    console.warn(`Locale "${locale}" not supported. Using "${currentLocale}" instead.`);
-  }
-};
-
-// Основная функция для получения перевода (translation function)
-export const t = (key: string, values?: Record<string, any>): string => {
-  // Получаем перевод для текущей локали, если ключ существует
-  let translation = locales[currentLocale]?.[key];
-
-  // Если перевод не найден для текущей локали, возвращаем сам ключ
+  // Если перевод не найден, выводим предупреждение и возвращаем сам ключ
   if (translation === undefined) {
-    console.warn(`Translation key "${key}" not found for locale "${currentLocale}".`);
-    return key;
+    console.warn(`Translation key "${key}" not found for locale "${locale}".`);
+    return key; // Возвращаем ключ как запасной вариант
   }
 
-  // Заменяем плейсхолдеры в переводе, если они есть
+  // Если есть значения для подстановки, проходим по ним и заменяем в строке перевода
   if (values) {
     for (const valueKey in values) {
-      // Простая замена. Для более сложных случаев (например, форматирование чисел/дат)
-      // стоит использовать библиотеки типа i18next.
+      // Заменяем {ключ} на значение
       translation = translation.replace(`{${valueKey}}`, String(values[valueKey]));
     }
   }
-
   return translation;
 };
 
-// Экспорт текущей локали, если нужно
-export const getCurrentLocale = (): Locale => currentLocale;
+// Экспортируем тип Locale и объект locales, чтобы их можно было использовать в других частях приложения
+// Например, в next.config.js или в компонентах Next.js для настройки i18n.
+export { Locale, locales };
 
-// Можно также экспортировать все доступные локали, если это потребуется другим частям приложения
-export { locales };
+

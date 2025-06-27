@@ -1,4 +1,4 @@
-
+// paritet\apps\client-frontend-service\next.config.js
 const { composePlugins, withNx } = require('@nx/next');
 const path = require('node:path');
 
