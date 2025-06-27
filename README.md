@@ -125,6 +125,9 @@ nx g @nx/nest:app apps/api-gateway
 npx nx sync
 nx reset
 
+nx serve api-gateway
+nx dev client-frontend-service
+
 
 tree /F /A > project-description.txt
 команда яка робе структуру папок та файлiв удобно для роботи з АI
