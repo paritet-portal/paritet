@@ -10,9 +10,6 @@
       "path": "./apps/frontend-service"
     },
     {
-      "path": "./libs/shared/i18n"
-    },
-    {
       "path": "./apps/api-gateway-e2e"
     },
     {
@@ -47,6 +44,9 @@
     },
     {
       "path": "./libs/prisma-auth"
+    },
+    {
+      "path": "./libs/shared/ui"
     }
   ]
 }

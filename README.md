@@ -119,6 +119,7 @@ docker builder prune
 npx create-nx-workspace@latest paritet
 
 nx generate @nx/js:library libs/shared/i18n --bundler=none --importPath=@paritet/shared-i18n
+npx nx g @nx/js:lib libs/shared/ui --bundler=none --importPath=@paritet/shared-ui
 
 nx add @nx/next
 nx g @nx/next:app apps/frontend-service

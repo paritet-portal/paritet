@@ -31,9 +31,9 @@
         }
       },
       "exclude": [
-        "libs/shared/i18n/*",
         "libs/prisma-translation/*",
-        "libs/prisma-auth/*"
+        "libs/prisma-auth/*",
+        "libs/shared/ui/*"
       ]
     },
     {
@@ -73,9 +73,9 @@
     {
       "plugin": "@nx/js/typescript",
       "include": [
-        "libs/shared/i18n/*",
         "libs/prisma-translation/*",
-        "libs/prisma-auth/*"
+        "libs/prisma-auth/*",
+        "libs/shared/ui/*"
       ],
       "options": {
         "typecheck": {

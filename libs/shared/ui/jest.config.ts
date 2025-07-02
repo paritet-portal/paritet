@@ -10,7 +10,7 @@ const swcJestConfig = JSON.parse(
 swcJestConfig.swcrc = false;
 
 export default {
-  displayName: '@paritet/shared-i18n',
+  displayName: '@paritet/shared-ui',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
