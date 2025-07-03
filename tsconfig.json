@@ -47,6 +47,21 @@
     },
     {
       "path": "./libs/shared/ui"
+    },
+    {
+      "path": "./libs/public/feature-about-page"
+    },
+    {
+      "path": "./libs/public/feature-about-page"
+    },
+    {
+      "path": "./libs/auth/data-access"
+    },
+    {
+      "path": "./libs/auth/feature-login"
+    },
+    {
+      "path": "./libs/auth/utils"
     }
   ]
 }
