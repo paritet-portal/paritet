@@ -40,21 +40,6 @@
       "path": "./apps/translation-service"
     },
     {
-      "path": "./libs/prisma-translation"
-    },
-    {
-      "path": "./libs/prisma-auth"
-    },
-    {
-      "path": "./libs/shared/ui"
-    },
-    {
-      "path": "./libs/public/feature-about-page"
-    },
-    {
-      "path": "./libs/public/feature-about-page"
-    },
-    {
       "path": "./libs/auth/data-access"
     },
     {
@@ -62,6 +47,27 @@
     },
     {
       "path": "./libs/auth/utils"
+    },
+    {
+      "path": "./libs/shared/types"
+    },
+    {
+      "path": "./apps/client-profile-service-e2e"
+    },
+    {
+      "path": "./apps/client-profile-service"
+    },
+    {
+      "path": "./libs/auth/dtos"
+    },
+    {
+      "path": "./libs/prisma/auth"
+    },
+    {
+      "path": "./libs/prisma/translation"
+    },
+    {
+      "path": "./libs/prisma/client-profile"
     }
   ]
 }

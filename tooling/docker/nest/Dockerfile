@@ -22,7 +22,8 @@ RUN npm install
 
 COPY . .
 RUN npx nx sync --force
-RUN npx nx build ${APP_NAME} --skip-nx-cache
+# RUN npx nx build ${APP_NAME} --skip-nx-cache
+RUN npx nx run-many --target=build --projects=${APP_NAME} --with-deps --skip-nx-cache
 
 
 

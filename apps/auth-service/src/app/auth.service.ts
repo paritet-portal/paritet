@@ -2,42 +2,53 @@ import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/co
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { RegisterUserDto } from '../dto/register-user.dto';
-import { LoginUserDto } from '../dto/login-user.dto';
+import { RegisterClientDto } from '@paritet/auth-dtos';
+import { LoginDto } from '@paritet/auth-dtos';
+import { KafkaService } from '../kafka/kafka.service';
+import { UserRole } from '@paritet/shared-types'; 
+
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
-  ) {}
-  async register(registerDto: RegisterUserDto) {
-    const { email, password, role } = registerDto;
-
-    const existingUser = await this.prisma.user.findUnique({ where: { email } });
+    private readonly kafkaService: KafkaService,
+  ) { }
+  async registerClient(registerDto: RegisterClientDto) {
+    const existingUser = await this.prisma.user.findUnique({ where: { email: registerDto.email } });
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    const hashedPassword = await bcrypt.hash(registerDto.password, 10);
 
     const newUser = await this.prisma.user.create({
       data: {
-        email,
+        email: registerDto.email,
         password: hashedPassword,
-        role,
+        role: UserRole.CLIENT, 
       },
     });
 
-    // ВАЖЛИВО: На цьому етапі ми пізніше додамо відправку події в Kafka.
-    // Поки що просто повертаємо створеного користувача (без пароля).
+    this.kafkaService.emitUserRegistered({
+      userId: newUser.id,
+      email: newUser.email,
+      role: newUser.role as UserRole,
+      profileData: {
+      fullName: registerDto.fullName,
+      phoneNumber: registerDto.phoneNumber,
+    }
+    });
+
     const { password: _, ...result } = newUser;
     return result;
   }
-  
-  async login(loginDto: LoginUserDto) {
+
+
+  async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
-    
+
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
@@ -50,11 +61,10 @@ export class AuthService {
 
     const payload = { sub: user.id, email: user.email, role: user.role };
     const accessToken = this.jwtService.sign(payload);
-    
-    // Повертаємо токен та дані користувача
-    return { 
-        accessToken, 
-        user: { id: user.id, email: user.email, role: user.role } 
+
+    return {
+      accessToken,
+      user: { id: user.id, email: user.email, role: user.role }
     };
   }
 

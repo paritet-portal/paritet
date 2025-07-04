@@ -77,10 +77,11 @@
   "workspaces": [
     "packages/*",
     "apps/*",
-    "libs/shared/*",
     "libs/*",
     "libs/public/*",
-    "libs/auth/*"
+    "libs/auth/*",
+    "libs/shared/*",
+    "libs/prisma/*"
   ],
   "dependencies": {
     "@nestjs/common": "^11.0.0",
@@ -94,6 +95,7 @@
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "kafkajs": "^2.2.4",
     "next": "~15.2.4",
     "react": "19.0.0",
     "react-dom": "19.0.0",

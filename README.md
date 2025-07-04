@@ -149,7 +149,8 @@ tree /F /A > project-description.txt
 
   Административная панель --------------------- (admin-panel-frontend)
   Брокер сообщений ---------------------------- (Message Broker)
-  Сервис Профилей Специалистов ---------------- (Specialist Profile Service)
+  Сервис Профилей Специалистов ---------------- (Specialist Profile Service) 
+  Сервис Профилей Клиєнтов ----------------     (Client Profile Service) 
   Сервис Кейсов ------------------------------- (Case Service)
   Сервис Платежей и Биллинга ------------------ (Payment Service)
   Сервис Уведомлений -------------------------- (Notification Service)
@@ -208,3 +209,16 @@ http://host.docker.internal:3333/api/translation?text=Hello
 бази даних
 npx nx run prisma-translation:prisma-generate   Коли запускати 🔁 Завжди після зміни schema.prisma (локально чи перед білдом сервісу)
 npx nx run prisma-translation:prisma-migrate-dev --name init  Коли запускати  🛠️ Один раз при створенні нової схеми — перед деплоєм або в dev-контейнері вручну
+
+PRISMA generate
+auth-service DB
+npx prisma generate --schema=./libs/prisma/auth/prisma/schema.prisma
+
+client-profile-service DB
+npx prisma generate --schema=./libs/prisma/client-profile/prisma/schema.prisma
+
+
+
+
+можна подивитися які бібліотеки належать мікросервісу
+nx dep-graph --focus=@paritet/auth-service

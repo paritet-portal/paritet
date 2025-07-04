@@ -54,6 +54,29 @@ services:
     networks:
       - paritet-network
 
+  client-profile-service:
+    container_name: paritet-client-profile-service
+    build:
+      context: .
+      dockerfile: tooling/docker/nest/Dockerfile
+      args:
+        APP_NAME: client-profile-service
+    restart: always
+    ports:
+      - "3336:3333" 
+    env_file:
+      - ./apps/client-profile-service/.env
+    environment:
+      - NODE_ENV=production
+      - PORT=3333 
+    depends_on:
+      client-profile-db:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    networks:
+      - paritet-network
+
 
   auth-service:
     container_name: paritet-auth-service
@@ -141,6 +164,24 @@ services:
     networks:
       - paritet-network
 
+  client-profile-db:
+    image: postgres:15-alpine
+    container_name: paritet-client-profile-db
+    restart: always
+    ports:
+      - "5435:5432"
+    env_file:
+      - ./apps/client-profile-service/.env
+    volumes:
+      - prod-client-profile-db-data:/var/lib/postgresql/data 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - paritet-network
+
   translation-db:
     image: postgres:15-alpine
     container_name: paritet-translation-db
@@ -210,6 +251,7 @@ services:
 
 volumes:
   prod-auth-db-data:
+  prod-client-profile-db-data:
   prod-translation-db-data:
   prod-kafka-data:
 
