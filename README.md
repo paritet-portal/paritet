@@ -109,7 +109,7 @@ docker-compose up -d
 docker compose -f docker-compose.prod.yml pull
 docker compose -f docker-compose.prod.yml build --no-cache
 docker compose -f docker-compose.prod.yml up -d
-docker builder prune
+
 
 docker compose -f docker-compose.dev.yml logs nginx
 docker compose -f docker-compose.dev.yml build --no-cache
@@ -120,6 +120,11 @@ npx create-nx-workspace@latest paritet
 
 nx generate @nx/js:library libs/shared/i18n --bundler=none --importPath=@paritet/shared-i18n
 npx nx g @nx/js:lib libs/shared/ui --bundler=none --importPath=@paritet/shared-ui
+
+npx nx g @nx/react:lib feature-about-page --directory=libs/public/feature-about-page
+npx nx g @nx/workspace:remove "@paritet/feature-about-page"
+nx g rm "@paritet/feature-about-page"
+nx show projects
 
 nx add @nx/next
 nx g @nx/next:app apps/frontend-service

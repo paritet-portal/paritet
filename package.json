@@ -81,7 +81,9 @@
     "libs/public/*",
     "libs/auth/*",
     "libs/shared/*",
-    "libs/prisma/*"
+    "libs/prisma/*",
+    "libs/specialist/*",
+    "libs/client/*"
   ],
   "dependencies": {
     "@nestjs/common": "^11.0.0",

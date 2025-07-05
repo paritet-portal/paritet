@@ -14,7 +14,10 @@ module.exports = {
   content: [
     './{src,pages,components,app}/**/*.{ts,tsx,js,jsx,html}',
     '!./{src,pages,components,app}/**/*.{stories,spec}.{ts,tsx,js,jsx,html}',
+    '../../libs/specialist/**/*.{ts,tsx,js,jsx,html}',
+    // '../../libs/**/*.{js,ts,jsx,tsx}',
     //     ...createGlobPatternsForDependencies(__dirname)
+    // './libs/specialist/**/*.{ts,tsx,js,jsx,html}', // Включає всі файли в specialist lib
   ],
   theme: {
     extend: {},

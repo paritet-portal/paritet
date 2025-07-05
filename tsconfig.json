@@ -68,6 +68,12 @@
     },
     {
       "path": "./libs/prisma/client-profile"
+    },
+    {
+      "path": "./libs/specialist/feature-register"
+    },
+    {
+      "path": "./libs/client/feature-register"
     }
   ]
 }

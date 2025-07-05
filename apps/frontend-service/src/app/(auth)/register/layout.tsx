@@ -1,50 +1,43 @@
+'use client';
+
 import Link from 'next/link';
-import { usePathname } from 'next/navigation'; // Хук для отримання поточного шляху на клієнті
-'use client'; // Цей layout буде клієнтським, бо використовує хук usePathname для активного стану табів
-
-// Можна створити окремий компонент для табів
-const RegistrationTabs = () => {
-    const pathname = usePathname();
-
-    const getTabClassName = (path: string) => {
-        return pathname === path
-            ? 'bg-blue-600 text-white px-6 py-2 rounded-md' // Стиль для активного табу
-            : 'bg-gray-200 text-gray-700 px-6 py-2 rounded-md'; // Стиль для неактивного
-    };
-
-    return (
-        <div className="flex justify-center gap-2 mb-10">
-            <Link href="/register/specialist" passHref>
-                <button className={getTabClassName('/register/specialist')}>
-                    Як спеціаліст
-                </button>
-            </Link>
-            <Link href="/register/client" passHref>
-                <button className={getTabClassName('/register/client')}>
-                    Як споживач
-                </button>
-            </Link>
-        </div>
-    );
-};
-
+import { usePathname } from 'next/navigation';
+import React from 'react';
 
 export default function RegisterLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <div className="bg-gray-50 min-h-screen py-16">
-            <div className="container mx-auto max-w-4xl">
-                <h1 className="text-4xl font-bold text-center mb-6">
-                    Зареєструватися
-                </h1>
+  const pathname = usePathname();
 
-                {/* Наші спільні таби */}
-                <RegistrationTabs />
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-start bg-gray-50 p-4">
+      <h1 className="text-4xl font-bold text-blue-800 mb-8">Зареєструватися</h1>
 
-                {/* Тут буде рендеритись вміст page.tsx з папок /register, /register/client або /register/specialist */}
-                <main>
-                    {children}
-                </main>
-            </div>
-        </div>
-    );
+      <div className="flex space-x-8 mb-12">
+        <Link href="/register/specialist">
+          <button
+            className={`text-xl font-medium pb-2 px-4 ${
+              pathname === '/register/specialist'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-500 hover:text-blue-600'
+            }`}
+          >
+            Як спеціаліст
+          </button>
+        </Link>
+
+        <Link href="/register/client">
+          <button
+            className={`text-xl font-medium pb-2 px-4 ${
+              pathname === '/register/client'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-500 hover:text-blue-600'
+            }`}
+          >
+            Як споживач
+          </button>
+        </Link>
+      </div>
+
+      {children}
+    </div>
+  );
 }
