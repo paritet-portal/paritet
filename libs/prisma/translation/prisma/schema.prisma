@@ -1,0 +1,31 @@
+generator client {
+    provider = "prisma-client-js"
+    output   = "../../../../node_modules/@internal/prisma-translation-client"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("TRANSLATION_DATABASE_URL")
+}
+
+model Namespace {
+    id           String        @id @default(cuid())
+    name         String        @unique
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+    translations Translation[]
+}
+
+model Translation {
+    id          String   @id @default(cuid())
+    namespaceId String
+    key         String
+    language    String
+    value       String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    namespace Namespace @relation(fields: [namespaceId], references: [id], onDelete: Cascade)
+
+    @@unique([namespaceId, key, language])
+}

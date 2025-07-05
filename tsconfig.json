@@ -1,0 +1,79 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/frontend-service-e2e"
+    },
+    {
+      "path": "./apps/frontend-service"
+    },
+    {
+      "path": "./apps/api-gateway-e2e"
+    },
+    {
+      "path": "./apps/api-gateway"
+    },
+    {
+      "path": "./apps/auth-service-e2e"
+    },
+    {
+      "path": "./apps/auth-service"
+    },
+    {
+      "path": "./apps/client-frontend-service-e2e"
+    },
+    {
+      "path": "./apps/client-frontend-service"
+    },
+    {
+      "path": "./apps/specialist-frontend-service-e2e"
+    },
+    {
+      "path": "./apps/specialist-frontend-service"
+    },
+    {
+      "path": "./apps/translation-service-e2e"
+    },
+    {
+      "path": "./apps/translation-service"
+    },
+    {
+      "path": "./libs/auth/data-access"
+    },
+    {
+      "path": "./libs/auth/feature-login"
+    },
+    {
+      "path": "./libs/auth/utils"
+    },
+    {
+      "path": "./libs/shared/types"
+    },
+    {
+      "path": "./apps/client-profile-service-e2e"
+    },
+    {
+      "path": "./apps/client-profile-service"
+    },
+    {
+      "path": "./libs/auth/dtos"
+    },
+    {
+      "path": "./libs/prisma/auth"
+    },
+    {
+      "path": "./libs/prisma/translation"
+    },
+    {
+      "path": "./libs/prisma/client-profile"
+    },
+    {
+      "path": "./libs/specialist/feature-register"
+    },
+    {
+      "path": "./libs/client/feature-register"
+    }
+  ]
+}
