@@ -188,7 +188,7 @@ export function SpecialistRegistrationForm() {
       <Button
           type="submit"
           disabled={isLoading}
-          className="mt-12" // Передаємо специфічний для цього місця стиль через `className`
+          className="mt-12"
         >
           {isLoading ? 'Реєстрація...' : 'Зареєструватися'}
         </Button>

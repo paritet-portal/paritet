@@ -12,11 +12,11 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 export const Button: React.FC<ButtonProps> = ({
   children,
   className = '',
-  type = 'button', // За замовчуванням тип 'button', щоб уникнути випадкового сабміту форм
+  type = 'button', 
   ...props // Всі інші props (напр., `disabled`, `onClick`) передаються напряму до елемента <button>
 }) => {
   // Базові стилі, які будуть у всіх кнопок.
-  const baseStyles = 'px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 disabled:bg-gray-400 disabled:cursor-not-allowed';
+  const baseStyles = 'mt-12 px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75';
 
   return (
     <button
