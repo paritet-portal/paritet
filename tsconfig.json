@@ -70,10 +70,13 @@
       "path": "./libs/prisma/client-profile"
     },
     {
-      "path": "./libs/specialist/feature-register"
+      "path": "./libs/shared/ui"
     },
     {
-      "path": "./libs/client/feature-register"
+      "path": "./libs/auth/feature-register-client"
+    },
+    {
+      "path": "./libs/auth/feature-register-specialist"
     }
   ]
 }

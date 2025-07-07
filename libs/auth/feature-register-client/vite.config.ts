@@ -6,7 +6,7 @@ import * as path from 'path';
 
 export default defineConfig(() => ({
   root: __dirname,
-  cacheDir: '../../../node_modules/.vite/libs/client/feature-register',
+  cacheDir: '../../../node_modules/.vite/libs/auth/feature-register-client',
   plugins: [
     react(),
     dts({
