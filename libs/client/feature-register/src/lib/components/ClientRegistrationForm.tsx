@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@paritet/shared-ui';
 import React, { useState } from 'react';
 import { useRegisterClient } from '../hooks/useRegisterClient';
 
@@ -115,12 +116,20 @@ export function ClientRegistrationForm() {
         </div>
       </form>
 
-      <button
+       <Button
+          type="submit"
+          disabled={isLoading}
+          className="mt-12" // Передаємо специфічний для цього місця стиль через `className`
+        >
+          {isLoading ? 'Реєстрація...' : 'Зареєструватися'}
+        </Button>
+
+      {/* <button
         type="submit"
         disabled={isLoading}
         className="mt-12 px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">
         Зареєструватися
-      </button>
+      </button> */}
       {error && <p className="text-red-500 mt-4">{error.message}</p>}
     </>
   );

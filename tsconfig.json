@@ -74,6 +74,9 @@
     },
     {
       "path": "./libs/client/feature-register"
+    },
+    {
+      "path": "./libs/shared/ui"
     }
   ]
 }
