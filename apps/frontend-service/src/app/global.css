@@ -10,6 +10,7 @@ html {
   line-height: 1.5;
   tab-size: 4;
   scroll-behavior: smooth;
+  scrollbar-gutter: stable both-edges;
 }
 body {
   font-family: inherit;

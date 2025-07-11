@@ -8,7 +8,7 @@ export function useRegisterSpecialist () {
   return useMutation({
     mutationFn: async (data: RegisterSpecialistSchema) => {
       const { confirmPassword, terms, ...payload } = data; 
-      return await authApi.registerClient(payload);
+      return await authApi.registerSpecialist (payload);
     },
   });
 }

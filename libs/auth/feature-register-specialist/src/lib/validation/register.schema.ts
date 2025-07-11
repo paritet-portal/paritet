@@ -13,11 +13,11 @@ export const registerSchema = z
 
     password: z
       .string()
-      .min(6, { message: "Пароль має містити щонайменше 6 символів" }),
+      .min(8, { message: "Пароль має містити щонайменше 8 символів" }),
 
     confirmPassword: z
       .string()
-      .min(6, { message: "Пароль має містити щонайменше 6 символів" }),
+      .min(8, { message: "Пароль має містити щонайменше 8 символів" }),
 
     specialistType: z
       .string()

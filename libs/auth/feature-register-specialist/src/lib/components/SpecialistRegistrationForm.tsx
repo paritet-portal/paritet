@@ -2,7 +2,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, HidePassword, ShowPassword } from '@paritet/shared-ui';
+import { ArrowDown, Button, HidePassword, ShowPassword } from '@paritet/shared-ui';
 import { useEffect, useRef, useState } from 'react';
 import ReCAPTCHA from "react-google-recaptcha";
 import { Controller, useForm } from 'react-hook-form';
@@ -21,7 +21,8 @@ interface CountryOptionType {
 
 export function SpecialistRegistrationForm() {
   const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
-  const { register: registerApi, isLoading, error } = useRegisterSpecialist();
+
+  const { mutateAsync, isPending,error  } = useRegisterSpecialist();
 
   const {
     register,
@@ -97,17 +98,16 @@ export function SpecialistRegistrationForm() {
 
     fetchCountries();
   }, [setValue]);
+
   const onSubmit = async (data: RegisterSpecialistSchema) => {
-    // Проверяем, прошел ли пользователь reCAPTCHA
     if (!recaptchaValue) {
-      alert("Please verify you are not a robot."); // Можно сделать красивее с помощью toast или ошибки формы
+      alert("Please verify you are not a robot.");
       return;
     }
 
-    // Формируем полный номер телефона с кодом страны
     const fullPhoneNumber = `${data.countryCode}${data.phone.replace(/\s+/g, '')}`;
-    // Вызываем API регистрации, передавая остальные поля и полный номер
-    await registerApi({ ...data, phone: fullPhoneNumber, recaptchaToken: recaptchaValue }); // Передаем токен reCAPTCHA
+
+    await mutateAsync({ ...data, phone: fullPhoneNumber, recaptchaToken: recaptchaValue });
   };
 
 
@@ -124,7 +124,7 @@ export function SpecialistRegistrationForm() {
         onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16"
       >
-        
+
         {/* Left Column */}
         <div className="bg-white p-8 rounded-lg shadow-lg">
           <div className="mb-6">
@@ -142,18 +142,7 @@ export function SpecialistRegistrationForm() {
                 <option value="attorney">Адвокат</option>
               </select>
               <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg
-                  className="h-5 w-5 text-gray-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <ArrowDown className="h-5 w-5 text-gray-400"/>
               </div>
             </div>
             {errors.specialistType?.message && <p className="text-red-500 text-sm mt-1">{errors.specialistType.message}</p>}
@@ -191,9 +180,9 @@ export function SpecialistRegistrationForm() {
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
-                  <ShowPassword/>
+                  <ShowPassword />
                 ) : (
-                  <HidePassword/>
+                  <HidePassword />
                 )}
               </div>
             </div>
@@ -206,6 +195,7 @@ export function SpecialistRegistrationForm() {
             </label>
             <div className="relative">
               <select
+               {...register('locationCountry')}
 
                 className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none"
               >
@@ -215,18 +205,7 @@ export function SpecialistRegistrationForm() {
               </select>
 
               <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg
-                  className="h-5 w-5 text-gray-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                 <ArrowDown className="h-5 w-5 text-gray-400"/>
               </div>
             </div>
             {errors.locationCountry?.message && <p className="text-red-500 text-sm mt-1">{errors.locationCountry.message}</p>}
@@ -248,7 +227,6 @@ export function SpecialistRegistrationForm() {
                       field.onChange(selected ? selected.countryCode : '');
                       setSelectedCountryForPhone(selected);
                     }}
-                    placeholder="Код країни"
                   />
                 )}
               />
@@ -291,33 +269,25 @@ export function SpecialistRegistrationForm() {
             {errors.licenseNumber?.message && <p className="text-red-500 text-sm mt-1">{errors.licenseNumber.message}</p>}
           </div>
 
-          {/* Повтор пароля */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Пароль ще раз<span className="text-red-500">*</span>
             </label>
-            <div className="relative"> {/* Оборачиваем input и иконку в relative div */}
+            <div className="relative">
               <input
-               {...register('confirmPassword', { // <-- Правильно регистрируем поле
-                  // Валидация из Zod схемы будет применена автоматически через zodResolver.
-                  // Дополнительные проверки здесь не нужны, если они уже есть в Zod схеме.
-                  // Если вы хотите кастомную проверку (хотя Zod refine уже делает это),
-                  // можно оставить, но убедитесь, что она корректно возвращает ошибку.
-                  // Пример с Zod refine:
-                  validate: (value) => value === getValues('password') || 'Паролі не співпадають',
-                })}
-                type={showConfirmPassword ? 'text' : 'password'} // <<< Динамический тип поля
+                {...register('confirmPassword')}
+                type={showConfirmPassword ? 'text' : 'password'}
                 placeholder="Повторіть свій пароль"
                 className={getInputFieldClass('confirmPassword')}
               />
               <div
                 className="absolute inset-y-0 right-0 flex items-center px-3 cursor-pointer"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)} // <<< Переключение состояния
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 {showConfirmPassword ? (
-                  <ShowPassword/>
+                  <ShowPassword />
                 ) : (
-                  <HidePassword/>
+                  <HidePassword />
                 )}
               </div>
             </div>
@@ -347,15 +317,13 @@ export function SpecialistRegistrationForm() {
               placeholder="Введіть ПІБ спеціаліста"
               className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
-            {/* Валидация для referrer опциональна, поэтому сообщение об ошибке может не понадобиться */}
           </div>
         </div>
 
 
-      <div className="col-span-2 flex flex-col items-center mt-8"> {/* Используем flex для центрирования содержимого */}
-          
-          {/* ReCAPTCHA */}
-          <div className="mb-10 w-full flex justify-center"> {/* Центрируем reCAPTCHA */}
+        <div className="col-span-2 flex flex-col items-center mt-8">
+
+          <div className="mb-10 w-full flex justify-center">
             <ReCAPTCHA
               sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LcDgnwrAAAAAPMwdQ93htfMzdBv68XsXlXear_0'}
               onChange={handleRecaptchaChange}
@@ -364,13 +332,10 @@ export function SpecialistRegistrationForm() {
             />
           </div>
 
-          {/* Submit Button */}
-          {/* Делаем кнопку на всю ширину родительского flex-контейнера, который центрирован */}
-          <Button type="submit" disabled={isLoading || isSubmitting} className="w-full max-w-sm"> {/* Устанавливаем максимальную ширину кнопки */}
-            {isLoading || isSubmitting ? 'Реєстрація...' : 'Зареєструватися'}
+          <Button type="submit" disabled={!recaptchaValue || isPending || isSubmitting} >
+            {isPending || isSubmitting ? 'Реєстрація...' : 'Зареєструватися'}
           </Button>
 
-          {/* Чекбокс и лейбл */}
           <div className="flex items-center mt-4 mb-4">
             <input
               type="checkbox"
@@ -386,7 +351,6 @@ export function SpecialistRegistrationForm() {
             </label>
           </div>
 
-          {/* Сообщения об ошибках */}
           {errors.terms && <p className="text-red-500 text-sm mt-1 text-center w-full">{errors.terms.message}</p>}
           {error && <p className="text-red-500 mt-4 text-center w-full">{error.message}</p>}
         </div>

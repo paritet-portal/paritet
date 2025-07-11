@@ -1,9 +1,8 @@
-import { Controller, Post, Body, Inject } from '@nestjs/common'
+import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
-import { RegisterClientDto } from '@paritet/auth-dtos';
-import { LoginDto } from '@paritet/auth-dtos';
+import { LoginDto, RegisterClientDto, RegisterSpecialistDto } from '@paritet/auth-dtos';
 import { AUTH_PATTERNS } from '@paritet/config';
+import { firstValueFrom } from 'rxjs';
 
 @Controller('/auth')
 export class AuthController {
@@ -23,5 +22,15 @@ export class AuthController {
         };
 
         return await firstValueFrom(this.authClient.send(AUTH_PATTERNS.REGISTER_CLIENT, payload));
+    }
+
+    @Post('register/specialist') // Новый эндпоинт
+    async registerSpecialist(@Body() registerSpecialistDto: RegisterSpecialistDto) { // Новый DTO
+        const payload = {
+            ...registerSpecialistDto,
+            role: 'SPECIALIST', // Устанавливаем роль специалиста
+        };
+        // Отправляем сообщение на сервис авторизации
+        return await firstValueFrom(this.authClient.send(AUTH_PATTERNS.REGISTER_SPECIALIST, payload)); // Нужен новый паттерн
     }
 }
