@@ -2,11 +2,11 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@paritet/shared-ui';
-import React, { useEffect, useRef, useState } from 'react';
+import { Button, HidePassword, ShowPassword } from '@paritet/shared-ui';
+import { useEffect, useRef, useState } from 'react';
 import ReCAPTCHA from "react-google-recaptcha";
 import { Controller, useForm } from 'react-hook-form';
-import { RegisterFormData, registerSchema } from '../validation/register.schema';
+import { RegisterSpecialistSchema, registerSchema } from '../validation/register.schema';
 
 import { useRegisterSpecialist } from '../hooks/useRegisterSpecialist';
 import { CustomCountryCodeSelector } from './CustomCountryCodeSelector';
@@ -20,7 +20,7 @@ interface CountryOptionType {
 }
 
 export function SpecialistRegistrationForm() {
-  const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null); 
+  const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
   const { register: registerApi, isLoading, error } = useRegisterSpecialist();
 
   const {
@@ -29,9 +29,8 @@ export function SpecialistRegistrationForm() {
     formState: { errors, isSubmitting },
     control,
     setValue,
-    watch,
     getValues
-  } = useForm<RegisterFormData>({
+  } = useForm<RegisterSpecialistSchema>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       countryCode: 'UA',
@@ -42,28 +41,17 @@ export function SpecialistRegistrationForm() {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const handleRecaptchaChange = (token: string | null) => {
     setRecaptchaValue(token);
-    // Если вы хотите, чтобы reCAPTCHA была частью валидации RHF (например, чтобы поле показывало ошибку, если токен не получен):
-    // setValue('recaptchaToken', token); // Предполагая, что у вас есть такое поле в RegisterFormData и schema
   };
- const getInputFieldClass = (fieldName: keyof RegisterFormData) => {
-    // Базовые классы для всех полей
+  const getInputFieldClass = (fieldName: keyof RegisterSpecialistSchema) => {
     const baseClasses = "block w-full px-4 py-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm";
 
-    // Классы, которые будут добавлены при наличии ошибки
     const errorClasses = "border-red-500 focus:ring-red-500 outline-red-500 outline-offset-2 outline-2";
 
-    // Проверяем, есть ли вообще информация об ошибках для этого поля
-    // errors[fieldName] может быть undefined, если поле вообще не зарегистрировано или не валидировалось
-    // errors[fieldName]?.message проверяет, есть ли само сообщение об ошибке
     const hasError = errors[fieldName] && errors[fieldName]?.message;
 
-    // Собираем финальные классы.
-    // Если есть ошибка, добавляем errorClasses к baseClasses.
-    // Если ошибки нет, применяем стандартные классы рамки и фокуса.
     if (hasError) {
       return `${baseClasses} ${errorClasses}`;
     } else {
-      // Возвращаем базовые классы с правильными фокусными стилями для "не ошибочных" состояний
       return `${baseClasses} border-gray-300 focus:border-blue-500 focus:ring-blue-500`;
     }
   };
@@ -109,7 +97,7 @@ export function SpecialistRegistrationForm() {
 
     fetchCountries();
   }, [setValue]);
-   const onSubmit = async (data: RegisterFormData) => {
+  const onSubmit = async (data: RegisterSpecialistSchema) => {
     // Проверяем, прошел ли пользователь reCAPTCHA
     if (!recaptchaValue) {
       alert("Please verify you are not a robot."); // Можно сделать красивее с помощью toast или ошибки формы
@@ -126,20 +114,17 @@ export function SpecialistRegistrationForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const [selectedRole, setSelectedRole] = useState("");
-  const handleSpecialistChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value } = e.target;
-    setSelectedRole(value);
-  };
+
 
   return (
-    
+
     <>
-    {console.log('Current form errors:', errors)}
+      {console.log('Current form errors:', errors)}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16"
       >
+        
         {/* Left Column */}
         <div className="bg-white p-8 rounded-lg shadow-lg">
           <div className="mb-6">
@@ -148,19 +133,13 @@ export function SpecialistRegistrationForm() {
             </label>
             <div className="relative">
               <select
-              {...register('specialistType')}
+                {...register('specialistType')}
 
                 className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none"
               >
                 <option value="" disabled>Виберіть зі списку</option>
                 <option value="lawyer">Юрист</option>
                 <option value="attorney">Адвокат</option>
-                <option value="barrister">Баристер</option>
-                <option value="solicitor">Солісітор</option>
-                <option value="corporate-lawyer">Корпоративний юрист</option>
-                <option value="tax-lawyer">Податковий юрист</option>
-                <option value="civil-lawyer">Цивільний юрист</option>
-                <option value="criminal-lawyer">Кримінальний юрист</option>
               </select>
               <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                 <svg
@@ -188,42 +167,33 @@ export function SpecialistRegistrationForm() {
               {...register('email')}
               type="email"
               placeholder="Введіть свій Email"
-              
+
               className={getInputFieldClass('email')}
             />
             {errors.email?.message && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
           </div>
 
-          
+
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Пароль<span className="text-red-500">*</span>
             </label>
-            <div className="relative"> 
+            <div className="relative">
               <input
                 {...register('password')}
-                type={showPassword ? 'text' : 'password'} 
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Введіть свій пароль"
-               
+
                 className={getInputFieldClass('password')}
               />
               <div
                 className="absolute inset-y-0 right-0 flex items-center px-3 cursor-pointer"
-                onClick={() => setShowPassword(!showPassword)} 
+                onClick={() => setShowPassword(!showPassword)}
               >
-                 {showPassword ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M14.4258 11.5063C14.4258 12.9892 13.2275 14.1875 11.7446 14.1875C10.2618 14.1875 9.06348 12.9892 9.06348 11.5063C9.06348 10.0235 10.2618 8.82518 11.7446 8.82518C13.2275 8.82518 14.4258 10.0235 14.4258 11.5063Z" stroke="#0E0E0F" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M11.745 18.0036C14.8998 18.0036 17.8401 16.3692 19.8867 13.5407C20.6911 12.4329 20.6911 10.5707 19.8867 9.46284C17.8401 6.63428 14.8998 5 11.745 5C8.59018 5 5.64986 6.63428 3.60326 9.46284C2.79891 10.5707 2.79891 12.4329 3.60326 13.5407C5.64986 16.3692 8.59018 18.0036 11.745 18.0036Z" stroke="#0E0E0F" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                {showPassword ? (
+                  <ShowPassword/>
                 ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M14.9338 6.35603C13.9172 5.96927 12.8438 5.76614 11.7437 5.76614C8.65733 5.76614 5.78083 7.36495 3.77864 10.1321C2.99176 11.2159 2.99176 13.0377 3.77864 14.1215C4.17625 14.671 4.60835 15.1745 5.06972 15.6284M18.1479 8.36839C18.7113 8.88696 19.2345 9.47678 19.7087 10.1321C20.4956 11.2159 20.4956 13.0377 19.7087 14.1215C17.7065 16.8887 14.83 18.4874 11.7437 18.4874C10.5322 18.4874 9.35297 18.2411 8.24632 17.7744" stroke="#0E0E0F" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M14.366 12.131C14.366 13.5817 13.1937 14.7539 11.7431 14.7539M13.5788 10.2559C13.106 9.79305 12.4583 9.50803 11.7431 9.50803C10.2924 9.50803 9.12012 10.6803 9.12012 12.131C9.12012 12.7686 9.34662 13.3525 9.7237 13.8067" stroke="#0E0E0F" strokeLinecap="round" strokeLinejoin="round"
-                    
-                    />
-                    <path d="M3 20L20.4863 4.00001" stroke="#0E0E0F" strokeLinecap="round" />
-                  </svg>
+                  <HidePassword/>
                 )}
               </div>
             </div>
@@ -242,13 +212,6 @@ export function SpecialistRegistrationForm() {
                 <option value="">Виберіть країну</option>
                 <option value="ua">Україна</option>
                 <option value="pl">Польща</option>
-                <option value="de">Німеччина</option>
-                <option value="fr">Франція</option>
-                <option value="es">Іспанія</option>
-                <option value="it">Італія</option>
-                <option value="pt">Португалія</option>
-                <option value="ro">Румунія</option>
-                <option value="hu">Угорщина</option>
               </select>
 
               <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
@@ -335,22 +298,13 @@ export function SpecialistRegistrationForm() {
             </label>
             <div className="relative"> {/* Оборачиваем input и иконку в relative div */}
               <input
-                {...register("confirmPassword", { // <-- Вот здесь изменения
-                  validate: (value) => {
-                    // Получаем значение поля password с помощью getValues
-
-                    console.log(`Validation for confirmPassword:
-                  - current value (from validate): ${value}
-                  - getValues('password'): ${passwordValue}
-                  - getValues('confirmPassword'): ${confirmPasswordValue}
-                  - comparison result (passwords match?): ${passwordValue === confirmPasswordValue}
-                  - return value: ${passwordValue === confirmPasswordValue || "Паролі не співпадають"}
-                `);
-                   return getValues("password") !== getValues("confirmPassword") && "Паролі не співпадають"
-                    // const passwordValue = getValues("password");
-                    // // Сравниваем и возвращаем ошибку, если они не совпадают
-                    // return value === passwordValue || "Паролі не співпадають";
-                  }
+               {...register('confirmPassword', { // <-- Правильно регистрируем поле
+                  // Валидация из Zod схемы будет применена автоматически через zodResolver.
+                  // Дополнительные проверки здесь не нужны, если они уже есть в Zod схеме.
+                  // Если вы хотите кастомную проверку (хотя Zod refine уже делает это),
+                  // можно оставить, но убедитесь, что она корректно возвращает ошибку.
+                  // Пример с Zod refine:
+                  validate: (value) => value === getValues('password') || 'Паролі не співпадають',
                 })}
                 type={showConfirmPassword ? 'text' : 'password'} // <<< Динамический тип поля
                 placeholder="Повторіть свій пароль"
@@ -361,16 +315,9 @@ export function SpecialistRegistrationForm() {
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)} // <<< Переключение состояния
               >
                 {showConfirmPassword ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M14.4258 11.5063C14.4258 12.9892 13.2275 14.1875 11.7446 14.1875C10.2618 14.1875 9.06348 12.9892 9.06348 11.5063C9.06348 10.0235 10.2618 8.82518 11.7446 8.82518C13.2275 8.82518 14.4258 10.0235 14.4258 11.5063Z" stroke="#0E0E0F" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M11.745 18.0036C14.8998 18.0036 17.8401 16.3692 19.8867 13.5407C20.6911 12.4329 20.6911 10.5707 19.8867 9.46284C17.8401 6.63428 14.8998 5 11.745 5C8.59018 5 5.64986 6.63428 3.60326 9.46284C2.79891 10.5707 2.79891 12.4329 3.60326 13.5407C5.64986 16.3692 8.59018 18.0036 11.745 18.0036Z" stroke="#0E0E0F" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  <ShowPassword/>
                 ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M14.9338 6.35603C13.9172 5.96927 12.8438 5.76614 11.7437 5.76614C8.65733 5.76614 5.78083 7.36495 3.77864 10.1321C2.99176 11.2159 2.99176 13.0377 3.77864 14.1215C4.17625 14.671 4.60835 15.1745 5.06972 15.6284M18.1479 8.36839C18.7113 8.88696 19.2345 9.47678 19.7087 10.1321C20.4956 11.2159 20.4956 13.0377 19.7087 14.1215C17.7065 16.8887 14.83 18.4874 11.7437 18.4874C10.5322 18.4874 9.35297 18.2411 8.24632 17.7744" stroke="#0E0E0F" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M14.366 12.131C14.366 13.5817 13.1937 14.7539 11.7431 14.7539M13.5788 10.2559C13.106 9.79305 12.4583 9.50803 11.7431 9.50803C10.2924 9.50803 9.12012 10.6803 9.12012 12.131C9.12012 12.7686 9.34662 13.3525 9.7237 13.8067" stroke="#0E0E0F" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M3 20L20.4863 4.00001" stroke="#0E0E0F" strokeLinecap="round" />
-                  </svg>
+                  <HidePassword/>
                 )}
               </div>
             </div>
@@ -403,29 +350,52 @@ export function SpecialistRegistrationForm() {
             {/* Валидация для referrer опциональна, поэтому сообщение об ошибке может не понадобиться */}
           </div>
         </div>
-      </form>
 
-       <div className="col-span-2"> {/* Размещаем reCAPTCHA на всю ширину */}
-          <div className="mb-10">
+
+      <div className="col-span-2 flex flex-col items-center mt-8"> {/* Используем flex для центрирования содержимого */}
+          
+          {/* ReCAPTCHA */}
+          <div className="mb-10 w-full flex justify-center"> {/* Центрируем reCAPTCHA */}
             <ReCAPTCHA
-              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LcDgnwrAAAAAPMwdQ93htfMzdBv68XsXlXear_0'} // <-- ВАШ ПУБЛИЧНЫЙ КЛЮЧ RECAPTCHA
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LcDgnwrAAAAAPMwdQ93htfMzdBv68XsXlXear_0'}
               onChange={handleRecaptchaChange}
               ref={recaptchaRef}
-              theme="light" // Или "dark"
+              theme="light"
             />
-            {/* Простая проверка ошибки, если хотите */}
-            {/* {!recaptchaValue && (
-              <p className="text-red-500 text-sm mt-1">Please complete the reCAPTCHA.</p>
-            )} */}
           </div>
+
+          {/* Submit Button */}
+          {/* Делаем кнопку на всю ширину родительского flex-контейнера, который центрирован */}
+          <Button type="submit" disabled={isLoading || isSubmitting} className="w-full max-w-sm"> {/* Устанавливаем максимальную ширину кнопки */}
+            {isLoading || isSubmitting ? 'Реєстрація...' : 'Зареєструватися'}
+          </Button>
+
+          {/* Чекбокс и лейбл */}
+          <div className="flex items-center mt-4 mb-4">
+            <input
+              type="checkbox"
+              {...register('terms')}
+              id="terms-checkbox"
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mr-2"
+            />
+            <label
+              htmlFor="terms-checkbox"
+              className="text-sm font-medium text-gray-700 cursor-pointer"
+            >
+              Натискаючи кнопку "Зареєструватися", я погоджуюсь з правилами порталу
+            </label>
+          </div>
+
+          {/* Сообщения об ошибках */}
+          {errors.terms && <p className="text-red-500 text-sm mt-1 text-center w-full">{errors.terms.message}</p>}
+          {error && <p className="text-red-500 mt-4 text-center w-full">{error.message}</p>}
         </div>
 
-      {/* Submit Button */}
-      <Button type="submit" disabled={isLoading || isSubmitting} >
-        {isLoading || isSubmitting ? 'Реєстрація...' : 'Зареєструватися'}
-      </Button>
 
-      {error && <p className="text-red-500 mt-4">{error.message}</p>}
+      </form>
+
+
+
     </>
   );
 }

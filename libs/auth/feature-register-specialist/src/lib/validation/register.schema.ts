@@ -38,6 +38,10 @@ export const registerSchema = z
     countryCode: z
       .string()
       .min(1, { message: "Код країни є обов'язковим" }),
+      
+    terms: z.literal(true, {
+      errorMap: () => ({ message: 'Ви повинні погодитись з правилами порталу' }),
+    }),
 
     licenseNumber: z
       .string()
@@ -49,4 +53,4 @@ export const registerSchema = z
     path: ["confirmPassword"],
   });
 
-export type RegisterFormData = z.infer<typeof registerSchema>;
+export type RegisterSpecialistSchema = z.infer<typeof registerSchema>;

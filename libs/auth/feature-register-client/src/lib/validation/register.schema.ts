@@ -1,12 +1,4 @@
-// import { z } from 'zod';
-// import type { RegisterClientPayload } from '@paritet/shared-types';
-
-// export const registerClientSchema: z.ZodType<RegisterClientPayload> = z.object({
-//     fullName: z.string().min(1, 'Введіть повне імʼя'),
-//     email: z.string().email('Невалідний email'),
-//     password: z.string().min(8, 'Пароль має бути мінімум 8 символів'),
-//     phoneNumber: z.string().regex(/^\+38\d{10}$/, 'Невалідний номер телефону').optional(),
-// });
+//libs\auth\feature-register-client\src\lib\validation\register.schema.ts
 
 import { z } from 'zod';
 
