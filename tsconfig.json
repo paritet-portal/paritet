@@ -77,6 +77,18 @@
     },
     {
       "path": "./libs/auth/feature-register-specialist"
+    },
+    {
+      "path": "./libs/shared/providers"
+    },
+    {
+      "path": "./libs/shared/config"
+    },
+    {
+      "path": "./libs/shared/state"
+    },
+    {
+      "path": "./libs/shared/utils-browser"
     }
   ]
 }

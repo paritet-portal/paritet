@@ -48,5 +48,15 @@
     "eslint.config.cjs",
     "eslint.config.mjs"
   ],
-  "references": []
+  "references": [
+    {
+      "path": "../../libs/shared/providers"
+    },
+    {
+      "path": "../../libs/auth/feature-register-specialist"
+    },
+    {
+      "path": "../../libs/auth/feature-register-client"
+    }
+  ]
 }

@@ -1,22 +1,16 @@
-// Тимчасова заглушка для хука
+import { useMutation } from '@tanstack/react-query';
+import { authApi } from '@paritet/auth-data-access';
+import { RegisterClientFormData } from '../validation/register.schema';
 
-export const useRegisterClient = () => {
-  console.warn(
-    'Warning: useRegisterSpecialist is a mock and does not perform real API calls yet.'
-  );
+export function useRegisterClient() {
+  return useMutation({
+    mutationFn: async (data: RegisterClientFormData) => {
+      const { confirmPassword, terms, ...payload } = data; 
+      return await authApi.registerClient(payload);
+    },
+  });
+}
 
-  // Імітуємо API хука React Query, щоб компонент, який його використовує, не зламався
-  const register = (data: any) => {
-    console.log('Attempting to register specialist with data:', data);
-    // Нічого не робимо, бо залежності ще немає
-  };
-
-  return {
-    register,
-    isLoading: false, // Завжди false
-    error: null,      // Завжди null
-  };
-};
 
 
 

@@ -2,10 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function RegisterLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [currentPath, setCurrentPath] = useState('');
+
+  useEffect(() => {
+    setCurrentPath(pathname);
+  }, [pathname]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start bg-gray-50 p-4">
@@ -15,7 +20,7 @@ export default function RegisterLayout({ children }: { children: React.ReactNode
         <Link href="/register/specialist">
           <button
             className={`text-xl font-medium pb-2 px-4 ${
-              pathname === '/register/specialist'
+              currentPath === '/register/specialist'
                 ? 'text-blue-600 border-b-2 border-blue-600'
                 : 'text-gray-500 hover:text-blue-600'
             }`}
@@ -27,7 +32,7 @@ export default function RegisterLayout({ children }: { children: React.ReactNode
         <Link href="/register/client">
           <button
             className={`text-xl font-medium pb-2 px-4 ${
-              pathname === '/register/client'
+              currentPath === '/register/client'
                 ? 'text-blue-600 border-b-2 border-blue-600'
                 : 'text-gray-500 hover:text-blue-600'
             }`}

@@ -19,41 +19,41 @@ services:
       timeout: 5s
       retries: 5
 
-  client-profile-db:
-    image: postgres:15-alpine
-    container_name: paritet-client-profile-db
-    restart: always
-    ports:
-      - '5435:5432' 
-    env_file:
-      - ./apps/client-profile-service/.env 
-    volumes:
-      - client-profile-db-data:/var/lib/postgresql/data 
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - paritet-network
+  # client-profile-db:
+  #   image: postgres:15-alpine
+  #   container_name: paritet-client-profile-db
+  #   restart: always
+  #   ports:
+  #     - '5435:5432' 
+  #   env_file:
+  #     - ./apps/client-profile-service/.env 
+  #   volumes:
+  #     - client-profile-db-data:/var/lib/postgresql/data 
+  #   healthcheck:
+  #     test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - paritet-network
 
-  translation-db:
-    image: postgres:15-alpine
-    container_name: paritet-translation-db
-    restart: always
-    ports:
-      - '5434:5432'
-    env_file:
-      - ./apps/translation-service/.env
-    volumes:
-      - translation-db-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - paritet-network
+  # translation-db:
+  #   image: postgres:15-alpine
+  #   container_name: paritet-translation-db
+  #   restart: always
+  #   ports:
+  #     - '5434:5432'
+  #   env_file:
+  #     - ./apps/translation-service/.env
+  #   volumes:
+  #     - translation-db-data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - paritet-network
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -106,8 +106,8 @@ networks:
 
 volumes:
   auth-db-data:
-  translation-db-data:
-  client-profile-db-data:
+  # translation-db-data:
+  # client-profile-db-data:
   kafka-data:
 
 

@@ -1,6 +1,7 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength, IsOptional, IsPhoneNumber} from 'class-validator';
+import { RegisterClientPayload } from '@paritet/shared-types';
+import { IsEmail, IsNotEmpty, IsString, MinLength, IsOptional, IsPhoneNumber } from 'class-validator';
 
-export class RegisterClientDto {
+export class RegisterClientDto implements RegisterClientPayload {
     @IsString()
     @IsNotEmpty({ message: 'Full name cannot be empty' })
     fullName!: string;
@@ -12,7 +13,7 @@ export class RegisterClientDto {
     @MinLength(8, { message: 'Password must be at least 8 characters long' })
     password!: string;
 
-    @IsOptional() 
-    @IsPhoneNumber(undefined, { message: 'Please provide a valid phone number' }) 
+    @IsOptional()
+    @IsPhoneNumber(undefined, { message: 'Please provide a valid phone number' })
     phoneNumber?: string;
 }

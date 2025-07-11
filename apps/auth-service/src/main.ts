@@ -14,15 +14,17 @@ async function bootstrap() {
     {
       transport: Transport.TCP,
       options: {
-        host: '127.0.0.1',
-        port: 8877,
-      }
+      // host: process.env.AUTH_SERVICE_HOST || '0.0.0.0',
+      // port: parseInt(process.env.AUTH_SERVICE_PORT || '4001', 10),
+      host: 'localhost',
+      port: 4001,
+    },
   }
 );
   await app.listen()
   
   Logger.log(
-    `🚀 Auth Service is running TCP port 8877`
+    `🚀 Auth Service is running TCP port ${process.env.AUTH_SERVICE_PORT}`
   );
 }
 
