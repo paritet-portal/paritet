@@ -229,9 +229,11 @@ npx prisma generate --schema=./libs/prisma/client-profile/prisma/schema.prisma
 nx dep-graph --focus=@paritet/auth-service
 
 запуск
-docker compose -f docker-compose.dev.yml up -d
+docker compose -f docker-compose.dev.yml up -d
+
 npx prisma generate --schema=./libs/prisma/auth/prisma/schema.prisma
 npx prisma migrate dev --name init --schema=./libs/prisma/auth/prisma/schema.prisma
 nx serve api-gateway
 nx serve auth-service
 npx nx dev @paritet/frontend-service
+npx prisma studio --schema=./libs/prisma/auth/prisma/schema.prisma
