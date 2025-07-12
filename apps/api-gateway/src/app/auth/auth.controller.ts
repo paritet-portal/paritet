@@ -24,13 +24,12 @@ export class AuthController {
         return await firstValueFrom(this.authClient.send(AUTH_PATTERNS.REGISTER_CLIENT, payload));
     }
 
-    @Post('register/specialist') // Новый эндпоинт
-    async registerSpecialist(@Body() registerSpecialistDto: RegisterSpecialistDto) { // Новый DTO
+    @Post('register/specialist') 
+    async registerSpecialist(@Body() registerSpecialistDto: RegisterSpecialistDto) { 
         const payload = {
             ...registerSpecialistDto,
-            role: 'SPECIALIST', // Устанавливаем роль специалиста
+            role: 'SPECIALIST', 
         };
-        // Отправляем сообщение на сервис авторизации
-        return await firstValueFrom(this.authClient.send(AUTH_PATTERNS.REGISTER_SPECIALIST, payload)); // Нужен новый паттерн
+        return await firstValueFrom(this.authClient.send(AUTH_PATTERNS.REGISTER_SPECIALIST, payload)); 
     }
 }

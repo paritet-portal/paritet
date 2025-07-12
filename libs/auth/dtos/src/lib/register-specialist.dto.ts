@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-vali
 // Вам может понадобиться импортировать типы из @paritet/shared-types, если они есть для специалиста
 // import { RegisterSpecialistPayload } from '@paritet/shared-types'; 
 
-export class RegisterSpecialistDto /* implements RegisterSpecialistPayload */ { // Добавьте implements, если есть соответствующий тип
+export class RegisterSpecialistDto /* implements RegisterSpecialistPayload */ { 
     @IsString()
     @IsNotEmpty({ message: "ПІБ або назва компанії є обов'язковим полем" })
     fullName!: string;
@@ -12,7 +12,7 @@ export class RegisterSpecialistDto /* implements RegisterSpecialistPayload */ { 
     email!: string;
 
     @IsString()
-    @MinLength(8, { message: "Пароль має містити щонайменше 8 символів" }) // Убедитесь, что длина пароля соответствует вашим требованиям (ваша Zod схема имеет min(6), а тут min(8) - уточните это)
+    @MinLength(8, { message: "Пароль має містити щонайменше 8 символів" }) 
     password!: string;
 
     @IsString()
@@ -27,12 +27,10 @@ export class RegisterSpecialistDto /* implements RegisterSpecialistPayload */ { 
     @IsNotEmpty({ message: "Місто/село є обов'язковим полем" })
     locationCity!: string;
 
-    // Для телефона может понадобиться другая валидация, если формат отличается от RegisterClientDto
-    // Например, если вы хотите принимать только цифры после кода страны:
     @IsString()
     @IsNotEmpty({ message: "Номер телефону є обов'язковим" })
-    @MinLength(7, { message: "Номер телефону має містити щонайменше 7 цифр" }) // Уточните минимальную длину
-    phone!: string;
+    @MinLength(7, { message: "Номер телефону має містити щонайменше 7 цифр" }) 
+    phoneNumber!: string;
 
     @IsString()
     @IsNotEmpty({ message: "Код країни є обов'язковим" })

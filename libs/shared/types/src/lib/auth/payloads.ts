@@ -13,7 +13,7 @@ export interface RegisterSpecialistPayload {
     specialistType: string;
     locationCountry: string;
     locationCity: string;
-    phone: string; // Обратите внимание на формат телефона! Он будет полным, с кодом страны.
+    phoneNumber: string; // Обратите внимание на формат телефона! Он будет полным, с кодом страны.
     countryCode: string;
     licenseNumber: string;
     referrer?: string; // Опциональное поле

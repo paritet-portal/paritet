@@ -31,7 +31,7 @@ export const registerSchema = z
       .string()
       .min(1, { message: "Місто/село є обов'язковим полем" }),
 
-    phone: z
+    phoneNumber: z
       .string()
       .min(7, { message: "Номер телефону має містити щонайменше 7 цифр" }),
 

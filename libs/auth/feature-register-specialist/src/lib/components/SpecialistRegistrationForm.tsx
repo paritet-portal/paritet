@@ -105,9 +105,10 @@ export function SpecialistRegistrationForm() {
       return;
     }
 
-    const fullPhoneNumber = `${data.countryCode}${data.phone.replace(/\s+/g, '')}`;
+    const fullPhoneNumber = `${data.countryCode}${data.phoneNumber.replace(/\s+/g, '')}`;
 
-    await mutateAsync({ ...data, phone: fullPhoneNumber, recaptchaToken: recaptchaValue });
+    await mutateAsync({ ...data, phoneNumber: fullPhoneNumber });
+    // await mutateAsync({ ...data, phone: fullPhoneNumber, recaptchaToken: recaptchaValue });
   };
 
 
@@ -231,13 +232,13 @@ export function SpecialistRegistrationForm() {
                 )}
               />
               <input
-                {...register('phone')}
+                {...register('phoneNumber')}
                 type="tel"
                 placeholder="Ваш номер"
                 className="flex-1 px-4 py-3 border border-gray-300 rounded-r-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
             </div>
-            {errors.phone?.message && <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>}
+            {errors.phoneNumber?.message && <p className="text-red-500 text-sm mt-1">{errors.phoneNumber.message}</p>}
           </div>
         </div>
 

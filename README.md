@@ -128,6 +128,7 @@ nx show projects
 
 nx add @nx/next
 nx g @nx/next:app apps/frontend-service
+nx g @nx/nest:app apps/specialist-profile-service
 
 nx add @nx/nest
 nx g @nx/nest:app apps/api-gateway

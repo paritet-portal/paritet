@@ -1,9 +1,8 @@
 import { Controller } from '@nestjs/common';
-import { AuthService } from './auth.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { RegisterClientDto } from '@paritet/auth-dtos';
-import { LoginDto } from '@paritet/auth-dtos';
+import { LoginDto, RegisterClientDto, RegisterSpecialistDto } from '@paritet/auth-dtos';
 import { AUTH_PATTERNS } from '@paritet/config';
+import { AuthService } from './auth.service';
 
 @Controller()
 export class AppController {
@@ -12,6 +11,11 @@ export class AppController {
   @MessagePattern(AUTH_PATTERNS.REGISTER_CLIENT)
   async registerClient(@Payload() registerDto: RegisterClientDto) {
     return this.authService.registerClient(registerDto);
+  }
+  
+  @MessagePattern(AUTH_PATTERNS.REGISTER_SPECIALIST)
+  async registerSpecialist(@Payload() registerDto: RegisterSpecialistDto) {
+    return this.authService.registerSpecialist(registerDto);
   }
 
   @MessagePattern(AUTH_PATTERNS.LOGIN)
