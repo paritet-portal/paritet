@@ -101,7 +101,7 @@ export function SpecialistRegistrationForm() {
 
   const onSubmit = async (data: RegisterSpecialistSchema) => {
     if (!recaptchaValue) {
-      alert("Please verify you are not a robot.");
+      console.error("Please verify you are not a robot.");
       return;
     }
 
@@ -141,6 +141,9 @@ export function SpecialistRegistrationForm() {
                 <option value="" disabled>Виберіть зі списку</option>
                 <option value="lawyer">Юрист</option>
                 <option value="attorney">Адвокат</option>
+                <option value="attorney">нотариус</option>
+                <option value="attorney">бухгалтер</option>
+                <option value="attorney">аудитор</option>
               </select>
               <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
                 <ArrowDown className="h-5 w-5 text-gray-400"/>

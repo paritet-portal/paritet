@@ -1,0 +1,2969 @@
+Структура папок тома System
+Серийный номер тома: 4424-0D3C
+C:.
+|   .dockerignore
+|   .env
+|   .env.example
+|   .gitignore
+|   .prettierignore
+|   .prettierrc
+|   docker-compose.dev.yml
+|   docker-compose.prod.yml
+|   docker-compose.test.yml
+|   eslint.config.mjs
+|   jest.config.ts
+|   jest.preset.js
+|   nx.json
+|   package.json
+|   project-description.txt
+|   README.md
+|   tsconfig.base.json
+|   tsconfig.json
+|   vitest.workspace.ts
+|   
++---.github
+|   \---workflows
+|           ci.yml
+|           
++---.nx
+|   +---cache
+|   |   |   run.json
+|   |   |   
+|   |   +---10048721268142650870
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           
+|   |   +---10166119410024932505
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---10195436479835268377
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---types
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                       |   events.d.ts
+|   |   |                       |   events.d.ts.map
+|   |   |                       |   
+|   |   |                       \---auth
+|   |   |                               auth.types.d.ts
+|   |   |                               auth.types.d.ts.map
+|   |   |                               payloads.d.ts
+|   |   |                               payloads.d.ts.map
+|   |   |                               
+|   |   +---10205969122275401638
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---config
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   tsconfig.lib.tsbuildinfo
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           constants.d.ts
+|   |   |                           constants.d.ts.map
+|   |   |                           constants.js
+|   |   |                           env.d.ts
+|   |   |                           env.d.ts.map
+|   |   |                           env.js
+|   |   |                           
+|   |   +---10300086815735998746
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---10363879583356072575
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---10385163079543520515
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---10438484516765710640
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---1049562430633482914
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---10539842438533940875
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---10543251828468465050
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---10702253360167152326
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---10714271898343846469
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---types
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                       |   events.d.ts
+|   |   |                       |   events.d.ts.map
+|   |   |                       |   
+|   |   |                       \---auth
+|   |   |                               auth.types.d.ts
+|   |   |                               auth.types.d.ts.map
+|   |   |                               payloads.d.ts
+|   |   |                               payloads.d.ts.map
+|   |   |                               
+|   |   +---10761550084498598048
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---10909658411976656616
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---11053518797913346263
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---11134013048176639940
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---11237765089308403807
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---11395340125662224491
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---11622932572929260845
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---11700397108270627626
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---11731741715091049952
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---11751007137690491776
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---11779798002746657269
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---types
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                       |   events.d.ts
+|   |   |                       |   events.d.ts.map
+|   |   |                       |   
+|   |   |                       \---auth
+|   |   |                               auth.types.d.ts
+|   |   |                               auth.types.d.ts.map
+|   |   |                               payloads.d.ts
+|   |   |                               payloads.d.ts.map
+|   |   |                               
+|   |   +---11892162878723591650
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---11925393722048513083
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---12008938375034688612
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---12039660382950814213
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---12242774395929433766
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---12257349557485194478
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---1245300952563717896
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---12661072224308030845
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           register-specialist.dto.d.ts
+|   |   |                           register-specialist.dto.d.ts.map
+|   |   |                           
+|   |   +---1270243605361755342
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---12726135708870897349
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---12727749584972665331
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---12851845553429911729
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---1285553861175389282
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---12926453600450471710
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---12946310111017383617
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---13253022121148450991
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---types
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                       |   events.d.ts
+|   |   |                       |   events.d.ts.map
+|   |   |                       |   
+|   |   |                       \---auth
+|   |   |                               auth.types.d.ts
+|   |   |                               auth.types.d.ts.map
+|   |   |                               payloads.d.ts
+|   |   |                               payloads.d.ts.map
+|   |   |                               
+|   |   +---13384857630476169501
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---13569030017870368835
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           register-specialist.dto.d.ts
+|   |   |                           register-specialist.dto.d.ts.map
+|   |   |                           
+|   |   +---13717076599871766905
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---13772272473724274829
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---13870368796179482825
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---types
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                       |   events.d.ts
+|   |   |                       |   events.d.ts.map
+|   |   |                       |   
+|   |   |                       \---auth
+|   |   |                               auth.types.d.ts
+|   |   |                               auth.types.d.ts.map
+|   |   |                               payloads.d.ts
+|   |   |                               payloads.d.ts.map
+|   |   |                               
+|   |   +---13959625806802001920
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---14016858925532459802
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---14082121253667742952
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           register-specialist.dto.d.ts
+|   |   |                           register-specialist.dto.d.ts.map
+|   |   |                           
+|   |   +---14127583317069837612
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---14159909771277765276
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---14250920823149377209
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---14268057236084518993
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           register-specialist.dto.d.ts
+|   |   |                           register-specialist.dto.d.ts.map
+|   |   |                           
+|   |   +---14318614086139954373
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---14368595004320179291
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---14381509635434859534
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---types
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                       |   events.d.ts
+|   |   |                       |   events.d.ts.map
+|   |   |                       |   
+|   |   |                       \---auth
+|   |   |                               auth.types.d.ts
+|   |   |                               auth.types.d.ts.map
+|   |   |                               payloads.d.ts
+|   |   |                               payloads.d.ts.map
+|   |   |                               
+|   |   +---14402681274818658650
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---14589788496910886779
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---14725069887481861634
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---14771752074375813176
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---14910008100803064939
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---1516321182440674595
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---15181384366040032856
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---15184906318777463620
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---15380322910965272222
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---config
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   tsconfig.lib.tsbuildinfo
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           constants.d.ts
+|   |   |                           constants.d.ts.map
+|   |   |                           constants.js
+|   |   |                           env.d.ts
+|   |   |                           env.d.ts.map
+|   |   |                           env.js
+|   |   |                           
+|   |   +---15419388517252432731
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---15427870350226557046
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---15619962295330398373
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---config
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   tsconfig.lib.tsbuildinfo
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           constants.d.ts
+|   |   |                           constants.d.ts.map
+|   |   |                           constants.js
+|   |   |                           env.d.ts
+|   |   |                           env.d.ts.map
+|   |   |                           env.js
+|   |   |                           
+|   |   +---15669203375867476722
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---15706429936671058404
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---15852751147480990125
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---1595850178260947656
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---16192615732784044841
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---16254371047517254595
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---types
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                       |   events.d.ts
+|   |   |                       |   events.d.ts.map
+|   |   |                       |   
+|   |   |                       \---auth
+|   |   |                               auth.types.d.ts
+|   |   |                               auth.types.d.ts.map
+|   |   |                               payloads.d.ts
+|   |   |                               payloads.d.ts.map
+|   |   |                               
+|   |   +---16305125319635960258
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---16317647558940155686
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---16642445586940510550
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---16831177109624287972
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---types
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                       |   events.d.ts
+|   |   |                       |   events.d.ts.map
+|   |   |                       |   
+|   |   |                       \---auth
+|   |   |                               auth.types.d.ts
+|   |   |                               auth.types.d.ts.map
+|   |   |                               payloads.d.ts
+|   |   |                               payloads.d.ts.map
+|   |   |                               
+|   |   +---16976769076596613366
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---17302790124974791138
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---17306241673234011731
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---17419937141150779236
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---17522320882419525632
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---config
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   tsconfig.lib.tsbuildinfo
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           constants.d.ts
+|   |   |                           constants.d.ts.map
+|   |   |                           constants.js
+|   |   |                           env.d.ts
+|   |   |                           env.d.ts.map
+|   |   |                           env.js
+|   |   |                           
+|   |   +---17695302183124220046
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---17859910604076253237
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---17906062525944859623
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---18256928841530397329
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---18319295834447123697
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---1858026204744602632
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---1883714542341586346
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---2011305964244691726
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           register-specialist.dto.d.ts
+|   |   |                           register-specialist.dto.d.ts.map
+|   |   |                           
+|   |   +---2026116378138408577
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---2248597374444059604
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           register-specialist.dto.d.ts
+|   |   |                           register-specialist.dto.d.ts.map
+|   |   |                           
+|   |   +---2271631492364950686
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---2750341520884254825
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---2824439753684059053
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---3110743575343582936
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---3149693848881757505
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---322473317697614916
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---types
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                       |   events.d.ts
+|   |   |                       |   events.d.ts.map
+|   |   |                       |   
+|   |   |                       \---auth
+|   |   |                               auth.types.d.ts
+|   |   |                               auth.types.d.ts.map
+|   |   |                               payloads.d.ts
+|   |   |                               payloads.d.ts.map
+|   |   |                               
+|   |   +---330665833603970532
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---types
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                       |   events.d.ts
+|   |   |                       |   events.d.ts.map
+|   |   |                       |   
+|   |   |                       \---auth
+|   |   |                               auth.types.d.ts
+|   |   |                               auth.types.d.ts.map
+|   |   |                               payloads.d.ts
+|   |   |                               payloads.d.ts.map
+|   |   |                               
+|   |   +---3465440936119654175
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---3638500458552194413
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---types
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                       |   events.d.ts
+|   |   |                       |   events.d.ts.map
+|   |   |                       |   
+|   |   |                       \---auth
+|   |   |                               auth.types.d.ts
+|   |   |                               auth.types.d.ts.map
+|   |   |                               payloads.d.ts
+|   |   |                               payloads.d.ts.map
+|   |   |                               
+|   |   +---3640616007064007010
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           register-specialist.dto.d.ts
+|   |   |                           register-specialist.dto.d.ts.map
+|   |   |                           
+|   |   +---3921615236614979016
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---4074240022860713604
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           register-specialist.dto.d.ts
+|   |   |                           register-specialist.dto.d.ts.map
+|   |   |                           
+|   |   +---4074437743739271155
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---4086655903770762267
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---4234958554024091404
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---4264702827340490370
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           register-specialist.dto.d.ts
+|   |   |                           register-specialist.dto.d.ts.map
+|   |   |                           
+|   |   +---4270324255840279557
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---4379152645030657310
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---4752483244570224143
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---4834897122351739846
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---5099446245834635859
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           register-specialist.dto.d.ts
+|   |   |                           register-specialist.dto.d.ts.map
+|   |   |                           
+|   |   +---5156578757905029851
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---5271462454310034976
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---5321989155897748423
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---5353897703584181534
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---5403541926423133824
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---5627571558104897265
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---564446614585233375
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---5663409914797861150
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---types
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                       |   events.d.ts
+|   |   |                       |   events.d.ts.map
+|   |   |                       |   
+|   |   |                       \---auth
+|   |   |                               auth.types.d.ts
+|   |   |                               auth.types.d.ts.map
+|   |   |                               payloads.d.ts
+|   |   |                               payloads.d.ts.map
+|   |   |                               
+|   |   +---5848548296176747227
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---6166451749259235507
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---623688705431737981
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---6344717636425973488
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---6376320073303493040
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---6425252623404362676
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---6527533686969642764
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---6699668677802199258
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           
+|   |   +---6724545066889202989
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---6981633867775271030
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---7061407222094452202
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---7278063892368388022
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---7303333402576098351
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---7335342856936856864
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---7413984510389508204
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           
+|   |   +---7472191514568455494
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---7564376480579182174
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---7648585636010986948
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---7730139174729000127
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---7828789355946910908
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---config
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   tsconfig.lib.tsbuildinfo
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           constants.d.ts
+|   |   |                           constants.d.ts.map
+|   |   |                           constants.js
+|   |   |                           env.d.ts
+|   |   |                           env.d.ts.map
+|   |   |                           env.js
+|   |   |                           
+|   |   +---7901150336555273434
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---7906247248912635433
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           register-specialist.dto.d.ts
+|   |   |                           register-specialist.dto.d.ts.map
+|   |   |                           
+|   |   +---8089444427037225209
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---8114732802195101706
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---832047141697078835
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---8406243495797543265
+|   |   |   \---libs
+|   |   |       \---shared
+|   |   |           \---types
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                       |   events.d.ts
+|   |   |                       |   events.d.ts.map
+|   |   |                       |   
+|   |   |                       \---auth
+|   |   |                               auth.types.d.ts
+|   |   |                               auth.types.d.ts.map
+|   |   |                               payloads.d.ts
+|   |   |                               payloads.d.ts.map
+|   |   |                               
+|   |   +---8574766971606873521
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           register-specialist.dto.d.ts
+|   |   |                           register-specialist.dto.d.ts.map
+|   |   |                           
+|   |   +---8640683577667547125
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---8677382515101779695
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           register-specialist.dto.d.ts
+|   |   |                           register-specialist.dto.d.ts.map
+|   |   |                           
+|   |   +---8717415511199099901
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---877667178486297234
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---8937532352395767456
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---8953432551849688059
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---89631141651146877
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           register-specialist.dto.d.ts
+|   |   |                           register-specialist.dto.d.ts.map
+|   |   |                           
+|   |   +---9160277712717922069
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---9665190887010735173
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---9701339932108645460
+|   |   |   \---apps
+|   |   |       \---auth-service
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---9734228330968978445
+|   |   |   \---apps
+|   |   |       \---api-gateway
+|   |   |           \---dist
+|   |   |               |   main.js
+|   |   |               |   main.js.map
+|   |   |               |   package-lock.json
+|   |   |               |   package.json
+|   |   |               |   
+|   |   |               \---assets
+|   |   |                       .gitkeep
+|   |   |                       
+|   |   +---9976140195406291816
+|   |   |   \---libs
+|   |   |       \---auth
+|   |   |           \---dtos
+|   |   |               \---dist
+|   |   |                   |   index.d.ts
+|   |   |                   |   index.d.ts.map
+|   |   |                   |   index.js
+|   |   |                   |   
+|   |   |                   \---lib
+|   |   |                           login.dto.d.ts
+|   |   |                           login.dto.d.ts.map
+|   |   |                           register-client.dto.d.ts
+|   |   |                           register-client.dto.d.ts.map
+|   |   |                           register-specialist.dto.d.ts
+|   |   |                           register-specialist.dto.d.ts.map
+|   |   |                           
+|   |   +---cloud
+|   |   |   |   verify.lock
+|   |   |   |   
+|   |   |   \---2507.11.8
+|   |   |       |   index.js
+|   |   |       |   package.json
+|   |   |       |   
+|   |   |       +---lib
+|   |   |       |   +---daemon
+|   |   |       |   |       process-run-end.js
+|   |   |       |   |       
+|   |   |       |   \---heartbeat
+|   |   |       |           heartbeat-process.js
+|   |   |       |           
+|   |   |       \---static
+|   |   |               login-end.html
+|   |   |               login-start.html
+|   |   |               
+|   |   \---terminalOutputs
+|   |           10048721268142650870
+|   |           10166119410024932505
+|   |           10195436479835268377
+|   |           10205969122275401638
+|   |           10300086815735998746
+|   |           10363879583356072575
+|   |           10385163079543520515
+|   |           10428406100996024418
+|   |           10438484516765710640
+|   |           1049562430633482914
+|   |           10539842438533940875
+|   |           10543251828468465050
+|   |           10702253360167152326
+|   |           10714271898343846469
+|   |           10761550084498598048
+|   |           10909658411976656616
+|   |           11053518797913346263
+|   |           11134013048176639940
+|   |           11237765089308403807
+|   |           11395340125662224491
+|   |           11622932572929260845
+|   |           11700397108270627626
+|   |           11731741715091049952
+|   |           11751007137690491776
+|   |           11779798002746657269
+|   |           11892162878723591650
+|   |           11925393722048513083
+|   |           12008938375034688612
+|   |           12039660382950814213
+|   |           12242774395929433766
+|   |           12257349557485194478
+|   |           1245300952563717896
+|   |           12661072224308030845
+|   |           1270243605361755342
+|   |           12726135708870897349
+|   |           12727749584972665331
+|   |           12851845553429911729
+|   |           1285553861175389282
+|   |           12926453600450471710
+|   |           12946310111017383617
+|   |           13253022121148450991
+|   |           13384857630476169501
+|   |           13569030017870368835
+|   |           13717076599871766905
+|   |           13772272473724274829
+|   |           13870368796179482825
+|   |           13959625806802001920
+|   |           14016858925532459802
+|   |           14082121253667742952
+|   |           14127583317069837612
+|   |           14159909771277765276
+|   |           14250920823149377209
+|   |           14268057236084518993
+|   |           14318614086139954373
+|   |           14368595004320179291
+|   |           14381509635434859534
+|   |           14402681274818658650
+|   |           14589788496910886779
+|   |           14725069887481861634
+|   |           14771752074375813176
+|   |           14910008100803064939
+|   |           1516321182440674595
+|   |           15181384366040032856
+|   |           15184906318777463620
+|   |           15380322910965272222
+|   |           15419388517252432731
+|   |           15427870350226557046
+|   |           15619962295330398373
+|   |           15669203375867476722
+|   |           15706429936671058404
+|   |           15852751147480990125
+|   |           1595850178260947656
+|   |           16192615732784044841
+|   |           16254371047517254595
+|   |           16305125319635960258
+|   |           16308763884283287671
+|   |           16317647558940155686
+|   |           16642445586940510550
+|   |           16818226190487838038
+|   |           16831177109624287972
+|   |           16976769076596613366
+|   |           17302790124974791138
+|   |           17306241673234011731
+|   |           17412675540565239023
+|   |           17419937141150779236
+|   |           17522320882419525632
+|   |           17695302183124220046
+|   |           17859910604076253237
+|   |           17906062525944859623
+|   |           18256928841530397329
+|   |           18319295834447123697
+|   |           1858026204744602632
+|   |           1883714542341586346
+|   |           2011305964244691726
+|   |           2026116378138408577
+|   |           2248597374444059604
+|   |           2271631492364950686
+|   |           258266458554097764
+|   |           2750341520884254825
+|   |           2824439753684059053
+|   |           3110743575343582936
+|   |           3149693848881757505
+|   |           322473317697614916
+|   |           330665833603970532
+|   |           3465440936119654175
+|   |           3638500458552194413
+|   |           3640616007064007010
+|   |           3688556470474730712
+|   |           3921615236614979016
+|   |           4074240022860713604
+|   |           4074437743739271155
+|   |           4086655903770762267
+|   |           4193425585378399125
+|   |           4234958554024091404
+|   |           4264702827340490370
+|   |           4270324255840279557
+|   |           4379152645030657310
+|   |           4752483244570224143
+|   |           4834897122351739846
+|   |           487639748758196711
+|   |           5099446245834635859
+|   |           5156578757905029851
+|   |           5271462454310034976
+|   |           5321989155897748423
+|   |           5353897703584181534
+|   |           5403541926423133824
+|   |           5627571558104897265
+|   |           564446614585233375
+|   |           5663409914797861150
+|   |           5848548296176747227
+|   |           5917394118012460056
+|   |           6166451749259235507
+|   |           623688705431737981
+|   |           6344717636425973488
+|   |           6376320073303493040
+|   |           6425252623404362676
+|   |           6527533686969642764
+|   |           6699668677802199258
+|   |           6724545066889202989
+|   |           6981633867775271030
+|   |           7061407222094452202
+|   |           7278063892368388022
+|   |           7303333402576098351
+|   |           7335342856936856864
+|   |           7413984510389508204
+|   |           7472191514568455494
+|   |           7564376480579182174
+|   |           7648585636010986948
+|   |           7730139174729000127
+|   |           7828789355946910908
+|   |           7901150336555273434
+|   |           7906247248912635433
+|   |           8089096147495147617
+|   |           8089444427037225209
+|   |           8114732802195101706
+|   |           832047141697078835
+|   |           8406243495797543265
+|   |           8574766971606873521
+|   |           8640683577667547125
+|   |           8677382515101779695
+|   |           8702278836028923695
+|   |           8717415511199099901
+|   |           877667178486297234
+|   |           8937532352395767456
+|   |           8953432551849688059
+|   |           89631141651146877
+|   |           9160277712717922069
+|   |           9665190887010735173
+|   |           9701339932108645460
+|   |           9734228330968978445
+|   |           9976140195406291816
+|   |           
+|   \---workspace-data
+|       |   b7b5b28d-1de2-4405-aa51-fa23d7927bd9.db
+|       |   b8273943-c43d-48bc-93fa-d1cbe0415b71.db
+|       |   eslint-2654242865465226088.hash
+|       |   file-map.json
+|       |   jest-7930610538513362720.hash
+|       |   lockfile.hash
+|       |   next-17064054913098911197.json
+|       |   nx_files.nxt
+|       |   parsed-lock-file.json
+|       |   playwright-5186013267177752385.hash
+|       |   project-graph.json
+|       |   project-graph.lock
+|       |   react-router-8507840353650169656.hash
+|       |   source-maps.json
+|       |   tsc-18207456075392326415.hash
+|       |   tsc-2568428459166798129.hash
+|       |   tsconfig-files.hash
+|       |   vite-9347777721732807074.hash
+|       |   webpack-5621830741124012108.hash
+|       |   
+|       \---d
+|               daemon-error.log
+|               daemon.log
+|               disabled
+|               
++---.vscode
+|       extensions.json
+|       
++---apps
+|   +---api-gateway
+|   |   |   .env
+|   |   |   .env.example
+|   |   |   .spec.swcrc
+|   |   |   eslint.config.mjs
+|   |   |   jest.config.ts
+|   |   |   package.json
+|   |   |   tsconfig.app.json
+|   |   |   tsconfig.json
+|   |   |   tsconfig.spec.json
+|   |   |   webpack.config.js
+|   |   |   
+|   |   \---src
+|   |       |   main.ts
+|   |       |   
+|   |       +---app
+|   |       |   |   app.controller.spec.ts
+|   |       |   |   app.controller.ts
+|   |       |   |   app.module.ts
+|   |       |   |   app.service.spec.ts
+|   |       |   |   app.service.ts
+|   |       |   |   
+|   |       |   \---auth
+|   |       |           auth.controller.ts
+|   |       |           
+|   |       +---assets
+|   |       |       .gitkeep
+|   |       |       
+|   |       \---guards
+|   |           \---auth
+|   |                   auth.guard.ts
+|   |                   
+|   +---auth-service
+|   |   |   .env
+|   |   |   .env.example
+|   |   |   .env.local
+|   |   |   .spec.swcrc
+|   |   |   eslint.config.mjs
+|   |   |   jest.config.ts
+|   |   |   package.json
+|   |   |   tsconfig.app.json
+|   |   |   tsconfig.json
+|   |   |   tsconfig.spec.json
+|   |   |   webpack.config.js
+|   |   |   
+|   |   \---src
+|   |       |   main.ts
+|   |       |   
+|   |       +---app
+|   |       |       app.controller.spec.ts
+|   |       |       app.controller.ts
+|   |       |       app.module.ts
+|   |       |       app.service.spec.ts
+|   |       |       auth.service.ts
+|   |       |       
+|   |       +---assets
+|   |       |       .gitkeep
+|   |       |       
+|   |       +---kafka
+|   |       |       kafka.module.ts
+|   |       |       kafka.service.ts
+|   |       |       
+|   |       \---prisma
+|   |               prisma.module.ts
+|   |               prisma.service.ts
+|   |               
+|   +---client-frontend-service
+|   |   |   .env
+|   |   |   .env.example
+|   |   |   .env.local
+|   |   |   .swcrc
+|   |   |   eslint.config.mjs
+|   |   |   index.d.ts
+|   |   |   jest.config.ts
+|   |   |   next-env.d.ts
+|   |   |   next.config.js
+|   |   |   package.json
+|   |   |   postcss.config.js
+|   |   |   tailwind.config.js
+|   |   |   tsconfig.json
+|   |   |   tsconfig.spec.json
+|   |   |   
+|   |   +---public
+|   |   |       .gitkeep
+|   |   |       favicon.ico
+|   |   |       
+|   |   +---specs
+|   |   |       index.spec.tsx
+|   |   |       
+|   |   \---src
+|   |       \---app
+|   |           |   global.css
+|   |           |   layout.tsx
+|   |           |   page.tsx
+|   |           |   
+|   |           \---api
+|   |               \---hello
+|   |                       route.ts
+|   |                       
+|   +---client-profile-service
+|   |   |   .env
+|   |   |   .env.example
+|   |   |   .spec.swcrc
+|   |   |   eslint.config.mjs
+|   |   |   jest.config.ts
+|   |   |   package.json
+|   |   |   tsconfig.app.json
+|   |   |   tsconfig.json
+|   |   |   tsconfig.spec.json
+|   |   |   webpack.config.js
+|   |   |   
+|   |   \---src
+|   |       |   main.ts
+|   |       |   
+|   |       +---app
+|   |       |       app.controller.spec.ts
+|   |       |       app.controller.ts
+|   |       |       app.module.ts
+|   |       |       app.service.spec.ts
+|   |       |       app.service.ts
+|   |       |       
+|   |       \---assets
+|   |               .gitkeep
+|   |               
+|   +---frontend-service
+|   |   |   .env
+|   |   |   .env.example
+|   |   |   .env.local
+|   |   |   .swcrc
+|   |   |   eslint.config.mjs
+|   |   |   index.d.ts
+|   |   |   jest.config.ts
+|   |   |   next-env.d.ts
+|   |   |   next.config.js
+|   |   |   package.json
+|   |   |   postcss.config.js
+|   |   |   tailwind.config.js
+|   |   |   tsconfig.json
+|   |   |   tsconfig.spec.json
+|   |   |   
+|   |   +---public
+|   |   |       .gitkeep
+|   |   |       favicon.ico
+|   |   |       
+|   |   +---specs
+|   |   |       index.spec.tsx
+|   |   |       
+|   |   \---src
+|   |       \---app
+|   |           |   global.css
+|   |           |   layout.tsx
+|   |           |   page.tsx
+|   |           |   
+|   |           \---(auth)
+|   |               +---login
+|   |               |       page.tsx
+|   |               |       
+|   |               \---register
+|   |                   |   layout.tsx
+|   |                   |   page.tsx
+|   |                   |   
+|   |                   \---[userType]
+|   |                           page.tsx
+|   |                           RegistrationWrapper.tsx
+|   |                           
+|   +---specialist-frontend-service
+|   |   |   .env
+|   |   |   .env.example
+|   |   |   .env.local
+|   |   |   .swcrc
+|   |   |   eslint.config.mjs
+|   |   |   index.d.ts
+|   |   |   jest.config.ts
+|   |   |   next-env.d.ts
+|   |   |   next.config.js
+|   |   |   package.json
+|   |   |   postcss.config.js
+|   |   |   tailwind.config.js
+|   |   |   tsconfig.json
+|   |   |   tsconfig.spec.json
+|   |   |   
+|   |   +---public
+|   |   |       .gitkeep
+|   |   |       favicon.ico
+|   |   |       
+|   |   +---specs
+|   |   |       index.spec.tsx
+|   |   |       
+|   |   \---src
+|   |       \---app
+|   |           |   global.css
+|   |           |   layout.tsx
+|   |           |   page.tsx
+|   |           |   
+|   |           \---api
+|   |               \---hello
+|   |                       route.ts
+|   |                       
+|   +---specialist-profile-service
+|   |   |   .spec.swcrc
+|   |   |   eslint.config.mjs
+|   |   |   jest.config.ts
+|   |   |   package.json
+|   |   |   tsconfig.app.json
+|   |   |   tsconfig.json
+|   |   |   tsconfig.spec.json
+|   |   |   webpack.config.js
+|   |   |   
+|   |   \---src
+|   |       |   main.ts
+|   |       |   
+|   |       +---app
+|   |       |       app.controller.spec.ts
+|   |       |       app.controller.ts
+|   |       |       app.module.ts
+|   |       |       app.service.spec.ts
+|   |       |       app.service.ts
+|   |       |       
+|   |       \---assets
+|   |               .gitkeep
+|   |               
+|   \---translation-service
+|       |   .env
+|       |   .env..example
+|       |   .spec.swcrc
+|       |   eslint.config.mjs
+|       |   jest.config.ts
+|       |   package.json
+|       |   tsconfig.app.json
+|       |   tsconfig.json
+|       |   tsconfig.spec.json
+|       |   webpack.config.js
+|       |   
+|       \---src
+|           |   main.ts
+|           |   
+|           +---app
+|           |       app.controller.spec.ts
+|           |       app.controller.ts
+|           |       app.module.ts
+|           |       app.service.spec.ts
+|           |       app.service.ts
+|           |       
+|           \---assets
+|                   .gitkeep
+|                   
++---libs
+|   +---auth
+|   |   +---data-access
+|   |   |   |   eslint.config.mjs
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   tsconfig.json
+|   |   |   |   tsconfig.lib.json
+|   |   |   |   tsconfig.spec.json
+|   |   |   |   vite.config.ts
+|   |   |   |   
+|   |   |   \---src
+|   |   |       |   index.ts
+|   |   |       |   
+|   |   |       \---lib
+|   |   |               api.ts
+|   |   |               handle-response.ts
+|   |   |               types.ts
+|   |   |               
+|   |   +---dtos
+|   |   |   |   eslint.config.mjs
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   tsconfig.json
+|   |   |   |   tsconfig.lib.json
+|   |   |   |   tsconfig.spec.json
+|   |   |   |   vite.config.ts
+|   |   |   |   
+|   |   |   +---dist
+|   |   |   |   |   index.d.ts
+|   |   |   |   |   index.d.ts.map
+|   |   |   |   |   index.js
+|   |   |   |   |   
+|   |   |   |   \---lib
+|   |   |   |           login.dto.d.ts
+|   |   |   |           login.dto.d.ts.map
+|   |   |   |           register-client.dto.d.ts
+|   |   |   |           register-client.dto.d.ts.map
+|   |   |   |           register-specialist.dto.d.ts
+|   |   |   |           register-specialist.dto.d.ts.map
+|   |   |   |           
+|   |   |   \---src
+|   |   |       |   index.ts
+|   |   |       |   
+|   |   |       \---lib
+|   |   |               login.dto.ts
+|   |   |               register-client.dto.ts
+|   |   |               register-specialist.dto.ts
+|   |   |               
+|   |   +---feature-login
+|   |   |   |   .babelrc
+|   |   |   |   eslint.config.mjs
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   tsconfig.json
+|   |   |   |   tsconfig.lib.json
+|   |   |   |   tsconfig.spec.json
+|   |   |   |   vite.config.ts
+|   |   |   |   
+|   |   |   \---src
+|   |   |       |   index.ts
+|   |   |       |   
+|   |   |       \---lib
+|   |   |           |   index.ts
+|   |   |           |   
+|   |   |           +---components
+|   |   |           |       LoginForm.tsx
+|   |   |           |       
+|   |   |           +---hooks
+|   |   |           |       useLogin.ts
+|   |   |           |       
+|   |   |           \---validation
+|   |   |                   login.schema.ts
+|   |   |                   
+|   |   +---feature-register-client
+|   |   |   |   .babelrc
+|   |   |   |   eslint.config.mjs
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   tsconfig.json
+|   |   |   |   tsconfig.lib.json
+|   |   |   |   tsconfig.spec.json
+|   |   |   |   vite.config.ts
+|   |   |   |   
+|   |   |   \---src
+|   |   |       |   index.ts
+|   |   |       |   
+|   |   |       \---lib
+|   |   |           +---components
+|   |   |           |       ClientRegistrationForm.tsx
+|   |   |           |       page.tsx
+|   |   |           |       
+|   |   |           +---hooks
+|   |   |           |       useRegisterClient.ts
+|   |   |           |       
+|   |   |           \---validation
+|   |   |                   register.schema.ts
+|   |   |                   
+|   |   +---feature-register-specialist
+|   |   |   |   .babelrc
+|   |   |   |   eslint.config.mjs
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   tsconfig.json
+|   |   |   |   tsconfig.lib.json
+|   |   |   |   tsconfig.spec.json
+|   |   |   |   vite.config.ts
+|   |   |   |   
+|   |   |   \---src
+|   |   |       |   index.ts
+|   |   |       |   
+|   |   |       \---lib
+|   |   |           +---components
+|   |   |           |       CustomCountryCodeSelector.tsx
+|   |   |           |       SpecialistRegistrationForm.spec.tsx
+|   |   |           |       SpecialistRegistrationForm.tsx
+|   |   |           |       
+|   |   |           +---hooks
+|   |   |           |       useRegisterSpecialist.ts
+|   |   |           |       
+|   |   |           \---validation
+|   |   |                   register.schema.ts
+|   |   |                   
+|   |   \---utils
+|   |       |   eslint.config.mjs
+|   |       |   package.json
+|   |       |   README.md
+|   |       |   tsconfig.json
+|   |       |   tsconfig.lib.json
+|   |       |   tsconfig.spec.json
+|   |       |   vite.config.ts
+|   |       |   
+|   |       \---src
+|   |           |   index.ts
+|   |           |   
+|   |           \---lib
+|   |                   utils.spec.ts
+|   |                   utils.ts
+|   |                   
+|   +---prisma
+|   |   +---auth
+|   |   |   |   eslint.config.mjs
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   tsconfig.json
+|   |   |   |   tsconfig.lib.json
+|   |   |   |   tsconfig.spec.json
+|   |   |   |   vite.config.ts
+|   |   |   |   
+|   |   |   \---prisma
+|   |   |       |   schema.prisma
+|   |   |       |   
+|   |   |       \---migrations
+|   |   |           |   migration_lock.toml
+|   |   |           |   
+|   |   |           \---20250710110242_init
+|   |   |                   migration.sql
+|   |   |                   
+|   |   +---client-profile
+|   |   |   |   eslint.config.mjs
+|   |   |   |   package.json
+|   |   |   |   README.md
+|   |   |   |   tsconfig.json
+|   |   |   |   tsconfig.lib.json
+|   |   |   |   tsconfig.spec.json
+|   |   |   |   vite.config.ts
+|   |   |   |   
+|   |   |   \---prisma
+|   |   |           schema.prisma
+|   |   |           
+|   |   \---translation
+|   |       |   eslint.config.mjs
+|   |       |   package.json
+|   |       |   README.md
+|   |       |   tsconfig.json
+|   |       |   tsconfig.lib.json
+|   |       |   tsconfig.spec.json
+|   |       |   vite.config.ts
+|   |       |   
+|   |       \---prisma
+|   |               schema.prisma
+|   |               
+|   \---shared
+|       +---config
+|       |   |   eslint.config.mjs
+|       |   |   package.json
+|       |   |   README.md
+|       |   |   tsconfig.json
+|       |   |   tsconfig.lib.json
+|       |   |   tsconfig.spec.json
+|       |   |   vite.config.ts
+|       |   |   
+|       |   +---dist
+|       |   |   |   index.d.ts
+|       |   |   |   index.d.ts.map
+|       |   |   |   index.js
+|       |   |   |   tsconfig.lib.tsbuildinfo
+|       |   |   |   
+|       |   |   \---lib
+|       |   |           constants.d.ts
+|       |   |           constants.d.ts.map
+|       |   |           constants.js
+|       |   |           env.d.ts
+|       |   |           env.d.ts.map
+|       |   |           env.js
+|       |   |           
+|       |   \---src
+|       |       |   index.ts
+|       |       |   
+|       |       \---lib
+|       |               constants.ts
+|       |               env.ts
+|       |               
+|       +---providers
+|       |   |   .babelrc
+|       |   |   eslint.config.mjs
+|       |   |   package.json
+|       |   |   README.md
+|       |   |   tsconfig.json
+|       |   |   tsconfig.lib.json
+|       |   |   tsconfig.spec.json
+|       |   |   vite.config.ts
+|       |   |   
+|       |   \---src
+|       |       |   index.ts
+|       |       |   
+|       |       \---lib
+|       |               query-provider.tsx
+|       |               
+|       +---state
+|       |   |   .swcrc
+|       |   |   eslint.config.mjs
+|       |   |   package.json
+|       |   |   README.md
+|       |   |   tsconfig.json
+|       |   |   tsconfig.lib.json
+|       |   |   tsconfig.spec.json
+|       |   |   vite.config.ts
+|       |   |   
+|       |   \---src
+|       |       |   index.ts
+|       |       |   
+|       |       \---lib
+|       |               auth-store.ts
+|       |               
+|       +---types
+|       |   |   eslint.config.mjs
+|       |   |   package.json
+|       |   |   README.md
+|       |   |   tsconfig.json
+|       |   |   tsconfig.lib.json
+|       |   |   tsconfig.spec.json
+|       |   |   vite.config.ts
+|       |   |   
+|       |   +---dist
+|       |   |   |   index.d.ts
+|       |   |   |   index.d.ts.map
+|       |   |   |   index.js
+|       |   |   |   
+|       |   |   \---lib
+|       |   |       |   events.d.ts
+|       |   |       |   events.d.ts.map
+|       |   |       |   
+|       |   |       \---auth
+|       |   |               auth.types.d.ts
+|       |   |               auth.types.d.ts.map
+|       |   |               payloads.d.ts
+|       |   |               payloads.d.ts.map
+|       |   |               
+|       |   \---src
+|       |       |   index.ts
+|       |       |   
+|       |       \---lib
+|       |           |   events.ts
+|       |           |   
+|       |           \---auth
+|       |                   auth.types.ts
+|       |                   payloads.ts
+|       |                   
+|       +---ui
+|       |   |   .babelrc
+|       |   |   eslint.config.mjs
+|       |   |   package.json
+|       |   |   README.md
+|       |   |   tsconfig.json
+|       |   |   tsconfig.lib.json
+|       |   |   tsconfig.spec.json
+|       |   |   vite.config.ts
+|       |   |   
+|       |   \---src
+|       |       |   index.ts
+|       |       |   
+|       |       \---lib
+|       |           |   ui.spec.tsx
+|       |           |   ui.tsx
+|       |           |   
+|       |           +---components
+|       |           |   \---button
+|       |           |           Button.tsx
+|       |           |           
+|       |           \---icons
+|       |               \---register
+|       |                       arrowDown.tsx
+|       |                       hidePassword.tsx
+|       |                       showPassword.tsx
+|       |                       
+|       \---utils-browser
+|           |   eslint.config.mjs
+|           |   package.json
+|           |   README.md
+|           |   tsconfig.json
+|           |   tsconfig.lib.json
+|           |   tsconfig.spec.json
+|           |   vite.config.ts
+|           |   
+|           \---src
+|               |   index.ts
+|               |   
+|               \---lib
+|                       handle-auth-success.ts
+|                       redirect-to-role-app.ts
+|                       
++---packages
+|       .gitkeep
+|       
+\---tooling
+    +---configs
+    |   \---nginx
+    |       |   nginx.conf
+    |       |   
+    |       +---conf.d
+    |       |       main-routes.conf
+    |       |       
+    |       \---dev.d
+    |               dev.conf
+    |               
+    \---docker
+        +---nest
+        |       Dockerfile
+        |       
+        +---next
+        |       Dockerfile
+        |       
+        \---nginx
+                Dockerfile
+                

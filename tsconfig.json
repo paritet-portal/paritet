@@ -4,37 +4,19 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/frontend-service-e2e"
-    },
-    {
       "path": "./apps/frontend-service"
-    },
-    {
-      "path": "./apps/api-gateway-e2e"
     },
     {
       "path": "./apps/api-gateway"
     },
     {
-      "path": "./apps/auth-service-e2e"
-    },
-    {
       "path": "./apps/auth-service"
-    },
-    {
-      "path": "./apps/client-frontend-service-e2e"
     },
     {
       "path": "./apps/client-frontend-service"
     },
     {
-      "path": "./apps/specialist-frontend-service-e2e"
-    },
-    {
       "path": "./apps/specialist-frontend-service"
-    },
-    {
-      "path": "./apps/translation-service-e2e"
     },
     {
       "path": "./apps/translation-service"
@@ -50,9 +32,6 @@
     },
     {
       "path": "./libs/shared/types"
-    },
-    {
-      "path": "./apps/client-profile-service-e2e"
     },
     {
       "path": "./apps/client-profile-service"
@@ -89,9 +68,6 @@
     },
     {
       "path": "./libs/shared/utils-browser"
-    },
-    {
-      "path": "./apps/specialist-profile-service-e2e"
     },
     {
       "path": "./apps/specialist-profile-service"
