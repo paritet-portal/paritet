@@ -16,7 +16,7 @@ export const Button: React.FC<ButtonProps> = ({
   ...props // Всі інші props (напр., `disabled`, `onClick`) передаються напряму до елемента <button>
 }) => {
   // Базові стилі, які будуть у всіх кнопок.
-  const baseStyles = 'mt-12 px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75';
+  const baseStyles = 'mt-8 px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75';
 
   return (
     <button

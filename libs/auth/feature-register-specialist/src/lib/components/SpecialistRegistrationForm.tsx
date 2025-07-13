@@ -139,11 +139,11 @@ export function SpecialistRegistrationForm() {
       {console.log('Current form errors:', errors)}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16"
+        className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-x-8 mb-16"
       >
 
         {/* Left Column */}
-        <div className="bg-white p-8 rounded-lg shadow-lg">
+        <div className="bg-white p-8 rounded-lg">
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Тип спеціалісту<span className="text-red-500">*</span>
@@ -283,7 +283,7 @@ export function SpecialistRegistrationForm() {
         </div>
 
         {/* Right Column */}
-        <div className="bg-white p-8 rounded-lg shadow-lg">
+        <div className="bg-white p-8 rounded-lg ">
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               ПІБ або Назва компанії<span className="text-red-500">*</span>
@@ -384,9 +384,9 @@ export function SpecialistRegistrationForm() {
         </div>
 
 
-        <div className="col-span-2 flex flex-col items-center mt-8">
+        <div className="col-span-2 flex flex-col items-center">
 
-          <div className="mb-10 w-full flex justify-center">
+          <div className=" w-full flex justify-center">
             <ReCAPTCHA
               sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LcDgnwrAAAAAPMwdQ93htfMzdBv68XsXlXear_0'}
               onChange={handleRecaptchaChange}

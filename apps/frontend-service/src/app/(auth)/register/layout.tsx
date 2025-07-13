@@ -13,11 +13,11 @@ export default function RegisterLayout({ children }: { children: React.ReactNode
   }, [pathname]);
 
   return (
-    <div className="container  min-h-screen flex flex-col items-center justify-start bg-gray-50 p-4">
+    <div className="container  min-h-screen flex flex-col items-center justify-start bg-white p-4">
       <h1 className="text-4xl font-bold text-blue-800 mb-8">Зареєструватися</h1>
 
-      <div className="flex mb-12 w-full">
-        <div className="w-1/2 flex justify-start ">
+      <div className="flex mb-12 w-full ">
+        <div className="w-1/2 flex justify-start  px-8">
           <Link href="/register/specialist">
             <button
               className={`text-xl font-medium p-3  ${currentPath === '/register/specialist'
@@ -30,7 +30,7 @@ export default function RegisterLayout({ children }: { children: React.ReactNode
           </Link>
         </div>
 
-        <div className="w-1/2 flex justify-start ">
+        <div className="w-1/2 flex justify-start px-8">
           <Link href="/register/client">
             <button
               className={`text-xl font-medium p-3 ${currentPath === '/register/client'
