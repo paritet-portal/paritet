@@ -61,7 +61,7 @@ export function SpecialistRegistrationForm() {
     setRecaptchaValue(token);
   };
   const getInputFieldClass = (fieldName: keyof RegisterSpecialistSchema) => {
-    const baseClasses = "block w-full px-4 py-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm";
+    const baseClasses = "block w-full px-4 py-3 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 appearance-none sm:text-sm";
 
     const errorClasses = "border-red-500 focus:ring-red-500 outline-red-500 outline-offset-2 outline-2";
 
@@ -225,7 +225,7 @@ export function SpecialistRegistrationForm() {
               <select
                 {...register('locationCountry')}
 
-                className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none"
+               className={getInputFieldClass('locationCountry')}
               >
                 <option value="">Виберіть країну</option>
                 <option value="ua">Україна</option>
@@ -243,7 +243,7 @@ export function SpecialistRegistrationForm() {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Номер телефону
             </label>
-            <div className="flex">
+            <div className="flex" >
               <Controller
                 name="countryCode"
                 control={control}
@@ -264,7 +264,7 @@ export function SpecialistRegistrationForm() {
                   {...register('phoneNumber')}
                   type="tel"
                   placeholder="Ваш номер"
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-r-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className={getInputFieldClass('phoneNumber')}
                 />
                 <div
                   className="absolute inset-y-0 right-0 flex items-center px-3"
@@ -293,7 +293,7 @@ export function SpecialistRegistrationForm() {
                 {...register('fullName')}
                 type="text"
                 placeholder="Введіть свої ПІБ"
-                className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className={getInputFieldClass('fullName')}
               />
               <div
                 className="absolute inset-y-0 right-0 flex items-center px-3"
@@ -318,7 +318,7 @@ export function SpecialistRegistrationForm() {
                 {...register('licenseNumber')}
                 type="text"
                 placeholder="Введіть свої дані"
-                className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className={getInputFieldClass('licenseNumber')}
               />
               <div
                 className="absolute inset-y-0 right-0 flex items-center px-3"
@@ -365,7 +365,8 @@ export function SpecialistRegistrationForm() {
               {...register('locationCity')}
               type="text"
               placeholder="Виберіть місто/село"
-              className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className={getInputFieldClass('locationCity')}
+              
             />
             {errors.locationCity?.message && <p className="text-red-500 text-sm mt-1">{errors.locationCity.message}</p>}
           </div>
