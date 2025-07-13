@@ -2,7 +2,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowDown, Button, HidePassword, ShowPassword } from '@paritet/shared-ui';
+import { ArrowDown, Button, HidePassword, ShowPassword, ValidateError, ValidateSuccess } from '@paritet/shared-ui';
 import { useEffect, useRef, useState } from 'react';
 import ReCAPTCHA from "react-google-recaptcha";
 import { Controller, useForm } from 'react-hook-form';
@@ -22,15 +22,15 @@ interface CountryOptionType {
 export function SpecialistRegistrationForm() {
   const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
 
-  const { mutateAsync, isPending,error  } = useRegisterSpecialist();
+  const { mutateAsync, isPending, error } = useRegisterSpecialist();
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, touchedFields },
     control,
     setValue,
-    getValues
+    watch,
   } = useForm<RegisterSpecialistSchema>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -39,6 +39,23 @@ export function SpecialistRegistrationForm() {
     mode: 'onChange',
     criteriaMode: 'all',
   });
+
+  const email = watch('email');
+  const emailTouched = touchedFields.email;
+  const isEmailValid = email && !errors.email && emailTouched;
+
+  const phoneNumber = watch('phoneNumber');
+  const phoneNumberTouched = touchedFields.phoneNumber;
+  const isPhoneNumberValid = phoneNumber && !errors.phoneNumber && phoneNumberTouched;
+
+  const fullName = watch('fullName');
+  const fullNameTouched = touchedFields.fullName;
+  const isFullNameTouchedValid = fullName && !errors.fullName && fullNameTouched;
+
+  const licenseNumber = watch('licenseNumber');
+  const licenseNumberTouched = touchedFields.licenseNumber;
+  const isLicenseNumberTouchedValid = licenseNumber && !errors.fullName && licenseNumberTouched;
+
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const handleRecaptchaChange = (token: string | null) => {
     setRecaptchaValue(token);
@@ -108,7 +125,6 @@ export function SpecialistRegistrationForm() {
     const fullPhoneNumber = `${data.countryCode}${data.phoneNumber.replace(/\s+/g, '')}`;
 
     await mutateAsync({ ...data, phoneNumber: fullPhoneNumber });
-    // await mutateAsync({ ...data, phone: fullPhoneNumber, recaptchaToken: recaptchaValue });
   };
 
 
@@ -146,23 +162,31 @@ export function SpecialistRegistrationForm() {
                 <option value="attorney">аудитор</option>
               </select>
               <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <ArrowDown className="h-5 w-5 text-gray-400"/>
+                <ArrowDown className="h-5 w-5 text-gray-400" />
               </div>
             </div>
             {errors.specialistType?.message && <p className="text-red-500 text-sm mt-1">{errors.specialistType.message}</p>}
           </div>
 
-          <div className="mb-6">
+          <div className="mb-6 ">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Email<span className="text-red-500">*</span>
             </label>
-            <input
-              {...register('email')}
-              type="email"
-              placeholder="Введіть свій Email"
-
-              className={getInputFieldClass('email')}
-            />
+            <div className='relative'>
+              <input
+                {...register('email')}
+                type="email"
+                placeholder="Введіть свій Email"
+                className={getInputFieldClass('email')}
+              />
+              <div
+                className="absolute inset-y-0 right-0 flex items-center px-3"
+              >{errors.email && <ValidateError />}
+                {isEmailValid && (
+                  <ValidateSuccess />
+                )}
+              </div>
+            </div>
             {errors.email?.message && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
           </div>
 
@@ -199,7 +223,7 @@ export function SpecialistRegistrationForm() {
             </label>
             <div className="relative">
               <select
-               {...register('locationCountry')}
+                {...register('locationCountry')}
 
                 className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none"
               >
@@ -209,7 +233,7 @@ export function SpecialistRegistrationForm() {
               </select>
 
               <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                 <ArrowDown className="h-5 w-5 text-gray-400"/>
+                <ArrowDown className="h-5 w-5 text-gray-400" />
               </div>
             </div>
             {errors.locationCountry?.message && <p className="text-red-500 text-sm mt-1">{errors.locationCountry.message}</p>}
@@ -234,12 +258,24 @@ export function SpecialistRegistrationForm() {
                   />
                 )}
               />
-              <input
-                {...register('phoneNumber')}
-                type="tel"
-                placeholder="Ваш номер"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-r-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
+
+              <div className='relative'>
+                <input
+                  {...register('phoneNumber')}
+                  type="tel"
+                  placeholder="Ваш номер"
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-r-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                />
+                <div
+                  className="absolute inset-y-0 right-0 flex items-center px-3"
+                >
+                  {isPhoneNumberValid && (
+                    <ValidateSuccess />
+                  )}
+                </div>
+
+              </div>
+
             </div>
             {errors.phoneNumber?.message && <p className="text-red-500 text-sm mt-1">{errors.phoneNumber.message}</p>}
           </div>
@@ -251,12 +287,22 @@ export function SpecialistRegistrationForm() {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               ПІБ або Назва компанії<span className="text-red-500">*</span>
             </label>
-            <input
-              {...register('fullName')}
-              type="text"
-              placeholder="Введіть свої ПІБ"
-              className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            />
+            <div className='relative'>
+              <input
+                {...register('fullName')}
+                type="text"
+                placeholder="Введіть свої ПІБ"
+                className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+              <div
+                className="absolute inset-y-0 right-0 flex items-center px-3"
+              >
+                {isFullNameTouchedValid && (
+                  <ValidateSuccess />
+                )}
+              </div>
+
+            </div>
             {errors.fullName?.message && <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>}
           </div>
 
@@ -264,12 +310,22 @@ export function SpecialistRegistrationForm() {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               № ліцензії/свідоцтва<span className="text-red-500">*</span>
             </label>
-            <input
-              {...register('licenseNumber')}
-              type="text"
-              placeholder="Введіть свої дані"
-              className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            />
+            <div className='relative'>
+
+              <input
+                {...register('licenseNumber')}
+                type="text"
+                placeholder="Введіть свої дані"
+                className="block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+              <div
+                className="absolute inset-y-0 right-0 flex items-center px-3"
+              >
+                {isLicenseNumberTouchedValid && (
+                  <ValidateSuccess />
+                )}
+              </div>
+            </div>
             {errors.licenseNumber?.message && <p className="text-red-500 text-sm mt-1">{errors.licenseNumber.message}</p>}
           </div>
 
