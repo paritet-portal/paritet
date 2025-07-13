@@ -13,34 +13,37 @@ export default function RegisterLayout({ children }: { children: React.ReactNode
   }, [pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start bg-gray-50 p-4">
+    <div className="container  min-h-screen flex flex-col items-center justify-start bg-gray-50 p-4">
       <h1 className="text-4xl font-bold text-blue-800 mb-8">Зареєструватися</h1>
 
-      <div className="flex space-x-8 mb-12">
-        <Link href="/register/specialist">
-          <button
-            className={`text-xl font-medium pb-2 px-4 ${
-              currentPath === '/register/specialist'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-500 hover:text-blue-600'
-            }`}
-          >
-            Як спеціаліст
-          </button>
-        </Link>
+      <div className="flex mb-12 w-full">
+        <div className="w-1/2 flex justify-start">
+          <Link href="/register/specialist">
+            <button
+              className={`text-xl font-medium pb-2 px-4 ${currentPath === '/register/specialist'
+                  ? 'text-white bg-blue-500 dark:bg-blue-600 rounded-md'
+                  : 'text-gray-500 hover:text-blue-600'
+                }`}
+            >
+              Як спеціаліст
+            </button>
+          </Link>
+        </div>
 
-        <Link href="/register/client">
-          <button
-            className={`text-xl font-medium pb-2 px-4 ${
-              currentPath === '/register/client'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-500 hover:text-blue-600'
-            }`}
-          >
-            Як споживач
-          </button>
-        </Link>
+        <div className="w-1/2 flex justify-start">
+          <Link href="/register/client">
+            <button
+              className={`text-xl font-medium pb-2 px-4 ${currentPath === '/register/client'
+                  ? 'text-white bg-blue-500 dark:bg-blue-600 rounded-md'
+                  : 'text-gray-500 hover:text-blue-600'
+                }`}
+            >
+              Як споживач
+            </button>
+          </Link>
+        </div>
       </div>
+
 
       {children}
     </div>
