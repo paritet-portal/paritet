@@ -27,7 +27,7 @@ export function SpecialistRegistrationForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, touchedFields },
+    formState: { errors, isSubmitting, dirtyFields  },
     control,
     setValue,
     watch,
@@ -41,20 +41,20 @@ export function SpecialistRegistrationForm() {
   });
 
   const email = watch('email');
-  const emailTouched = touchedFields.email;
-  const isEmailValid = email && !errors.email && emailTouched;
+  const emailDirty  = dirtyFields.email;
+  const isEmailValid = email && !errors.email && emailDirty ;
 
   const phoneNumber = watch('phoneNumber');
-  const phoneNumberTouched = touchedFields.phoneNumber;
-  const isPhoneNumberValid = phoneNumber && !errors.phoneNumber && phoneNumberTouched;
+  const phoneNumberDirty = dirtyFields.phoneNumber;
+  const isPhoneNumberValid = phoneNumber && !errors.phoneNumber && phoneNumberDirty;
 
   const fullName = watch('fullName');
-  const fullNameTouched = touchedFields.fullName;
-  const isFullNameTouchedValid = fullName && !errors.fullName && fullNameTouched;
+  const fullNameDirty = dirtyFields.fullName;
+  const isFullNameDirtyValid = fullName && !errors.fullName && fullNameDirty;
 
   const licenseNumber = watch('licenseNumber');
-  const licenseNumberTouched = touchedFields.licenseNumber;
-  const isLicenseNumberTouchedValid = licenseNumber && !errors.fullName && licenseNumberTouched;
+  const licenseNumberDirty = dirtyFields.licenseNumber;
+  const isLicenseNumberDirtyValid = licenseNumber && !errors.fullName && licenseNumberDirty;
 
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const handleRecaptchaChange = (token: string | null) => {
@@ -269,6 +269,7 @@ export function SpecialistRegistrationForm() {
                 <div
                   className="absolute inset-y-0 right-0 flex items-center px-3"
                 >
+                  {errors.phoneNumber && <ValidateError />}
                   {isPhoneNumberValid && (
                     <ValidateSuccess />
                   )}
@@ -297,7 +298,8 @@ export function SpecialistRegistrationForm() {
               <div
                 className="absolute inset-y-0 right-0 flex items-center px-3"
               >
-                {isFullNameTouchedValid && (
+                {errors.fullName && <ValidateError />}
+                {isFullNameDirtyValid && (
                   <ValidateSuccess />
                 )}
               </div>
@@ -321,7 +323,8 @@ export function SpecialistRegistrationForm() {
               <div
                 className="absolute inset-y-0 right-0 flex items-center px-3"
               >
-                {isLicenseNumberTouchedValid && (
+                {errors.licenseNumber && <ValidateError />}
+                {isLicenseNumberDirtyValid && (
                   <ValidateSuccess />
                 )}
               </div>
